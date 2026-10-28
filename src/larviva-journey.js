@@ -78,10 +78,17 @@
     return "<div" + attrs(plain) + ">" + inner + "</div>";
   }
 
+  function colorToken(product) {
+    return String(product.colorToken || "default").replace(/[^a-z0-9-]/gi, "");
+  }
+
+  function accentToken(product) {
+    return "var(--lj-family-" + colorToken(product) + ", var(--lj-family-default))";
+  }
+
   function accentStyle(product) {
-    var token = String(product.colorToken || "default").replace(/[^a-z0-9-]/gi, "");
-    return "--lj-accent: var(--lj-family-" + token + ", var(--lj-family-default));" +
-      " --lj-on-accent: var(--lj-on-family-" + token + ", var(--lj-on-family-default));";
+    return "--lj-accent: " + accentToken(product) + ";" +
+      " --lj-on-accent: var(--lj-on-family-" + colorToken(product) + ", var(--lj-on-family-default));";
   }
 
   function iconHtml(illustrations, keys, extraClass) {
@@ -231,9 +238,6 @@
 
   /* ── Markup (shared by browser and pre-render) ───────────────────────── */
 
-  // Hairline of fine ticks used under titles throughout BioMar presentations.
-  var TICKS = '<span class="lj-ticks" aria-hidden="true"></span>';
-
   function renderModule(model, options) {
     options = options || {};
     var interactive = options.interactive !== false;
@@ -248,10 +252,15 @@
     var html = '<div class="lj' + (interactive ? " lj--interactive" : " lj--static") + '">';
     html += '<div class="lj-header"><div class="lj-header__text">';
     if (hasText(ui.eyebrow)) html += '<p class="lj-eyebrow">' + esc(ui.eyebrow) + "</p>";
-    html += '<h2 class="lj-title">' + esc(ui.moduleTitle) + "</h2></div>";
+    html += '<h2 class="lj-title">' + esc(ui.moduleTitle) + "</h2>";
+    if (interactive && hasText(ui.instruction)) html += '<p class="lj-lead">' + esc(ui.instruction) + "</p>";
+    html += "</div>";
 
     if (interactive && model.portfolios.length > 1) {
-      html += '<div class="lj-switch" role="tablist" aria-label="' + esc(ui.portfolioSwitchLabel) + '">';
+      var activeIndex = Math.max(0, model.portfolios.map(function (p) { return p.id; }).indexOf(active));
+      html += '<div class="lj-switch" role="tablist" aria-label="' + esc(ui.portfolioSwitchLabel) +
+        '" style="--lj-tabs: ' + model.portfolios.length + "; --lj-tab: " + activeIndex + ';">' +
+        '<span class="lj-switch__thumb" aria-hidden="true"></span>';
       model.portfolios.forEach(function (p) {
         var selected = p.id === active;
         html += "<button" + attrs({
@@ -267,7 +276,7 @@
       });
       html += "</div>";
     }
-    html += "</div>" + TICKS;
+    html += "</div>";
 
     model.portfolios.forEach(function (p) {
       html += renderPortfolio(model, p, Object.assign({ hidden: interactive && p.id !== active }, o));
@@ -309,13 +318,15 @@
       '<span class="lj-flag lj-flag--selected">' + checkIcon() + esc(ui.selectedState) + "</span>";
   }
 
-  // The journey is drawn as a value-chain band: joined chevrons running from
-  // light to dark as the animal develops.
+  // The journey card: stage icons over a progress track. The track fills to
+  // the selected stage and shows the selected product's span in its colour.
   function renderStages(model, p, o) {
     if (!p.stages.length) return "";
     var ui = model.ui;
-    var html = '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
-    html += '<ol class="lj-stages" style="--lj-cols: ' + p.stages.length + '">';
+    var n = p.stages.length;
+    var html = '<div class="lj-journey" style="--lj-cols: ' + n + '" data-lj-journey><div class="lj-journey__inner">';
+    html += '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
+    html += '<ol class="lj-stages">';
     p.stages.forEach(function (s, i) {
       html += '<li class="lj-stages__item" style="--i: ' + i + ';">' + control(o.interactive, {
         "class": "lj-stage",
@@ -323,15 +334,20 @@
         "aria-pressed": "false",
         "aria-controls": o.uid + "-detail-" + p.id
       },
-        '<span class="lj-stage__bg" aria-hidden="true"></span>' +
-        iconHtml(o.illustrations, s.illustration, "lj-stage__icon") +
-        '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
+        '<span class="lj-stage__visual" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
         '<span class="lj-stage__num" aria-hidden="true">' + (i < 9 ? "0" : "") + (i + 1) + "</span>" +
-        '<span class="lj-vh">, ' + esc(fmt(ui.stageNumber, { n: i + 1, total: p.stages.length })) + "</span>" +
+        '<span class="lj-vh">' + esc(fmt(ui.stageNumber, { n: i + 1, total: n })) + ": </span>" +
+        '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
         stageFlags(ui)
       ) + "</li>";
     });
-    return html + "</ol>";
+    html += "</ol>";
+    html += '<div class="lj-track" aria-hidden="true"><span class="lj-track__fill"></span><span class="lj-track__span"></span>';
+    p.stages.forEach(function (s, i) {
+      html += '<span class="lj-track__dot" style="left: ' + ((i + 0.5) / n * 100).toFixed(3) + '%"></span>';
+    });
+    html += "</div></div></div>";
+    return html;
   }
 
   function productLabel(model, product) {
@@ -442,8 +458,10 @@
     } else {
       html += '<p class="lj-panel__eyebrow">' + esc(p.title || p.label) + "</p>";
       html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(ui.panelEmptyTitle) + "</h4>";
-      html += TICKS;
       if (hasText(p.intro)) html += '<p class="lj-panel__text lj-panel__intro">' + esc(p.intro) + "</p>";
+      html += '<dl class="lj-stats">' +
+        '<div class="lj-stats__item"><dt>' + esc(ui.statStages) + "</dt><dd>" + p.stages.length + "</dd></div>" +
+        '<div class="lj-stats__item"><dt>' + esc(ui.statProducts) + "</dt><dd>" + p.products.length + "</dd></div></dl>";
       html += '<p class="lj-panel__hint">' + esc(ui.panelEmptyText) + "</p>";
     }
 
@@ -461,7 +479,6 @@
       : ui.activityLabel;
     var html = '<p class="lj-panel__eyebrow">' + esc(eyebrow) + "</p>";
     html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(stage.label) + "</h4>";
-    html += TICKS;
     if (hasText(stage.description)) html += '<p class="lj-panel__text">' + esc(stage.description) + "</p>";
     html += '<h5 class="lj-panel__subtitle">' + esc(ui.relatedProductsHeading) + "</h5>";
     if (!products.length) {
@@ -517,7 +534,6 @@
     html += '<p class="lj-panel__eyebrow"><span class="lj-swatch" aria-hidden="true"></span>' +
       esc(fmt(ui.productEyebrow, { portfolio: p.label })) + "</p>";
     html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(product.name) + "</h4>";
-    html += TICKS;
     if (hasText(product.productType)) {
       html += '<p class="lj-panel__tagline"><span class="lj-vh">' + esc(ui.fieldProductType) + ": </span>" + esc(product.productType) + "</p>";
     }
@@ -626,8 +642,10 @@
   Journey.prototype.setPortfolio = function (id) {
     if (id === this.state.portfolio) return;
     this.state = { portfolio: id, stage: null, product: null };
-    each(this.el.querySelectorAll('[role="tab"]'), function (tab) {
+    var tablist = this.el.querySelector('[role="tablist"]');
+    each(this.el.querySelectorAll('[role="tab"]'), function (tab, i) {
       var on = tab.getAttribute("data-portfolio") === id;
+      if (on && tablist) tablist.style.setProperty("--lj-tab", i);
       tab.setAttribute("aria-selected", on ? "true" : "false");
       if (on) tab.removeAttribute("tabindex"); else tab.setAttribute("tabindex", "-1");
     });
@@ -711,7 +729,23 @@
       btn.classList.toggle("is-dimmed", product ? !related : !!stage && id !== state.stage);
     });
 
+    var journey = section.querySelector("[data-lj-journey]");
+    if (journey) {
+      var n = p.stages.length;
+      var fill = stage && stage.kind === "stage" ? (stage.index + 0.5) / n * 100 : 0;
+      var span = product && product.stageIndices.length ? product.stageIndices : null;
+      journey.style.setProperty("--lj-fill", fill.toFixed(3) + "%");
+      journey.classList.toggle("has-span", !!span);
+      if (span) {
+        journey.style.setProperty("--lj-span-start", (span[0] / n * 100).toFixed(3) + "%");
+        journey.style.setProperty("--lj-span-end", ((span[span.length - 1] + 1) / n * 100).toFixed(3) + "%");
+        journey.style.setProperty("--lj-accent", accentToken(product));
+      }
+    }
+
     var detail = section.querySelector("[data-lj-panel]");
+    if (product) detail.style.setProperty("--lj-glow", "color-mix(in srgb, " + accentToken(product) + " 55%, transparent)");
+    else detail.style.removeProperty("--lj-glow");
     detail.innerHTML = renderPanel(this.model, p, state, {
       uid: this.uid,
       interactive: true,

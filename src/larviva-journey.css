@@ -2,21 +2,15 @@
  * LARVIVA Interactive Hatchery Journey — styles.
  *
  * DESIGN TOKENS: everything brand-specific is a custom property in the first
- * block. Values follow the BioMar Brand Guidelines 2026 and the visual
- * language of the BioMar corporate slide deck:
- *   - Typeface: Avenir Next (Regular / Bold), Arial as the digital fallback.
- *   - Colours: the BioMar palette and Black-% greys. Dark text is BioMar Blue;
- *     body copy in panels is Black 80% as on the deck's product slides.
- *   - Journey: the deck's value-chain band (joined chevrons running from
- *     light Sky Blue to dark navy, white icons).
- *   - Products: "traceability" lines spanning the stages they cover.
- *   - Ticked hairline under titles, rounded Crisp Blue cards.
- * The module sits on a white (#ffffff) background so it is seamless on the
- * website. Map the tokens to the site's design-system variables when
- * integrating.
+ * block. Colours and type follow the BioMar Brand Guidelines 2026 (BioMar
+ * palette, Black-% greys, Avenir Next with Arial fallback, BioMar Blue for
+ * dark text). The look is a contemporary web module: white page background
+ * (#ffffff) so it sits seamlessly on the site, soft Crisp/Sky Blue gradient
+ * surfaces, glassy tiles, a live progress track and fluid motion.
+ * Map the tokens to the website's design-system variables when integrating.
  *
  * Product family colours: a product's `colorToken` maps to --lj-family-<token>
- * (line / swatch colour) and --lj-on-family-<token> (text on that colour).
+ * and --lj-on-family-<token> (text on a solid fill of that colour).
  * Colour is never the only identifier: every product shows its name.
  *
  * All selectors are prefixed .lj / lj- to avoid clashing with site CSS.
@@ -39,22 +33,14 @@
   --lj-black-10: #ededed;
   --lj-white: #ffffff;
 
-  /* Surfaces */
+  /* Surfaces (tints of the palette) */
   --lj-bg: var(--lj-white);
-  --lj-card: rgba(195, 228, 239, 0.45); /* Crisp Blue card, as on the deck */
+  --lj-tint: #f3f9fc; /* Crisp Blue at ~20% on white */
+  --lj-line: rgba(31, 62, 119, 0.08);
+  --lj-shadow: 0 18px 48px rgba(31, 62, 119, 0.12);
+  --lj-shadow-sm: 0 6px 18px rgba(31, 62, 119, 0.1);
+  --lj-gradient-brand: linear-gradient(135deg, var(--lj-biomar-blue), var(--lj-ocean-blue));
   --lj-focus: var(--lj-ocean-blue);
-
-  /* Value-chain band, light → dark (as on the deck's value-chain slides). */
-  --lj-step-1-bg: var(--lj-sky-blue);
-  --lj-step-1-fg: var(--lj-biomar-blue);
-  --lj-step-2-bg: var(--lj-ocean-blue);
-  --lj-step-2-fg: var(--lj-white);
-  --lj-step-3-bg: var(--lj-biomar-blue);
-  --lj-step-3-fg: var(--lj-white);
-  --lj-step-4-bg: #152b55; /* deep navy used on the deck's value chain */
-  --lj-step-4-fg: var(--lj-white);
-  --lj-step-5-bg: #0f1f3f;
-  --lj-step-5-fg: var(--lj-white);
 
   /* Product family colours */
   --lj-family-default: var(--lj-ocean-blue);
@@ -81,10 +67,11 @@
   --lj-family-zm: var(--lj-biomar-blue);
 
   /* Shape and motion */
-  --lj-panel-width: 340px;
+  --lj-panel-width: 350px;
+  --lj-radius-lg: 28px;
   --lj-radius: 18px;
-  --lj-point: 18px; /* chevron depth */
   --lj-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --lj-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
 
   position: relative;
   background: var(--lj-bg);
@@ -126,73 +113,72 @@
   border: 0;
 }
 
-/* Ticked hairline used under titles on BioMar slides. */
-.lj-ticks {
-  display: block;
-  width: 100%;
-  height: 6px;
-  background: repeating-linear-gradient(90deg, var(--lj-sky-blue) 0 1px, transparent 1px 3px);
-}
-
 /* ── Header ───────────────────────────────────────────────────────────── */
 
 .lj-header {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 12px 24px;
-  margin-bottom: 12px;
-}
-
-.lj-header + .lj-ticks {
-  margin-bottom: 22px;
-}
-
-.lj-eyebrow {
-  color: var(--lj-ocean-blue);
-  font-size: 0.875rem;
-  font-weight: 700;
+  gap: 16px 32px;
+  margin-bottom: 24px;
 }
 
 .lj-title {
-  color: var(--lj-biomar-blue);
-  font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.25rem);
+  font-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
   font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: 0.01em;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 
+.lj-lead {
+  margin-top: 8px;
+  color: var(--lj-black-80);
+  font-size: 1.0625rem;
+}
+
+/* Segmented control with a sliding thumb. */
 .lj-switch {
-  display: inline-flex;
-  padding: 4px;
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: repeat(var(--lj-tabs, 2), 1fr);
+  padding: 5px;
   border-radius: 999px;
-  background: var(--lj-card);
+  background: var(--lj-tint);
+  box-shadow: inset 0 0 0 1px var(--lj-line);
+}
+
+.lj-switch__thumb {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  width: calc((100% - 10px) / var(--lj-tabs, 2));
+  border-radius: 999px;
+  background: var(--lj-gradient-brand);
+  box-shadow: 0 8px 20px rgba(4, 113, 173, 0.3);
+  transform: translateX(calc(100% * var(--lj-tab, 0)));
+  transition: transform 450ms var(--lj-spring);
 }
 
 .lj-switch__tab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-width: 124px;
-  padding: 9px 20px;
+  min-width: 128px;
+  padding: 10px 22px;
   border: 0;
   border-radius: 999px;
   background: transparent;
   color: var(--lj-biomar-blue);
   font-weight: 700;
-  letter-spacing: 0.025em;
   cursor: pointer;
-  transition: background-color 220ms var(--lj-ease), color 220ms var(--lj-ease);
-}
-
-.lj-switch__tab:hover {
-  background: rgba(146, 206, 232, 0.45);
+  transition: color 250ms var(--lj-ease);
 }
 
 .lj-switch__tab[aria-selected="true"] {
-  background: var(--lj-biomar-blue);
   color: var(--lj-white);
 }
 
@@ -234,7 +220,7 @@
 
 .lj-body {
   display: grid;
-  gap: 28px;
+  gap: 24px;
 }
 
 @media (min-width: 1024px) {
@@ -251,117 +237,115 @@
   min-width: 0;
 }
 
-/* ── Journey: value-chain band ────────────────────────────────────────── */
+/* ── Journey card ─────────────────────────────────────────────────────── */
+
+.lj-journey {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--lj-radius-lg);
+  background:
+    radial-gradient(70% 120% at 0% 0%, rgba(195, 228, 239, 0.95), transparent 60%),
+    radial-gradient(60% 120% at 100% 100%, rgba(146, 206, 232, 0.55), transparent 65%),
+    radial-gradient(40% 80% at 70% 0%, rgba(151, 209, 48, 0.12), transparent 70%),
+    var(--lj-tint);
+  box-shadow: inset 0 0 0 1px var(--lj-line);
+}
+
+.lj-journey__inner {
+  padding: 16px 14px 18px;
+}
 
 .lj-stages {
   display: grid;
   grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
   padding: 0;
   list-style: none;
-  border-radius: var(--lj-radius);
-  overflow: hidden;
 }
 
 .lj-stages__item {
-  --lj-step-bg: var(--lj-step-1-bg);
-  --lj-step-fg: var(--lj-step-1-fg);
-  position: relative;
   display: flex;
+  justify-content: center;
+  padding: 0 6px;
 }
 
-.lj-stages__item:nth-child(2) { --lj-step-bg: var(--lj-step-2-bg); --lj-step-fg: var(--lj-step-2-fg); }
-.lj-stages__item:nth-child(3) { --lj-step-bg: var(--lj-step-3-bg); --lj-step-fg: var(--lj-step-3-fg); }
-.lj-stages__item:nth-child(4) { --lj-step-bg: var(--lj-step-4-bg); --lj-step-fg: var(--lj-step-4-fg); }
-.lj-stages__item:nth-child(n+5) { --lj-step-bg: var(--lj-step-5-bg); --lj-step-fg: var(--lj-step-5-fg); }
-
 .lj-stage {
-  position: relative;
-  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  gap: 2px;
+  gap: 1px;
   width: 100%;
-  min-height: 150px;
-  padding: 16px 14px 14px calc(var(--lj-point) + 10px);
+  padding: 0 0 4px;
   border: 0;
+  border-radius: 22px;
   background: none;
-  color: var(--lj-step-fg);
+  color: var(--lj-biomar-blue);
   text-align: center;
-  transition: opacity 260ms var(--lj-ease);
-}
-
-.lj-stages__item:first-child .lj-stage {
-  padding-left: 14px;
+  transition: opacity 300ms var(--lj-ease), filter 300ms var(--lj-ease);
 }
 
 .lj--interactive .lj-stage {
   cursor: pointer;
 }
 
-.lj-stages .lj-stage:focus-visible {
-  outline-color: var(--lj-white);
-  outline-offset: -8px;
-}
-
-/* Chevron drawn on a background layer; each point reaches into the next
-   block's notch, leaving a thin white seam as on the deck. */
-.lj-stage__bg {
-  position: absolute;
-  inset: 0 calc(var(--lj-point) * -1 + 4px) 0 0;
-  z-index: -1;
-  background: var(--lj-step-bg);
-  clip-path: polygon(0 0, calc(100% - var(--lj-point)) 0, 100% 50%, calc(100% - var(--lj-point)) 100%, 0 100%, var(--lj-point) 50%);
-  transition: filter 220ms var(--lj-ease);
-}
-
-.lj-stages__item:first-child .lj-stage__bg {
-  clip-path: polygon(0 0, calc(100% - var(--lj-point)) 0, 100% 50%, calc(100% - var(--lj-point)) 100%, 0 100%);
-}
-
-.lj-stages__item:last-child .lj-stage__bg {
-  inset: 0;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, var(--lj-point) 50%);
-}
-
-.lj-stages__item:only-child .lj-stage__bg {
-  clip-path: none;
+/* Glassy tile holding the stage icon. */
+.lj-stage__visual {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 168px;
+  height: 82px;
+  margin-bottom: 8px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), var(--lj-shadow-sm);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: var(--lj-biomar-blue);
+  transition: transform 400ms var(--lj-spring), box-shadow 300ms var(--lj-ease), background 300ms var(--lj-ease), color 300ms var(--lj-ease);
 }
 
 .lj-stage__icon {
-  width: 100%;
-  max-width: 150px;
-  height: 50px;
-  margin-bottom: auto;
-  transition: transform 320ms var(--lj-ease);
-}
-
-.lj-stage__label {
-  margin-top: 12px;
-  font-weight: 700;
-  font-size: 1rem;
-  line-height: 1.2;
+  width: 78%;
+  height: 56%;
+  transition: transform 400ms var(--lj-spring);
 }
 
 .lj-stage__num {
-  font-size: 0.75rem;
+  color: var(--lj-ocean-blue);
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  opacity: 0.85;
+  letter-spacing: 0.14em;
 }
 
-.lj--interactive .lj-stage:hover .lj-stage__bg {
-  filter: brightness(1.12);
+.lj-stage__label {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.25;
 }
 
-.lj--interactive .lj-stage:hover .lj-stage__icon,
-.lj-stage[aria-pressed="true"] .lj-stage__icon {
-  transform: translateY(-3px) scale(1.06);
+.lj--interactive .lj-stage:hover .lj-stage__visual {
+  transform: translateY(-4px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.9), var(--lj-shadow);
+}
+
+.lj--interactive .lj-stage:hover .lj-stage__icon {
+  transform: scale(1.08);
+}
+
+.lj-stage[aria-pressed="true"] .lj-stage__visual {
+  background: var(--lj-gradient-brand);
+  color: var(--lj-white);
+  box-shadow: 0 14px 32px rgba(4, 113, 173, 0.35);
+  transform: translateY(-4px);
+}
+
+.lj-stage.is-related .lj-stage__visual {
+  box-shadow: inset 0 0 0 2px var(--lj-leafy-green), 0 10px 26px rgba(151, 209, 48, 0.3);
 }
 
 .lj-stage.is-dimmed {
   opacity: 0.45;
+  filter: saturate(0.4);
 }
 
 .lj-flag {
@@ -369,11 +353,11 @@
   align-items: center;
   gap: 4px;
   margin-top: 6px;
-  padding: 1px 10px;
+  padding: 2px 10px;
   border-radius: 999px;
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.025em;
+  animation: lj-pop 350ms var(--lj-spring);
 }
 
 .lj-flag--related {
@@ -382,8 +366,8 @@
 }
 
 .lj-flag--selected {
-  background: var(--lj-white);
-  color: var(--lj-biomar-blue);
+  background: var(--lj-biomar-blue);
+  color: var(--lj-white);
 }
 
 .lj-stage.is-related .lj-flag--related,
@@ -391,17 +375,65 @@
   display: inline-flex;
 }
 
-/* ── Products: traceability lines under the band ──────────────────────── */
+/* Progress track: fills to the selected stage; shows a product's span. */
+.lj-track {
+  position: relative;
+  height: 6px;
+  margin: 14px 6px 0;
+  border-radius: 999px;
+  background: rgba(31, 62, 119, 0.1);
+}
+
+.lj-track__fill,
+.lj-track__span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+}
+
+.lj-track__fill {
+  left: 0;
+  width: var(--lj-fill, 0%);
+  background: linear-gradient(90deg, var(--lj-sky-blue), var(--lj-ocean-blue));
+  transition: width 650ms var(--lj-ease);
+}
+
+.lj-track__span {
+  top: -3px;
+  bottom: -3px;
+  left: var(--lj-span-start, 0%);
+  width: calc(var(--lj-span-end, 0%) - var(--lj-span-start, 0%));
+  background: var(--lj-accent, var(--lj-ocean-blue));
+  box-shadow: 0 0 0 3px var(--lj-white), 0 6px 16px rgba(31, 62, 119, 0.2);
+  opacity: 0;
+  transition: left 500ms var(--lj-ease), width 500ms var(--lj-ease), opacity 250ms var(--lj-ease);
+}
+
+.lj-journey.has-span .lj-track__span {
+  opacity: 1;
+}
+
+.lj-track__dot {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: var(--lj-white);
+  box-shadow: 0 0 0 2px rgba(31, 62, 119, 0.18);
+}
+
+/* ── Product range ────────────────────────────────────────────────────── */
 
 .lj-lanes {
   display: grid;
   grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
-  grid-auto-rows: minmax(50px, auto);
-  row-gap: 4px;
-  padding: 6px 0;
+  grid-auto-rows: minmax(48px, auto);
+  row-gap: 8px;
+  padding: 0 14px;
   list-style: none;
-  /* Faint column separators continuing the band's divisions. */
-  background: linear-gradient(to right, var(--lj-black-10) 1px, transparent 1px) 0 0 / calc(100% / var(--lj-cols)) 100%;
 }
 
 .lj-lanes__item {
@@ -411,7 +443,7 @@
   container-type: inline-size;
 }
 
-/* Short lines show the name only; the feed type stays in the panel. */
+/* Short bars show the name only; the feed type stays in the panel. */
 @media (min-width: 760px) {
   @container (max-width: 240px) {
     .lj-pill--bar .lj-pill__meta {
@@ -423,27 +455,47 @@
 .lj-pill {
   position: relative;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 2px 10px;
+  align-items: center;
+  gap: 4px 10px;
   width: 100%;
   min-width: 0;
-  padding: 6px 10px 8px;
+  min-height: 48px;
+  padding: 8px 14px;
   border: 0;
-  border-radius: 12px;
-  background: transparent;
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--lj-accent) 18%, var(--lj-white));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lj-accent) 40%, var(--lj-white));
   color: var(--lj-biomar-blue);
   font-size: 0.875rem;
   line-height: 1.2;
   text-align: left;
-  transition: background-color 220ms var(--lj-ease), color 220ms var(--lj-ease), opacity 220ms var(--lj-ease);
+  transition: background-color 250ms var(--lj-ease), color 250ms var(--lj-ease),
+    box-shadow 250ms var(--lj-ease), transform 350ms var(--lj-spring), opacity 250ms var(--lj-ease);
+}
+
+.lj-pill::before {
+  content: "";
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--lj-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lj-accent) 30%, transparent);
+  transition: background-color 250ms var(--lj-ease);
 }
 
 .lj--interactive .lj-pill {
   cursor: pointer;
 }
 
+.lj--interactive .lj-pill:hover {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--lj-accent) 30%, var(--lj-white));
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--lj-accent) 60%, var(--lj-white)), var(--lj-shadow-sm);
+}
+
 .lj-pill__name {
+  flex: none;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -456,8 +508,8 @@
 
 .lj-pill__meta {
   overflow: hidden;
-  color: var(--lj-black-80);
   font-size: 0.75rem;
+  opacity: 0.8;
   white-space: nowrap;
   text-overflow: ellipsis;
   font-variant-numeric: tabular-nums;
@@ -465,7 +517,6 @@
 
 .lj-pill__stages {
   font-size: 0.75rem;
-  color: var(--lj-black-80);
 }
 
 .lj-pill--bar .lj-pill__stages,
@@ -479,119 +530,95 @@
   white-space: nowrap;
 }
 
-/* The line itself, with round end markers, spanning the covered stages. */
 .lj-pill__track {
   display: none;
-}
-
-.lj-pill--bar .lj-pill__track {
-  position: relative;
-  display: block;
-  flex: 1 0 100%;
-  height: 6px;
-  margin-top: 4px;
-  border-radius: 999px;
-  background: var(--lj-accent);
-  transform-origin: left center;
-  transition: height 220ms var(--lj-ease), background-color 220ms var(--lj-ease);
-}
-
-.lj-pill--bar .lj-pill__track::before,
-.lj-pill--bar .lj-pill__track::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  margin-top: -6px;
-  border: 3px solid var(--lj-accent);
-  border-radius: 50%;
-  background: var(--lj-white);
-}
-
-.lj-pill--bar .lj-pill__track::before {
-  left: -2px;
-}
-
-.lj-pill--bar .lj-pill__track::after {
-  right: -2px;
-}
-
-.lj-pill--segment {
-  padding-top: 26px;
-}
-
-.lj--interactive .lj-pill--bar:hover {
-  background: var(--lj-card);
 }
 
 .lj-check {
   display: none;
   flex: none;
-  align-self: center;
   margin-left: auto;
-  color: var(--lj-biomar-blue);
 }
 
-.lj-pill.is-selected {
-  background: var(--lj-card);
+.lj-pill.is-selected,
+.lj--interactive .lj-pill.is-selected:hover {
+  background: var(--lj-accent);
+  color: var(--lj-on-accent);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--lj-accent) 45%, transparent);
+  transform: translateY(-2px);
+}
+
+.lj-pill.is-selected::before {
+  background: var(--lj-white);
+  box-shadow: none;
 }
 
 .lj-pill.is-selected .lj-check {
   display: block;
 }
 
-.lj-pill--bar.is-selected .lj-pill__track {
-  height: 10px;
-}
-
 /* Dimmed, not removed (text stays above 4.5:1). */
-.lj-pill.is-dimmed {
+.lj-pill.is-dimmed,
+.lj--interactive .lj-pill.is-dimmed:hover {
+  background: var(--lj-white);
+  box-shadow: inset 0 0 0 1px var(--lj-black-10);
   color: var(--lj-black-80);
 }
 
-.lj-pill.is-dimmed .lj-pill__track {
+.lj-pill.is-dimmed::before {
   background: var(--lj-black-20);
+  box-shadow: none;
 }
 
-.lj-pill.is-dimmed .lj-pill__track::before,
-.lj-pill.is-dimmed .lj-pill__track::after {
-  border-color: var(--lj-black-20);
+.lj-pill--segment {
+  min-height: 48px;
 }
 
-/* Lines draw along the journey when a portfolio is shown. */
-@keyframes lj-draw {
-  from { transform: scaleX(0); }
-}
+/* ── Motion ───────────────────────────────────────────────────────────── */
 
-@keyframes lj-fade {
+@keyframes lj-rise {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(12px);
   }
 }
 
-.lj--interactive .lj-lanes__item {
-  animation: lj-fade 420ms var(--lj-ease) both;
-  animation-delay: calc(var(--i, 0) * 70ms + 150ms);
+@keyframes lj-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
 }
 
-.lj--interactive .lj-lanes__item .lj-pill__track {
-  animation: lj-draw 700ms var(--lj-ease) both;
-  animation-delay: calc(var(--i, 0) * 70ms + 250ms);
+@keyframes lj-grow {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0 round 16px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 16px);
+  }
 }
 
 .lj--interactive .lj-stages__item {
-  animation: lj-fade 420ms var(--lj-ease) both;
-  animation-delay: calc(var(--i, 0) * 70ms);
+  animation: lj-rise 500ms var(--lj-ease) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
 }
 
-/* ── Connected activities: rounded Crisp Blue cards ───────────────────── */
+.lj--interactive .lj-lanes__item {
+  animation: lj-grow 700ms var(--lj-ease) both;
+  animation-delay: calc(var(--i, 0) * 80ms + 250ms);
+}
+
+/* ── Connected activities ─────────────────────────────────────────────── */
 
 .lj-activities {
   display: flex;
   flex-wrap: wrap;
   gap: 8px 16px;
+  margin-top: 6px;
+  padding: 0 14px;
 }
 
 .lj-activities__intro {
@@ -605,12 +632,11 @@
 .lj-activities__title {
   font-size: 0.875rem;
   font-weight: 700;
-  letter-spacing: 0.025em;
 }
 
 .lj-activities__note {
   color: var(--lj-black-80);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
 }
 
 .lj-activities__list {
@@ -628,9 +654,10 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 10px;
-  padding: 10px 12px;
-  border-radius: 16px;
-  background: var(--lj-card);
+  padding: 8px 10px 8px 8px;
+  border-radius: 20px;
+  background: var(--lj-white);
+  box-shadow: inset 0 0 0 1px var(--lj-line), var(--lj-shadow-sm);
 }
 
 .lj-stage--activity {
@@ -639,9 +666,8 @@
   justify-content: flex-start;
   gap: 12px;
   width: auto;
-  min-height: 0;
   padding: 0;
-  color: var(--lj-biomar-blue);
+  border-radius: 14px;
   text-align: left;
 }
 
@@ -649,22 +675,21 @@
   display: grid;
   flex: none;
   place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: var(--lj-biomar-blue);
-  color: var(--lj-white);
-  transition: background-color 220ms var(--lj-ease), box-shadow 220ms var(--lj-ease), transform 220ms var(--lj-ease);
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--lj-tint);
+  box-shadow: inset 0 0 0 1px var(--lj-line);
+  color: var(--lj-biomar-blue);
+  transition: background 300ms var(--lj-ease), color 300ms var(--lj-ease), transform 400ms var(--lj-spring);
 }
 
 .lj-stage--activity .lj-stage__icon {
-  width: 78%;
-  height: 58%;
-  margin: 0;
+  width: 80%;
+  height: 60%;
 }
 
 .lj-stage--activity .lj-stage__label {
-  margin: 0;
   font-size: 0.875rem;
 }
 
@@ -672,46 +697,28 @@
   margin-top: 0;
 }
 
-.lj-stage--activity .lj-flag--selected {
-  background: var(--lj-biomar-blue);
-  color: var(--lj-white);
-}
-
 .lj--interactive .lj-stage--activity:hover .lj-stage__disc {
-  transform: scale(1.06);
+  transform: scale(1.08);
 }
 
 .lj-stage--activity[aria-pressed="true"] .lj-stage__disc {
-  background: var(--lj-ocean-blue);
-  box-shadow: 0 0 0 3px var(--lj-white), 0 0 0 5px var(--lj-ocean-blue);
+  background: var(--lj-gradient-brand);
+  color: var(--lj-white);
+  box-shadow: none;
 }
 
 .lj-stage--activity.is-related .lj-stage__disc {
-  box-shadow: 0 0 0 3px var(--lj-white), 0 0 0 5px var(--lj-leafy-green);
+  box-shadow: inset 0 0 0 2px var(--lj-leafy-green);
 }
 
-/* Product chips (activities, panel). */
+/* Compact product chips (activities, panel). */
 .lj-pill--activity,
 .lj-pill--chip {
   flex: 0 1 auto;
-  flex-wrap: nowrap;
-  align-items: center;
   width: auto;
-  min-height: 36px;
-  padding: 6px 14px 6px 10px;
+  min-height: 38px;
+  padding: 6px 14px 6px 12px;
   border-radius: 999px;
-  background: var(--lj-white);
-  box-shadow: inset 0 0 0 1px var(--lj-black-20);
-}
-
-.lj-pill--activity::before,
-.lj-pill--chip::before {
-  content: "";
-  flex: none;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--lj-accent);
 }
 
 .lj-pill--activity .lj-pill__meta,
@@ -719,38 +726,34 @@
   display: none;
 }
 
-.lj--interactive .lj-pill--activity:hover,
-.lj--interactive .lj-pill--chip:hover {
-  box-shadow: inset 0 0 0 2px var(--lj-biomar-blue);
-}
-
-.lj-pill--activity.is-selected,
-.lj-pill--chip.is-selected {
-  background: var(--lj-biomar-blue);
-  color: var(--lj-white);
-  box-shadow: none;
-}
-
-.lj-pill--activity.is-selected .lj-check,
-.lj-pill--chip.is-selected .lj-check {
-  color: var(--lj-white);
-}
-
-.lj-pill--activity.is-dimmed::before {
-  background: var(--lj-black-20);
-}
-
-/* ── Detail panel (deck product-slide styling) ────────────────────────── */
+/* ── Detail panel ─────────────────────────────────────────────────────── */
 
 .lj-panel {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 26px 26px 20px;
-  border-radius: var(--lj-radius);
-  background: var(--lj-card);
-  color: var(--lj-biomar-blue);
+  padding: 28px 26px 22px;
+  border-radius: var(--lj-radius-lg);
+  background: var(--lj-white);
+  box-shadow: inset 0 0 0 1px var(--lj-line), var(--lj-shadow);
   scroll-margin-top: 16px;
+}
+
+/* Soft colour glow that takes the selected product's colour. */
+.lj-panel::before {
+  content: "";
+  position: absolute;
+  top: -120px;
+  right: -110px;
+  z-index: -1;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--lj-glow, rgba(146, 206, 232, 0.6)), transparent);
+  transition: background 400ms var(--lj-ease);
 }
 
 .lj-detail {
@@ -758,7 +761,10 @@
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
-  animation: lj-fade 300ms var(--lj-ease);
+}
+
+.lj-panel > * {
+  animation: lj-rise 380ms var(--lj-ease) both;
 }
 
 .lj-panel__eyebrow {
@@ -766,23 +772,24 @@
   align-items: center;
   gap: 8px;
   color: var(--lj-ocean-blue);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   font-weight: 700;
 }
 
 .lj-swatch {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: var(--lj-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--lj-accent) 30%, transparent);
 }
 
 .lj-panel__title {
-  margin: 2px 0 8px;
-  font-size: 1.5rem;
+  margin: 4px 0 10px;
+  font-size: 1.625rem;
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
 
 .lj-panel__title:focus {
@@ -793,14 +800,13 @@
   outline: 3px solid var(--lj-ocean-blue);
 }
 
-.lj-panel .lj-ticks {
-  margin-bottom: 12px;
-}
-
 .lj-panel__tagline {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  padding: 3px 12px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--lj-accent) 22%, var(--lj-white));
+  font-size: 0.8125rem;
   font-weight: 700;
-  font-style: italic;
 }
 
 .lj-panel__text {
@@ -808,14 +814,40 @@
   font-size: 0.9375rem;
 }
 
+.lj-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.lj-stats__item {
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: var(--lj-tint);
+}
+
+.lj-stats dt {
+  color: var(--lj-black-80);
+  font-size: 0.75rem;
+}
+
+.lj-stats dd {
+  background: var(--lj-gradient-brand);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
 .lj-panel__hint {
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-top: 14px;
-  padding: 10px 14px;
-  border-radius: 14px;
-  background: var(--lj-white);
+  margin-top: 16px;
   font-size: 0.875rem;
   font-weight: 700;
 }
@@ -827,7 +859,12 @@
   height: 10px;
   border-radius: 50%;
   background: var(--lj-leafy-green);
-  box-shadow: 0 0 0 4px rgba(151, 209, 48, 0.3);
+  animation: lj-ping 1.8s var(--lj-ease) infinite;
+}
+
+@keyframes lj-ping {
+  0% { box-shadow: 0 0 0 0 rgba(151, 209, 48, 0.6); }
+  100% { box-shadow: 0 0 0 10px rgba(151, 209, 48, 0); }
 }
 
 .lj-panel__subtitle {
@@ -843,12 +880,19 @@
   list-style: none;
 }
 
+/* Spec tiles. */
 .lj-specs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px 16px;
+  gap: 8px;
   width: 100%;
-  margin-top: 14px;
+  margin-top: 16px;
+}
+
+.lj-specs__row {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--lj-tint);
 }
 
 .lj-specs__row--wide {
@@ -856,15 +900,16 @@
 }
 
 .lj-specs dt {
-  color: var(--lj-ocean-blue);
+  color: var(--lj-black-80);
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .lj-specs dd {
   font-size: 0.875rem;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
@@ -872,7 +917,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  margin-top: 2px;
+  margin-top: 4px;
   padding: 0;
   list-style: none;
 }
@@ -906,52 +951,52 @@
 
 .lj-scale__label {
   display: block;
-  margin-bottom: 6px;
-  color: var(--lj-ocean-blue);
+  margin-bottom: 8px;
+  color: var(--lj-black-80);
   font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
 .lj-scale__track {
   position: relative;
   display: block;
-  height: 12px;
+  height: 10px;
   border-radius: 999px;
-  background: var(--lj-white);
+  background: var(--lj-black-10);
 }
 
 .lj-scale__range {
   position: absolute;
-  top: 3px;
-  bottom: 3px;
+  top: 2px;
+  bottom: 2px;
   border-radius: 999px;
   background: var(--lj-black-20);
 }
 
 .lj-scale__range.is-current {
-  top: -3px;
-  bottom: -3px;
+  top: -4px;
+  bottom: -4px;
   background: var(--lj-accent);
-  box-shadow: 0 0 0 2px var(--lj-biomar-blue);
+  box-shadow: 0 0 0 3px var(--lj-white), 0 4px 12px rgba(31, 62, 119, 0.25);
 }
 
 .lj-scale__dot {
   position: absolute;
   top: 50%;
-  width: 12px;
-  height: 12px;
-  margin: -6px 0 0 -6px;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
   border-radius: 50%;
   background: var(--lj-accent);
-  box-shadow: 0 0 0 2px var(--lj-biomar-blue);
+  box-shadow: 0 0 0 3px var(--lj-white), 0 2px 8px rgba(31, 62, 119, 0.25);
 }
 
 .lj-scale__axis {
   display: flex;
   justify-content: space-between;
-  margin-top: 3px;
+  margin-top: 4px;
   color: var(--lj-black-80);
   font-size: 0.6875rem;
 }
@@ -961,25 +1006,27 @@
   align-items: center;
   gap: 8px;
   margin-top: 16px;
-  padding: 10px 20px;
+  padding: 11px 22px;
   border-radius: 999px;
-  background: var(--lj-biomar-blue);
+  background: var(--lj-gradient-brand);
   color: var(--lj-white);
   font-weight: 700;
   text-decoration: none;
+  box-shadow: 0 10px 24px rgba(4, 113, 173, 0.3);
+  transition: transform 300ms var(--lj-spring);
 }
 
 .lj-cta::after {
   content: "→";
-  transition: transform 200ms var(--lj-ease);
+  transition: transform 250ms var(--lj-ease);
 }
 
 .lj-cta:hover {
-  background: var(--lj-ocean-blue);
+  transform: translateY(-2px);
 }
 
 .lj-cta:hover::after {
-  transform: translateX(3px);
+  transform: translateX(4px);
 }
 
 .lj-textbtn {
@@ -1010,7 +1057,7 @@
 /* ── Footer ───────────────────────────────────────────────────────────── */
 
 .lj-disclaimer {
-  margin-top: 18px;
+  margin-top: 20px;
   color: var(--lj-black-80);
   font-size: 0.75rem;
   line-height: 1.4;
@@ -1043,61 +1090,62 @@
 
 @media (max-width: 759px) {
   .lj-switch {
-    display: flex;
+    display: grid;
     width: 100%;
   }
 
   .lj-switch__tab {
-    flex: 1;
     min-width: 0;
   }
 
-  /* The band becomes a swipeable strip; the page never scrolls sideways. */
-  .lj-stages {
-    grid-template-columns: repeat(var(--lj-cols), 150px);
+  /* The journey card scrolls sideways inside itself; the page never does. */
+  .lj-journey {
     overflow-x: auto;
-    scroll-snap-type: x mandatory;
+    scroll-snap-type: x proximity;
     scrollbar-width: none;
   }
 
-  .lj-stages::-webkit-scrollbar {
+  .lj-journey::-webkit-scrollbar {
     display: none;
+  }
+
+  .lj-journey__inner {
+    min-width: calc(var(--lj-cols) * 136px);
   }
 
   .lj-stages__item {
     scroll-snap-align: start;
   }
 
-  .lj-stages .lj-stage {
-    min-height: 136px;
+  .lj-stage__visual {
+    height: 78px;
   }
 
-  /* Lines become a list; each names its stages. */
   .lj-lanes {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 8px;
     padding: 0;
-    background: none;
   }
 
   .lj-lanes__item {
     padding: 0;
   }
 
+  .lj-pill--bar {
+    flex-wrap: wrap;
+  }
+
   .lj-pill--bar .lj-pill__stages {
     position: static;
-    order: 3;
     flex-basis: 100%;
     width: auto;
     height: auto;
+    padding-left: 20px;
     overflow: visible;
     clip: auto;
     white-space: normal;
-  }
-
-  .lj-pill--bar .lj-pill__track {
-    order: 4;
+    opacity: 0.8;
   }
 
   .lj-pill__meta {
@@ -1108,11 +1156,15 @@
     display: none;
   }
 
-  .lj-panel {
-    padding: 22px 18px 18px;
+  .lj-activities {
+    padding: 0;
   }
 
-  /* Keep the idle panel short on phones: the hint is enough. */
+  .lj-panel {
+    padding: 24px 18px 18px;
+  }
+
+  /* Keep the idle panel short on phones. */
   .lj-panel__intro {
     display: none;
   }
@@ -1129,8 +1181,10 @@
     scroll-behavior: auto !important;
   }
 
-  .lj--interactive .lj-stage:hover .lj-stage__icon,
-  .lj-stage[aria-pressed="true"] .lj-stage__icon {
+  .lj--interactive .lj-stage:hover .lj-stage__visual,
+  .lj-stage[aria-pressed="true"] .lj-stage__visual,
+  .lj--interactive .lj-pill:hover,
+  .lj-pill.is-selected {
     transform: none;
   }
 }
@@ -1138,12 +1192,12 @@
 /* ── Forced colours (Windows high contrast) ───────────────────────────── */
 
 @media (forced-colors: active) {
-  .lj-stage__bg,
-  .lj-pill__track {
+  .lj-stage__visual,
+  .lj-pill {
     border: 1px solid CanvasText;
   }
 
-  .lj-stage[aria-pressed="true"],
+  .lj-stage[aria-pressed="true"] .lj-stage__visual,
   .lj-pill.is-selected {
     outline: 3px solid Highlight;
   }

@@ -3,10 +3,10 @@
 A compact, interactive module for the LARVIVA landing page, styled to the **BioMar Brand Guidelines 2026**. Visitors switch between the **Fish** and **Shrimp** portfolios and select stages or products. A detail panel updates as they go.
 
 It sits on a white (`#ffffff`) background so it blends into the page, and is about 540 px tall on desktop.
-- **Journey:** a value-chain band taken from the BioMar corporate deck: joined chevrons running from light Sky Blue to deep navy, each carrying a LARVIVA icon.
-- **Products:** "traceability" lines (as on the deck's Food Safety Value Chain slide) running beneath the stages each product covers. They are packed into as few rows as possible.
+- **Journey:** a soft Crisp/Sky Blue gradient card with glassy icon tiles for each stage, over a live progress track. The track fills to the selected stage and lights up the selected product's span in its colour.
+- **Products:** tinted product bars beneath the stages they cover, packed into as few rows as possible. They "wipe in" along the journey.
 - **Fish activities:** a slim row for connected activities.
-- **Detail panel:** a rounded Crisp Blue card styled like the deck's LARVIVA product slides: Ocean Blue label, large name, ticked hairline, bold italic feed type, and grey body text.
+- **Detail panel:** a white floating card with a colour glow that takes the selected product's colour. It holds spec tiles and a particle-size comparison scale, and when idle shows live stat tiles (number of stages and products).
 
 > **Content status.** Product facts come from the project brief and the supplied LARVIVA range sheets. Every particle size is flagged `verified: false` and shows a "Provisional" badge. They must be checked against approved technical documentation before publication. Stage descriptions are draft copy. No product URLs are set, so no "View product details" links appear yet.
 
@@ -30,8 +30,8 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 | Dark text is BioMar Blue; Black only where BioMar Blue can't be used | Text on Shrimp Orange is black, because BioMar Blue on orange fails contrast. |
 | Avenir Next, Regular/Bold; Arial for digital when Avenir is unavailable | `--lj-font`. Headlines are bold with tracking 10, sub-headers bold with tracking 25. |
 | Typography on white: headline and body BioMar Blue, accents Ocean Blue | Header, labels and panel. |
-| Line detail | The ticked hairline under the module title and panel titles, as used on the corporate deck. |
-| Corporate deck elements | The value-chain chevron band (slides 24 and 87), traceability lines (slide 87), the ticked title hairline, rounded Crisp Blue cards with BioMar Blue icon discs (slide 60), and the product-slide layout (slides 98–102). |
+| Line detail | Not used, as it read too much like the slide deck. |
+| Contemporary web patterns | A segmented Fish/Shrimp control with a sliding thumb, glass tiles, gradient surfaces, spring-eased hover and selection motion, and a progress track. All of it stays within the BioMar palette. |
 | Aquaculture iconography | The supplied LARVIVA icons, recoloured through `currentColor`. |
 
 ## Files
@@ -52,8 +52,8 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 - **On load**, Fish is selected. The panel shows a short welcome and the instruction.
 - **Journey:** stage tiles run in a row, linked by a hashed line. Product pills sit beneath the stages they cover and grow in when a portfolio appears. Pills are packed into as few rows as possible, so adding products keeps the module short. A product can span several stages.
 - **Connected activities:** Broodstock nutrition and Live-feed enrichment sit in a dashed row labelled "not developmental stages". Each has its product: LARVIVA Broodstock and MultiGain.
-- **Selecting a stage** keeps its chevron at full strength with a "Selected" tag and fades the others. Related product lines stay coloured, while unrelated ones turn grey but remain visible and selectable. The panel shows the stage description and the related products.
-- **Selecting a product** highlights its line, with a check mark and a thicker stroke. Its stages get a "Relevant" tag and the others fade.
+- **Selecting a stage** fills its tile with the BioMar gradient, moves the progress track to it and fades the other stages. Related products stay coloured, while unrelated ones turn grey but remain visible and selectable. The panel shows the stage description and the related products.
+- **Selecting a product** fills its bar with the product colour and adds a check mark. Its span lights up on the track, and its stages get a green ring and a "Relevant" tag.
 - **The product panel** shows:
   - the name, feed type, particle size, stages, application and diets (empty fields are never shown)
   - a *particle size across the range* scale, which places the product among the rest of the portfolio
@@ -61,7 +61,7 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 - **Responsive:**
   - **Desktop:** the panel sits to the right.
   - **Tablet:** the panel moves below.
-  - **Mobile (< 760 px):** the chevron band becomes a swipeable strip, and the product lines become a list that names their stages. The panel goes below and scrolls into view on selection. The page never scrolls sideways.
+  - **Mobile (< 760 px):** the journey card scrolls sideways inside itself, and the products become a list that names their stages. The panel goes below and scrolls into view on selection. The page never scrolls sideways.
 
 ### Accessibility
 - **Controls:** the Fish/Shrimp switch follows the WAI-ARIA tabs pattern, with arrow keys, Home and End. Stages and products are `<button aria-pressed>`.

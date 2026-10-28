@@ -21,6 +21,8 @@
     "selectedState": "Selected",
     "stagesPrefix": "Stages:",
     "panelEmptyTitle": "Start strong at every stage",
+    "statStages": "Development stages",
+    "statProducts": "LARVIVA products",
     "panelEmptyText": "Select a stage to see the related LARVIVA products, or select a product for its details.",
     "relatedProductsHeading": "Related LARVIVA products",
     "noRelatedProducts": "No products are currently mapped to this stage.",
