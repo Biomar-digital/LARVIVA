@@ -44,10 +44,23 @@
   --lj-panel: rgba(195, 228, 239, 0.25);
   --lj-focus: var(--lj-ocean-blue);
 
+  /* LARVIVA label colour codes per grade (LARVIVA particle sizes and colour
+     code labels). Referenced by `color` on each grade in the dataset. */
+  --lj-grade-default: var(--lj-sky-blue);
+  --lj-grade-cyan: #00aeef;
+  --lj-grade-lightgreen: #8dc63f;
+  --lj-grade-orange: #f7941d;
+  --lj-grade-green: #00a651;
+  --lj-grade-darkgreen: #00923f;
+  --lj-grade-blue: #0072bc;
+  --lj-grade-purple: #8b3fb4;
+  --lj-grade-navy: #1d3c8f;
+  --lj-grade-red: #e4002b;
+
   /* Shape and motion */
   --lj-radius: 6px;
   --lj-circle-size: 112px;
-  --lj-panel-width: 360px;
+  --lj-panel-width: 380px;
   --lj-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   position: relative;
@@ -725,6 +738,7 @@
 /* Attribute list, as on biomar.com product pages. */
 .lj-attrs {
   display: grid;
+  grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr) !important;
   width: 100%;
   margin-top: 16px;
   padding-top: 14px;
@@ -751,11 +765,7 @@
   list-style: none;
 }
 
-.lj-grades span {
-  display: inline-block;
-  min-width: 4.2em;
-  font-weight: 600;
-}
+
 
 .lj-list {
   margin-top: 8px;
@@ -1028,5 +1038,224 @@
   .lj-stage[aria-pressed="true"] .lj-stage__circle,
   .lj-pill.is-selected {
     outline: 3px solid Highlight;
+  }
+}
+
+/* ── Grade chips (label colour codes) ─────────────────────────────────── */
+
+.lj-grades {
+  display: grid;
+  gap: 4px;
+  padding: 0;
+  list-style: none;
+}
+
+.lj-grade {
+  display: grid;
+  grid-template-columns: 12px auto 1fr;
+  align-items: baseline;
+  column-gap: 8px;
+}
+
+.lj-grade::before {
+  content: "";
+  align-self: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--lj-grade);
+}
+
+.lj-grade__label {
+  font-weight: 700;
+}
+
+.lj-grade__use {
+  grid-column: 2 / -1;
+  color: var(--lj-muted);
+  font-size: 0.8125rem;
+}
+
+/* ── Section head + Products / Chart switch ───────────────────────────── */
+
+.lj-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  margin: 6px 0 10px;
+}
+
+.lj-section-head .lj-section-title {
+  margin: 0;
+}
+
+.lj-views {
+  display: inline-flex;
+}
+
+.lj-views__btn {
+  padding: 5px 12px;
+  border: 1px solid var(--lj-biomar-blue);
+  background: var(--lj-white);
+  color: var(--lj-heading);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lj-views__btn:first-child {
+  border-radius: var(--lj-radius) 0 0 var(--lj-radius);
+}
+
+.lj-views__btn:last-child {
+  margin-left: -1px;
+  border-radius: 0 var(--lj-radius) var(--lj-radius) 0;
+}
+
+.lj-views__btn[aria-pressed="true"] {
+  background: var(--lj-biomar-blue);
+  color: var(--lj-white);
+}
+
+[data-lj-view][hidden] {
+  display: none;
+}
+
+/* ── Larval stage vs particle size chart ──────────────────────────────── */
+
+.lj-chart {
+  margin: 0;
+}
+
+.lj-chart__frame {
+  position: relative;
+  padding: 20px 0 40px 40px;
+}
+
+.lj-chart__plot {
+  position: relative;
+  height: 250px;
+  border-left: 1px solid var(--lj-sky-blue);
+  border-bottom: 1px solid var(--lj-sky-blue);
+}
+
+.lj-chart__band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px dashed var(--lj-crisp-blue);
+  transition: background-color 200ms var(--lj-ease);
+}
+
+.lj-chart__band-label {
+  position: absolute;
+  top: 4px;
+  left: 6px;
+  color: var(--lj-heading);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.lj-chart__band.is-active {
+  background: var(--lj-circle);
+}
+
+.lj-chart__grid {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border-top: 1px solid rgba(195, 228, 239, 0.6);
+}
+
+.lj-chart__grid span {
+  position: absolute;
+  right: calc(100% + 6px);
+  transform: translateY(-50%);
+  color: var(--lj-muted);
+  font-size: 0.6875rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.lj-chart__box {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  border: 1.5px solid var(--lj-grade);
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--lj-grade) 28%, var(--lj-white));
+  cursor: pointer;
+  transition: background-color 200ms var(--lj-ease), opacity 200ms var(--lj-ease), box-shadow 200ms var(--lj-ease);
+}
+
+.lj-chart__box:hover {
+  background: color-mix(in srgb, var(--lj-grade) 50%, var(--lj-white));
+}
+
+.lj-chart__box-label {
+  padding: 0 5px;
+  color: var(--lj-text);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.lj-chart__box.is-selected {
+  z-index: 2;
+  background: color-mix(in srgb, var(--lj-grade) 60%, var(--lj-white));
+  box-shadow: 0 0 0 2px var(--lj-biomar-blue);
+}
+
+.lj-chart__box.is-dimmed {
+  opacity: 0.3;
+}
+
+.lj-chart__axis {
+  position: absolute;
+  left: 40px;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: repeat(32, 1fr);
+  height: 36px;
+}
+
+.lj-chart__axis span {
+  justify-self: center;
+  margin-top: 4px;
+  color: var(--lj-muted);
+  font-size: 0.625rem;
+  white-space: nowrap;
+  transform: rotate(-55deg) translateX(-30%);
+  transform-origin: top center;
+}
+
+.lj-chart__unit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--lj-muted);
+  font-size: 0.6875rem;
+}
+
+.lj-chart__note {
+  color: var(--lj-muted);
+  font-size: 0.8125rem;
+}
+
+@media (max-width: 759px) {
+  .lj-chart__frame {
+    overflow-x: auto;
+  }
+
+  .lj-chart__plot,
+  .lj-chart__axis {
+    min-width: 640px;
   }
 }

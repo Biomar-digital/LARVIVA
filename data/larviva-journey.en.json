@@ -35,6 +35,13 @@
     "fieldVariants": "Diets",
     "fieldParticleSize": "Particle size",
     "fieldTechnicalNotes": "Technical notes",
+    "fieldUse": "Use",
+    "fieldPackaging": "Packaging",
+    "fieldHealth": "Health",
+    "viewProducts": "Products",
+    "viewChart": "Particle size by larval stage",
+    "chartTitle": "Larval stage versus accepted feed particle size",
+    "chartNote": "Boxes show each feed's particle size and target larval stages.",
     "fieldMarkets": "Market availability",
     "sizeScaleLabel": "Particle size across the range",
     "viewDetails": "View product details",
@@ -184,11 +191,87 @@
           400,
           500
         ]
+      },
+      "stageChart": {
+        "unit": "µm",
+        "max": 1200,
+        "ticks": [
+          0,
+          200,
+          400,
+          600,
+          800,
+          1000,
+          1200
+        ],
+        "axis": [
+          "Z1",
+          "Z2",
+          "Z3",
+          "M1",
+          "M2",
+          "M3",
+          "PL1",
+          "PL2",
+          "PL3",
+          "PL4",
+          "PL5",
+          "PL6",
+          "PL7",
+          "PL8",
+          "PL9",
+          "PL10",
+          "PL11",
+          "PL12",
+          "PL13",
+          "PL14",
+          "PL15",
+          "PL16",
+          "PL17",
+          "PL18",
+          "PL19",
+          "PL20",
+          "PL21",
+          "PL22",
+          "PL23",
+          "PL24",
+          "PL25",
+          "PL26"
+        ],
+        "stageSpans": {
+          "zoea": [
+            "Z1",
+            "Z3"
+          ],
+          "mysis": [
+            "M1",
+            "M3"
+          ],
+          "post-larvae": [
+            "PL1",
+            "PL15"
+          ],
+          "shrimp-nursery": [
+            "PL16",
+            "PL26"
+          ]
+        },
+        "source": "LARVIVA Hatchery presentation 2025-03, slide 13"
       }
     }
   ],
   "products": [
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": "https://www.biomar.com/media/qn3lc3de/larviva_alubags_25kg_prostart-200.png?width=480&format=webp&quality=80",
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-prostart",
       "name": "LARVIVA ProStart",
       "portfolio": "fish",
@@ -199,30 +282,50 @@
         "first-feeding",
         "co-feeding-weaning"
       ],
-      "application": "First feeding, co-feeding with live feed and early weaning.",
+      "application": "Co-feeding with live feed and early weaning.",
       "description": "Microencapsulated, high-protein larval feed for co-feeding with live feed and for early weaning.",
-      "variants": [],
       "particleSize": {
-        "type": "grades",
-        "values": [
-          100,
-          200,
-          300,
-          400
-        ],
+        "type": "set",
         "unit": "µm",
-        "label": "Average particle size grades",
-        "verified": false
+        "label": "Average particle size",
+        "verified": true,
+        "source": "LARVIVA particle sizes and colour code labels (2025)",
+        "items": [
+          {
+            "label": "100",
+            "average": 100,
+            "color": "cyan"
+          },
+          {
+            "label": "200",
+            "average": 200,
+            "color": "lightgreen"
+          },
+          {
+            "label": "300",
+            "average": 300,
+            "color": "orange"
+          },
+          {
+            "label": "400",
+            "average": 400,
+            "color": "green"
+          }
+        ]
       },
-      "technicalNotes": [],
-      "url": null,
-      "image": "https://www.biomar.com/media/qn3lc3de/larviva_alubags_25kg_prostart-200.png?width=480&format=webp&quality=80",
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 10
     },
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": "https://www.biomar.com/media/ds4d0fbl/larviva_bucket_prowean-300.png?width=480&format=webp&quality=80",
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-prowean",
       "name": "LARVIVA ProWean",
       "portfolio": "fish",
@@ -234,31 +337,60 @@
         "post-weaning",
         "nursery"
       ],
-      "application": "Weaning and early feeding of larvae and fry.",
+      "application": "Early feeding of larvae and marine fry.",
       "description": "Extruded granulates for early feeding of larvae and marine fry.",
-      "variants": [],
       "particleSize": {
-        "type": "grades",
-        "values": [
-          100,
-          300,
-          500,
-          700,
-          900
-        ],
+        "type": "set",
         "unit": "µm",
-        "label": "Average particle size grades",
-        "verified": false
+        "label": "Average particle size",
+        "verified": true,
+        "source": "LARVIVA particle sizes and colour code labels (2025)",
+        "items": [
+          {
+            "label": "100",
+            "average": 100,
+            "stageText": "Larval / post-weaning",
+            "color": "cyan"
+          },
+          {
+            "label": "300",
+            "average": 300,
+            "stageText": "Larval / post-weaning",
+            "color": "orange"
+          },
+          {
+            "label": "500",
+            "average": 500,
+            "stageText": "Nursery",
+            "color": "darkgreen"
+          },
+          {
+            "label": "700",
+            "average": 700,
+            "stageText": "Nursery",
+            "color": "blue"
+          },
+          {
+            "label": "900",
+            "average": 900,
+            "stageText": "Nursery",
+            "color": "purple"
+          }
+        ]
       },
-      "technicalNotes": [],
-      "url": null,
-      "image": "https://www.biomar.com/media/ds4d0fbl/larviva_bucket_prowean-300.png?width=480&format=webp&quality=80",
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 20
     },
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": null,
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-pronurse",
       "name": "LARVIVA ProNurse",
       "portfolio": "fish",
@@ -268,29 +400,45 @@
       "stages": [
         "nursery"
       ],
-      "application": "Nursery stage in marine hatcheries and nurseries.",
+      "application": "Marine hatcheries and nurseries.",
       "description": "Premium extruded mini-pellets for marine hatcheries and nurseries.",
-      "variants": [],
       "particleSize": {
-        "type": "grades",
-        "values": [
-          500,
-          800,
-          1100
-        ],
+        "type": "set",
         "unit": "µm",
-        "label": "Average particle size grades",
-        "verified": false
+        "label": "Average particle size",
+        "verified": true,
+        "source": "LARVIVA particle sizes and colour code labels (2025)",
+        "items": [
+          {
+            "label": "500",
+            "average": 500,
+            "color": "darkgreen"
+          },
+          {
+            "label": "800",
+            "average": 800,
+            "color": "purple"
+          },
+          {
+            "label": "1100",
+            "average": 1100,
+            "color": "navy"
+          }
+        ]
       },
-      "technicalNotes": [],
-      "url": null,
-      "image": null,
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 30
     },
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": "https://www.biomar.com/media/kbpnev30/fish-starter-top-performance-larviva-orbit.png?width=480&format=webp&quality=80",
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-orbit",
       "name": "LARVIVA ORBIT",
       "portfolio": "fish",
@@ -300,19 +448,25 @@
       "stages": [
         "nursery"
       ],
-      "application": "Nursery feeding in recirculating aquaculture systems (RAS).",
+      "application": "Marine nurseries operating recirculating aquaculture systems (RAS).",
       "description": "Nursery feed for recirculating aquaculture systems (RAS).",
-      "variants": [],
       "particleSize": null,
-      "technicalNotes": [],
-      "url": null,
-      "image": "https://www.biomar.com/media/kbpnev30/fish-starter-top-performance-larviva-orbit.png?width=480&format=webp&quality=80",
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 40
     },
     {
+      "variants": [
+        "Maintenance",
+        "Maturation"
+      ],
+      "technicalNotes": [],
+      "url": null,
+      "image": "https://www.biomar.com/media/q2kdp0j1/larviva-broodstock-maintenance-bucket.png?width=480&format=webp&quality=80",
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-broodstock",
       "name": "LARVIVA Broodstock",
       "portfolio": "fish",
@@ -322,30 +476,40 @@
       "stages": [
         "broodstock-nutrition"
       ],
-      "application": "Broodstock nutrition.",
-      "description": "Enhanced marine broodstock diets for maintenance and maturation.",
-      "variants": [
-        "Maintenance",
-        "Maturation"
-      ],
+      "application": "Broodstock maintenance and maturation.",
+      "description": "Enhanced marine broodstock diets.",
       "particleSize": {
-        "type": "grades",
-        "values": [
-          8
-        ],
+        "type": "set",
         "unit": "mm",
         "label": "Pellet size",
-        "verified": false
+        "verified": true,
+        "source": "LARVIVA particle sizes and colour code labels (2025)",
+        "items": [
+          {
+            "label": "Maintenance",
+            "average": 8,
+            "color": "cyan"
+          },
+          {
+            "label": "Maturation",
+            "average": 8,
+            "color": "lightgreen"
+          }
+        ]
       },
-      "technicalNotes": [],
-      "url": null,
-      "image": "https://www.biomar.com/media/q2kdp0j1/larviva-broodstock-maintenance-bucket.png?width=480&format=webp&quality=80",
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 50
     },
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": "https://www.biomar.com/media/jinltwtq/larviva-multigain-alubag.png?width=480&format=webp&quality=80",
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-multigain",
       "name": "LARVIVA MultiGain",
       "portfolio": "fish",
@@ -357,21 +521,26 @@
       ],
       "application": "Enrichment of rotifers and Artemia.",
       "description": "Enrichment formulation that boosts the nutritional value of rotifers and Artemia.",
-      "variants": [],
       "particleSize": {
         "type": "text",
         "value": "Powder",
-        "verified": false
+        "verified": true,
+        "source": "LARVIVA particle sizes and colour code labels (2025)",
+        "color": "red"
       },
-      "technicalNotes": [],
-      "url": null,
-      "image": "https://www.biomar.com/media/jinltwtq/larviva-multigain-alubag.png?width=480&format=webp&quality=80",
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 60
     },
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": "https://www.biomar.com/feed-services/all-feed/larviva-zoea-shrimp",
+      "image": "https://www.biomar.com/media/qrahdotw/larviva-zoea-can.png?width=480&format=webp&quality=80",
+      "use": "Z1 – M2",
+      "packaging": "Can 500 g · minimum order 1 box of 10 cans",
+      "health": "With Bactocell®",
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-zoea",
       "name": "LARVIVA Zoea",
       "portfolio": "shrimp",
@@ -379,27 +548,42 @@
       "colorToken": "zoea",
       "productType": "Microencapsulated feed",
       "stages": [
-        "zoea"
+        "zoea",
+        "mysis"
       ],
-      "application": "Early feeding and co-feeding at the zoea stage.",
+      "application": "Early feeding and co-feeding.",
       "description": "Microencapsulated larval feed for early feeding and co-feeding.",
-      "variants": [],
       "particleSize": {
-        "type": "range",
-        "min": 10,
-        "max": 70,
+        "type": "set",
         "unit": "µm",
-        "verified": false
+        "label": "Particle size",
+        "verified": true,
+        "source": "LARVIVA Hatchery presentation 2025-03, slide 11; particle sizes and colour code labels",
+        "items": [
+          {
+            "label": "Zoea",
+            "average": 40,
+            "min": 10,
+            "max": 70,
+            "useFrom": "Z1",
+            "useTo": "M2",
+            "color": "cyan"
+          }
+        ]
       },
-      "technicalNotes": [],
-      "url": "https://www.biomar.com/feed-services/all-feed/larviva-zoea-shrimp",
-      "image": "https://www.biomar.com/media/qrahdotw/larviva-zoea-can.png?width=480&format=webp&quality=80",
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 10
     },
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": "https://www.biomar.com/feed-services/all-feed/larviva-mysis-shrimp",
+      "image": "https://www.biomar.com/media/ztbbkybd/larviva-mysis-can.png?width=480&format=webp&quality=80",
+      "use": "M1 – PL2",
+      "packaging": "Can 500 g · minimum order 1 box of 10 cans",
+      "health": "With Bactocell®",
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-mysis",
       "name": "LARVIVA Mysis",
       "portfolio": "shrimp",
@@ -407,27 +591,42 @@
       "colorToken": "mysis",
       "productType": "Microencapsulated feed",
       "stages": [
-        "mysis"
+        "mysis",
+        "post-larvae"
       ],
-      "application": "Early feeding and co-feeding at the mysis stage.",
+      "application": "Early feeding and co-feeding.",
       "description": "Microencapsulated larval feed for early feeding and co-feeding.",
-      "variants": [],
       "particleSize": {
-        "type": "range",
-        "min": 70,
-        "max": 150,
+        "type": "set",
         "unit": "µm",
-        "verified": false
+        "label": "Particle size",
+        "verified": true,
+        "source": "LARVIVA Hatchery presentation 2025-03, slide 11; particle sizes and colour code labels",
+        "items": [
+          {
+            "label": "Mysis",
+            "average": 90,
+            "min": 70,
+            "max": 150,
+            "useFrom": "M1",
+            "useTo": "PL2",
+            "color": "lightgreen"
+          }
+        ]
       },
-      "technicalNotes": [],
-      "url": "https://www.biomar.com/feed-services/all-feed/larviva-mysis-shrimp",
-      "image": "https://www.biomar.com/media/ztbbkybd/larviva-mysis-can.png?width=480&format=webp&quality=80",
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 20
     },
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": "https://www.biomar.com/feed-services/all-feed/larviva-pl-shrimp",
+      "image": "https://www.biomar.com/media/xgwk022k/larviva-pl-can-larval-shrimp-feed-400.png?width=480&format=webp&quality=80",
+      "use": "PL2 – PL15",
+      "packaging": "Can 1 kg · minimum order 1 box of 5 alu cans",
+      "health": "With Bactocell® & B-WYSE™",
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
       "id": "larviva-pl",
       "name": "LARVIVA PL",
       "portfolio": "shrimp",
@@ -437,40 +636,112 @@
       "stages": [
         "post-larvae"
       ],
-      "application": "Post-larval shrimp feeding.",
+      "application": "Post-larval feeding, from PL2 to PL15.",
       "description": "Extruded and granulated post-larval shrimp feed.",
-      "variants": [],
       "particleSize": {
-        "type": "range-set",
+        "type": "set",
         "unit": "µm",
+        "label": "Particle size",
+        "verified": true,
+        "source": "LARVIVA Hatchery presentation 2025-03, slide 11; particle sizes and colour code labels",
         "items": [
           {
             "label": "PL 200",
+            "average": 200,
             "min": 150,
-            "max": 250
+            "max": 250,
+            "useFrom": "PL2",
+            "useTo": "PL6",
+            "color": "cyan"
           },
           {
             "label": "PL 300",
+            "average": 300,
             "min": 250,
-            "max": 375
+            "max": 375,
+            "useFrom": "PL6",
+            "useTo": "PL11",
+            "color": "lightgreen"
           },
           {
             "label": "PL 400",
+            "average": 400,
             "min": 375,
-            "max": 500
+            "max": 500,
+            "useFrom": "PL10",
+            "useTo": "PL15",
+            "color": "orange"
           }
-        ],
-        "verified": false
+        ]
       },
-      "technicalNotes": [],
-      "url": "https://www.biomar.com/feed-services/all-feed/larviva-pl-shrimp",
-      "image": "https://www.biomar.com/media/xgwk022k/larviva-pl-can-larval-shrimp-feed-400.png?width=480&format=webp&quality=80",
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
       "order": 30
     },
     {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": null,
+      "use": "PL13 onwards",
+      "packaging": "Bag 10 kg / 25 kg · minimum order 1 bag",
+      "health": "With Bactocell® & B-WYSE™",
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
+      "id": "inicio-focus",
+      "name": "INICIO Focus",
+      "portfolio": "shrimp",
+      "family": "INICIO",
+      "colorToken": "inicio",
+      "brandNote": "BioMar nursery feed",
+      "productType": "Extruded mini-pellets",
+      "stages": [
+        "shrimp-nursery"
+      ],
+      "application": "Hatchery and nursery systems, from around PL13.",
+      "description": "Extruded mini-pellets for hatchery and nursery systems, with reinforced health.",
+      "particleSize": {
+        "type": "set",
+        "unit": "mm",
+        "label": "Particle size",
+        "verified": false,
+        "source": "LARVIVA Hatchery presentation 2025-03, slides 9, 10 and 18 (sizes differ between slides)",
+        "items": [
+          {
+            "label": "0.5",
+            "average": 0.5,
+            "useFrom": "PL13",
+            "useTo": "PL19",
+            "color": "cyan"
+          },
+          {
+            "label": "0.8",
+            "average": 0.8,
+            "useFrom": "PL17",
+            "useTo": "PL23",
+            "color": "lightgreen"
+          },
+          {
+            "label": "1.1",
+            "average": 1.1,
+            "useFrom": "PL22",
+            "useTo": "PL26",
+            "color": "orange"
+          }
+        ]
+      },
+      "order": 40
+    },
+    {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": null,
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": null,
+      "published": false,
       "id": "larviva-zm",
       "name": "LARVIVA ZM",
       "portfolio": "shrimp",
@@ -480,14 +751,7 @@
       "stages": [],
       "application": null,
       "description": null,
-      "variants": [],
       "particleSize": null,
-      "technicalNotes": [],
-      "url": null,
-      "image": null,
-      "markets": null,
-      "marketAvailability": null,
-      "published": false,
       "order": 60
     }
   ]

@@ -12,18 +12,26 @@ It follows the approved reference design and the live biomar.com LARVIVA page. T
   - **LARVIVA PL:** one card listing PL 200 / PL 300 / PL 400, with each grade's particle size in the detail panel.
 - **Product thumbnails:** each product card carries its pack shot. Narrow cards drop the thumbnail so the name keeps its room.
 - **Fish activities:** "Connected hatchery activities" cards for LARVIVA Broodstock and MultiGain, each labelled with its activity (Broodstock nutrition, Live-feed enrichment) and kept outside the stage timeline.
+- **Particle size by larval stage (shrimp):** an interactive version of the presentation's "Penaeid larval stage versus accepted feed particle size" chart, reached with the Products / Particle size switch. Each grade is a box spanning its target sub-stages (Z1 … PL26) at its particle size, coloured with its label colour. Selecting a box or a product highlights it and its stage band.
+- **Grade colour codes:** grades in the product panel carry the official LARVIVA label colours (100 cyan, 200 light green, 300 orange, …).
 - **Feature card (right):**
   - **When nothing is selected:** a BioMar hatchery photograph (the fish or shrimp beaker image from the LARVIVA page) with the portfolio intro.
   - **For a stage:** a large stage illustration with its description and related products.
   - **For a product:** a product-page view with the pack shot, "LARVIVA" above the product name, a short description, the attribute list, a particle-size scale and a navy "View product details" button.
 
-> **Content status.**
-> - **Product facts** come from the project brief and the supplied LARVIVA range sheets.
-> - **Particle sizes** are all flagged `verified: false` and show a "Provisional" badge. They must be checked against approved technical documentation.
-> - **Stage descriptions** are draft copy.
-> - **Product links:** LARVIVA Zoea, Mysis and PL link to their existing biomar.com product pages. The fish products' pages on biomar.com are per species (for example `larviva-prowean-sea-bass`), so no single link is set for them. Pick a target page per market, or add species to the module.
-> - **Pack shots:** taken from biomar.com product pages and served through the site's own image resizer. There is none for ProNurse, as no page was found. The PL image is the site's PL 400 can.
-> - **Shrimp Nursery stage:** added to match the reference design. No LARVIVA product is mapped to it, because the sources place LARVIVA PL at post-larvae only.
+> **Content status.** Product data now comes from the supplied BioMar documents:
+> - *LARVIVA particle sizes and colour code labels*
+> - *2025-03 LARVIVA Hatchery presentation*
+> - *Hatchery Segment*
+>
+> What that covers:
+> - **Particle sizes:** fish grades (100–1100 µm, 8 mm broodstock, powder) and shrimp average sizes and ranges (zoea 40 µm / 10–70, mysis 90 µm / 70–150, PL 200/300/400).
+> - **Use ranges:** Z1–M2, M1–PL2, PL2–PL6, PL6–PL11, PL10–PL15.
+> - **Label colour codes per grade.**
+> - **Packaging, and the Bactocell® / B-WYSE™ health additions.**
+> - **INICIO Focus as the shrimp nursery feed.**
+>
+> Each particle-size block in the data names its `source`. INICIO Focus sizes differ between slides, so they stay flagged `verified: false`. Stage descriptions are still draft copy. Shrimp products link to their biomar.com pages. Fish product pages on biomar.com are per species, so no single link is set for them.
 
 ## Run it
 

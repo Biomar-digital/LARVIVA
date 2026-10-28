@@ -70,15 +70,26 @@ async function run() {
   await page.keyboard.press("ArrowRight");
   assert.ok(await shrimp.isVisible(), "shrimp visible after switch");
   assert.ok(!(await fish.isVisible()), "fish hidden after switch");
-  assert.strictEqual(await shrimp.locator('[aria-pressed="true"]').count(), 0, "selection reset");
-  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 3);
+  assert.strictEqual(await shrimp.locator('[data-stage-id][aria-pressed="true"], [data-product-id][aria-pressed="true"]').count(), 0, "selection reset");
+
+  // Particle-size chart view (shrimp): boxes follow the product selection.
+  await shrimp.locator('[data-action="view"][data-view="chart"]').first().click();
+  assert.ok(await shrimp.locator(".lj-chart").isVisible(), "chart view shown");
+  assert.ok(!(await shrimp.locator(".lj-lanes").isVisible()), "product view hidden");
+  assert.strictEqual(await shrimp.locator(".lj-chart__box").count(), 8);
+  await shrimp.locator('.lj-chart__box[data-product-id="larviva-zoea"]').click();
+  assert.match(await shrimp.locator("[data-lj-panel]").innerText(), /Z1 – M2/);
+  await shrimp.locator('.lj-chart [data-action="view"][data-view="products"]').click();
+  assert.ok(await shrimp.locator(".lj-lanes").isVisible(), "product view restored");
+  await shrimp.locator('.lj-lanes [data-product-id="larviva-zoea"]').click();
+  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 4);
 
   // Keyboard activation of a product.
   await shrimp.locator('.lj-lanes [data-product-id="larviva-pl"]').focus();
   await page.keyboard.press("Enter");
   var panelText = await shrimp.locator("[data-lj-panel]").innerText();
-  assert.match(panelText, /250–375 µm/);
-  assert.match(panelText, /Provisional/);
+  assert.match(panelText, /250–375/);
+  assert.match(panelText, /PL6 – PL11/);
   assert.match(panelText, /Post-larvae/);
   if (shotDir) await page.screenshot({ path: path.join(shotDir, "desktop-shrimp.png"), fullPage: true });
 

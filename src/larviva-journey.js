@@ -156,7 +156,7 @@
     if (spec.type === "range" && (spec.min == null || spec.max == null)) return null;
     if (spec.type === "grades" && !(spec.values && spec.values.length)) return null;
     if (spec.type === "text" && !hasText(spec.value)) return null;
-    if (spec.type === "range-set" && !(spec.items && spec.items.length)) return null;
+    if (spec.type === "set" && !(spec.items && spec.items.length)) return null;
     return spec;
   }
 
@@ -221,20 +221,50 @@
     if (!spec) return "";
     if (spec.type === "range") return spec.min + "–" + spec.max + " " + spec.unit;
     if (spec.type === "grades") return spec.values.join(" · ") + " " + spec.unit;
-    if (spec.type === "range-set") {
-      return spec.items.map(function (it) { return it.label + ": " + it.min + "–" + it.max + " " + spec.unit; }).join(", ");
+    if (spec.type === "set") {
+      return spec.items.map(function (it) { return it.label + ": " + itemSize(it, spec.unit); }).join(", ");
     }
     return spec.value;
   }
 
+  // "40 µm (10–70 µm)" or "500 µm" for one grade.
+  function itemSize(it, unit) {
+    var main = it.average != null ? it.average + " " + unit : "";
+    var range = it.min != null && it.max != null ? it.min + "–" + it.max + " " + unit : "";
+    if (main && range) return main + " (" + range + ")";
+    return main || range;
+  }
+
+  // One grade in the product panel: "PL 200  200 µm (150–250)  PL2 – PL6".
+  // A numeric label that equals the size ("100") is shown as "100 µm" once.
+  function gradeLine(it, unit) {
+    var sameAsSize = String(it.label) === String(it.average) && it.min == null;
+    var size = it.min != null && it.max != null
+      ? (it.average != null ? it.average + " " + unit + " (" + it.min + "–" + it.max + ")" : it.min + "–" + it.max + " " + unit)
+      : (it.average != null ? it.average + " " + unit : "");
+    var detail = it.useFrom ? it.useFrom + " – " + it.useTo : (it.stageText || "");
+    return '<span class="lj-grade__label">' + esc(sameAsSize ? it.label + " " + unit : it.label) + "</span>" +
+      (sameAsSize ? "" : '<span class="lj-grade__size">' + esc(size) + "</span>") +
+      (detail ? '<span class="lj-grade__use">' + esc(detail) + "</span>" : "");
+  }
+
+  function toMicrons(value, unit) {
+    return unit === "mm" ? value * 1000 : value;
+  }
+
   function onScale(spec, scale) {
-    if (!spec || !scale || spec.unit !== scale.unit) return false;
+    if (!spec || !scale) return false;
+    if (spec.type === "set") {
+      if (scale.unit !== "µm" || (spec.unit !== "µm" && spec.unit !== "mm")) return false;
+      return spec.items.every(function (it) {
+        var v = it.max != null ? it.max : it.average;
+        return v != null && toMicrons(v, spec.unit) <= scale.max;
+      });
+    }
+    if (spec.unit !== scale.unit) return false;
     if (spec.type === "range") return spec.min >= scale.min && spec.max <= scale.max;
     if (spec.type === "grades") {
       return spec.values.every(function (v) { return v >= scale.min && v <= scale.max; });
-    }
-    if (spec.type === "range-set") {
-      return spec.items.every(function (it) { return it.min >= scale.min && it.max <= scale.max; });
     }
     return false;
   }
@@ -243,11 +273,22 @@
   // grade names for a product with several grades.
   function cardMeta(product) {
     var spec = product.particleSize;
-    if (spec && spec.type === "range-set") return spec.items.map(function (it) { return it.label; }).join(" / ");
-    return [
-      hasText(product.productType) ? String(product.productType).replace(/\s+feed$/i, "") : "",
-      spec && spec.type === "range" ? formatSize(spec) : ""
-    ].filter(hasText).join("  |  ");
+    var type = hasText(product.productType) ? String(product.productType).replace(/\s+feed$/i, "") : "";
+    var size = "";
+    if (spec && spec.type === "set") {
+      var numeric = spec.items.every(function (it) { return /^[\d.]+$/.test(it.label); });
+      if (spec.items.length === 1) {
+        var it = spec.items[0];
+        size = it.min != null ? it.min + "–" + it.max + " " + spec.unit : itemSize(it, spec.unit);
+      } else if (numeric) {
+        size = spec.items.map(function (it) { return it.label; }).join(" / ") + " " + spec.unit;
+      } else {
+        return spec.items.map(function (it) { return it.label; }).join(" / ");
+      }
+    } else if (spec && spec.type === "range") {
+      size = formatSize(spec);
+    }
+    return [type, size].filter(hasText).join("  |  ");
   }
 
   function pct(value, scale) {
@@ -321,9 +362,9 @@
       esc(p.title || p.label) + "</h3>";
     html += '<div class="lj-body"><div class="lj-main">';
     html += renderStages(model, p, o);
-    html += renderLanes(model, p, o);
-    html += renderActivities(model, p, o);
-    html += renderUnmapped(model, p, o);
+    html += '<div data-lj-view="products">' + renderLanes(model, p, o, true) +
+      renderActivities(model, p, o) + renderUnmapped(model, p, o) + "</div>";
+    if (p.stageChart) html += renderStageChart(model, p, o);
     html += "</div>";
     if (o.interactive) {
       html += '<div class="lj-panel" id="' + esc(o.uid + "-detail-" + p.id) + '" data-lj-panel>' +
@@ -404,15 +445,25 @@
   var CHEVRON = '<svg class="lj-chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +
     '<path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
+  function viewSwitch(model, p, o, current) {
+    if (!p.stageChart || !o.interactive) return "";
+    var ui = model.ui;
+    return '<div class="lj-views">' + [["products", ui.viewProducts], ["chart", ui.viewChart]].map(function (v) {
+      return '<button type="button" class="lj-views__btn" data-action="view" data-view="' + v[0] + '" aria-pressed="' +
+        (v[0] === current ? "true" : "false") + '">' + esc(v[1]) + "</button>";
+    }).join("") + "</div>";
+  }
+
   function renderLanes(model, p, o) {
     if (!p.laneProducts.length) return "";
-    var html = '<h4 class="lj-section-title">' + esc(model.ui.productsHeading) + "</h4>";
+    var html = '<div class="lj-section-head"><h4 class="lj-section-title">' + esc(model.ui.productsHeading) + "</h4>" +
+      viewSwitch(model, p, o, "products") + "</div>";
     html += '<ul class="lj-lanes" style="--lj-cols: ' + p.stages.length + "; --lj-rows: " + p.rowCount + '">';
     p.laneProducts.forEach(function (product, i) {
       toRuns(product.stageIndices).forEach(function (run, r) {
         var place = "grid-column: " + (run[0] + 1) + " / " + (run[1] + 2) + "; grid-row: " + (product.row + 1) + "; --i: " + i + ";";
         if (r === 0) {
-          html += '<li class="lj-lanes__item" style="' + place + '">' + productPill(model, p, product, o, "bar") + "</li>";
+          html += '<li class="lj-lanes__item" style="' + place + '">' + productPill(model, p, product, o, "bar", "", product.brandNote) + "</li>";
         } else {
           // Extra segment for non-contiguous stages: visual only; the first
           // segment is the accessible control.
@@ -423,6 +474,66 @@
       });
     });
     return html + "</ul>";
+  }
+
+  // Interactive version of the "larval stage versus accepted feed particle
+  // size" chart from the LARVIVA hatchery presentation: each grade is a box
+  // spanning its target larval stages (x) and particle size (y).
+  function renderStageChart(model, p, o) {
+    var chart = p.stageChart;
+    var ui = model.ui;
+    var axis = chart.axis;
+    var n = axis.length;
+    function xPct(code) { return (axis.indexOf(code) / n * 100).toFixed(3) + "%"; }
+    function wPct(from, to) { return ((axis.indexOf(to) - axis.indexOf(from) + 1) / n * 100).toFixed(3) + "%"; }
+    function yPct(v) { return (v / chart.max * 100).toFixed(3) + "%"; }
+
+    var html = '<figure class="lj-chart" data-lj-view="chart"' + (o.interactive ? " hidden" : "") + ">";
+    html += '<div class="lj-section-head"><h4 class="lj-section-title">' + esc(ui.chartTitle) + "</h4>" +
+      viewSwitch(model, p, o, "chart") + "</div>";
+    html += '<div class="lj-chart__frame" aria-hidden="true"><div class="lj-chart__plot">';
+    // Stage bands along the top.
+    p.stages.forEach(function (s) {
+      var span = chart.stageSpans && chart.stageSpans[s.id];
+      if (!span) return;
+      html += '<span class="lj-chart__band" data-chart-stage="' + esc(s.id) + '" style="left: ' + xPct(span[0]) +
+        "; width: " + wPct(span[0], span[1]) + ';"><span class="lj-chart__band-label">' + esc(s.label) + "</span></span>";
+    });
+    (chart.ticks || []).forEach(function (t) {
+      html += '<span class="lj-chart__grid" style="bottom: ' + yPct(t) + '"><span>' + esc(t) + "</span></span>";
+    });
+    p.products.forEach(function (pr) {
+      var spec = pr.particleSize;
+      if (!spec || spec.type !== "set") return;
+      spec.items.forEach(function (it) {
+        if (!it.useFrom || axis.indexOf(it.useFrom) === -1 || axis.indexOf(it.useTo) === -1) return;
+        var lo = toMicrons(it.min != null ? it.min : it.average, spec.unit);
+        var hi = toMicrons(it.max != null ? it.max : it.average, spec.unit);
+        var mid = (lo + hi) / 2;
+        var h = Math.max(hi - lo, chart.max * 0.045);
+        html += '<span class="lj-chart__box" data-chart-product="' + esc(pr.id) + '" data-product-id="' + esc(pr.id) + '" style="' +
+          "--lj-grade: var(--lj-grade-" + esc(it.color || "default") + "); left: " + xPct(it.useFrom) +
+          "; width: " + wPct(it.useFrom, it.useTo) + "; bottom: " + yPct(Math.max(0, mid - h / 2)) + "; height: " + yPct(h) + ';">' +
+          '<span class="lj-chart__box-label">' + esc((pr.family === "INICIO" ? "INICIO " : "") + (spec.items.length > 1 || pr.family === "INICIO" ? (pr.family === "INICIO" ? "Focus " : "") + it.label : pr.name.replace(/^LARVIVA\s+/, ""))) + "</span></span>";
+      });
+    });
+    html += "</div>";
+    html += '<div class="lj-chart__axis">' + axis.map(function (code) {
+      return "<span>" + esc(code) + "</span>";
+    }).join("") + "</div>";
+    html += '<span class="lj-chart__unit">' + esc(chart.unit) + "</span></div>";
+    // Text equivalent for screen readers.
+    html += '<ul class="lj-vh">';
+    p.products.forEach(function (pr) {
+      var spec = pr.particleSize;
+      if (!spec || spec.type !== "set") return;
+      spec.items.forEach(function (it) {
+        if (it.useFrom) html += "<li>" + esc(pr.name + " " + (spec.items.length > 1 ? it.label + " " : "") + itemSize(it, spec.unit) + ", " + it.useFrom + " – " + it.useTo) + "</li>";
+      });
+    });
+    html += "</ul>";
+    if (hasText(ui.chartNote)) html += '<figcaption class="lj-chart__note">' + esc(ui.chartNote) + "</figcaption>";
+    return html + "</figure>";
   }
 
   // Broodstock nutrition and live-feed enrichment support the hatchery but are
@@ -532,28 +643,34 @@
   // scale, with the rest of the range drawn faintly for comparison.
   function renderSizeScale(model, p, product) {
     var scale = p.sizeChart;
-    if (!onScale(product.particleSize, scale)) return "";
-    function bar(min, max, cls, label) {
-      return '<span class="lj-scale__range' + cls + '" style="left: ' + pct(min, scale) +
+    if (!scale || !onScale(product.particleSize, scale)) return "";
+    function bar(min, max, cls, style, label) {
+      return '<span class="lj-scale__range' + cls + '" style="' + (style || "") + "left: " + pct(min, scale) +
         "; width: calc(" + pct(max, scale) + " - " + pct(min, scale) + ');">' +
+        (label ? '<span class="lj-scale__tag">' + esc(label) + "</span>" : "") + "</span>";
+    }
+    function dot(v, style, label) {
+      return '<span class="lj-scale__dot is-current" style="' + style + "left: " + pct(v, scale) + ';">' +
         (label ? '<span class="lj-scale__tag">' + esc(label) + "</span>" : "") + "</span>";
     }
     var marks = p.products.filter(function (pr) { return onScale(pr.particleSize, scale); }).map(function (pr) {
       var spec = pr.particleSize;
       var current = pr.id === product.id;
-      var cls = current ? " is-current" : "";
-      if (spec.type === "range") return bar(spec.min, spec.max, cls, current ? "" : "");
-      if (spec.type === "range-set") {
-        return spec.items.map(function (it) { return bar(it.min, it.max, cls, current ? it.label.replace(/^\D+\s*/, "") : ""); }).join("");
-      }
-      return current ? spec.values.map(function (v) {
-        return '<span class="lj-scale__dot is-current" style="left: ' + pct(v, scale) + ';"></span>';
-      }).join("") : "";
+      if (spec.type !== "set") return "";
+      return spec.items.map(function (it) {
+        var style = "--lj-grade: var(--lj-grade-" + (it.color || "default") + ");";
+        if (it.min != null && it.max != null) {
+          return bar(toMicrons(it.min, spec.unit), toMicrons(it.max, spec.unit), current ? " is-current" : "", style,
+            current && spec.items.length > 1 ? it.label : "");
+        }
+        return current ? dot(toMicrons(it.average, spec.unit), style, it.label) : "";
+      }).join("");
     }).join("");
     return '<div class="lj-scale" aria-hidden="true"><span class="lj-scale__label">' + esc(model.ui.sizeScaleLabel) + "</span>" +
       '<span class="lj-scale__track">' + marks + "</span>" +
       '<span class="lj-scale__axis"><span>' + esc(scale.min) + "</span><span>" + esc(scale.max + " " + scale.unit) + "</span></span></div>";
   }
+
 
   // Laid out like a product page on biomar.com: pack shot, brand over a large
   // product name, then an attribute list.
@@ -582,16 +699,21 @@
     rows += specRow(ui.fieldPortfolio, esc(p.title || p.label));
     if (hasText(product.productType)) rows += specRow(ui.fieldProductType, esc(product.productType));
     if (product.stageIds.length) rows += specRow(ui.fieldStages, esc(stageNames(p, product).join(", ")));
-    if (spec && spec.type === "range-set") {
-      rows += specRow(ui.fieldParticleSize, '<ul class="lj-grades">' + spec.items.map(function (it) {
-        return "<li><span>" + esc(it.label) + "</span> " + esc(it.min + "–" + it.max + " " + spec.unit) + "</li>";
+    if (spec && spec.type === "set") {
+      rows += specRow(spec.label || ui.fieldParticleSize, '<ul class="lj-grades">' + spec.items.map(function (it) {
+        return '<li class="lj-grade" style="--lj-grade: var(--lj-grade-' + esc(it.color || "default") + ');">' +
+          gradeLine(it, spec.unit) + "</li>";
       }).join("") + "</ul>" + (spec.verified === false ? '<span class="lj-badge">' + esc(ui.provisional) + "</span>" : ""));
     } else if (spec) {
       rows += specRow(ui.fieldParticleSize, esc(formatSize(spec)) +
         (spec.verified === false ? ' <span class="lj-badge">' + esc(ui.provisional) + "</span>" : ""));
     }
+    var gradesHaveUse = spec && spec.type === "set" && spec.items.some(function (it) { return it.useFrom; });
+    if (hasText(product.use) && !gradesHaveUse) rows += specRow(ui.fieldUse, esc(product.use));
     if (hasText(product.application)) rows += specRow(ui.fieldApplication, esc(product.application));
     if (product.variants.length) rows += specRow(ui.fieldVariants, esc(product.variants.join(", ")));
+    if (hasText(product.packaging)) rows += specRow(ui.fieldPackaging, esc(product.packaging));
+    if (hasText(product.health)) rows += specRow(ui.fieldHealth, esc(product.health));
     if (hasText(product.marketAvailability)) rows += specRow(ui.fieldMarkets, esc(product.marketAvailability));
     if (hasText(product.description)) html += '<p class="lj-panel__text">' + esc(product.description) + "</p>";
     html += '<dl class="lj-attrs">' + rows + "</dl>";
@@ -600,7 +722,7 @@
         return "<li>" + esc(n) + "</li>";
       }).join("") + "</ul>";
     }
-    if (o.interactive) html += renderSizeScale(model, p, product);
+    if (o.interactive && !p.stageChart) html += renderSizeScale(model, p, product);
 
     if (hasText(product.url)) {
       html += '<a class="lj-cta" href="' + esc(product.url) + '">' + esc(ui.viewDetails) +
@@ -660,6 +782,7 @@
       this.selectProduct(target.getAttribute("data-product-id") || target.getAttribute("data-segment-of"), fromPanel);
     } else {
       var action = target.getAttribute("data-action");
+      if (action === "view") this.setView(target.getAttribute("data-view"));
       if (action === "clear") this.clear(true);
       if (action === "back-to-stage") {
         this.state.product = null;
@@ -701,6 +824,19 @@
     this.update();
     this.announce(fmt(this.model.ui.announcePortfolio, { portfolio: this.portfolio().label }));
     this.emit();
+  };
+
+  // Products / chart view within the active portfolio; selection is kept.
+  Journey.prototype.setView = function (view) {
+    var section = this.el.querySelector('[data-portfolio-panel="' + this.state.portfolio + '"]');
+    each(section.querySelectorAll("[data-lj-view]"), function (el) {
+      el.hidden = el.getAttribute("data-lj-view") !== view;
+    });
+    each(section.querySelectorAll('[data-action="view"]'), function (btn) {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-view") === view ? "true" : "false");
+    });
+    var focusTarget = section.querySelector('[data-lj-view="' + view + '"] [data-view="' + view + '"]');
+    if (focusTarget) focusTarget.focus();
   };
 
   Journey.prototype.selectStage = function (id) {
@@ -792,6 +928,10 @@
       var id = el.getAttribute("data-product-id");
       if (el.hasAttribute("aria-pressed")) el.setAttribute("aria-pressed", id === state.product ? "true" : "false");
       productState(el, id);
+    });
+    each(section.querySelectorAll("[data-chart-stage]"), function (el) {
+      var id = el.getAttribute("data-chart-stage");
+      el.classList.toggle("is-active", id === state.stage || (!!product && product.stageIds.indexOf(id) !== -1));
     });
     each(section.querySelectorAll("[data-segment-of]"), function (el) {
       productState(el, el.getAttribute("data-segment-of"));
