@@ -33,7 +33,8 @@ async function run() {
   assert.strictEqual(await page.getAttribute('[role="tab"][data-portfolio="fish"]', "aria-selected"), "true");
   assert.ok(await fish.isVisible(), "fish visible by default");
   assert.ok(!(await shrimp.isVisible()), "shrimp hidden by default");
-  assert.strictEqual(await fish.locator(".lj-stages .lj-stage").count(), 4);
+  assert.strictEqual(await fish.locator(".lj-stages .lj-stage").count(), 6, "4 stages + 2 connected activities");
+  assert.strictEqual(await fish.locator(".lj-stages__item--activity").count(), 2);
   assert.strictEqual(await page.locator("h1").count(), 1, "module adds no h1");
   assert.strictEqual(await page.locator(".lj-cta").count(), 0, "no invented product links");
   if (shotDir) await page.screenshot({ path: path.join(shotDir, "desktop-initial.png"), fullPage: true });
@@ -59,10 +60,9 @@ async function run() {
   }), "focus moves to panel heading");
   if (shotDir) await page.screenshot({ path: path.join(shotDir, "desktop-product.png"), fullPage: true });
 
-  // Activity: broodstock sits outside the journey, labelled with its activity.
-  assert.strictEqual(await fish.locator('.lj-stages [data-stage-id="broodstock-nutrition"]').count(), 0, "broodstock is not a stage");
-  assert.match(await fish.locator(".lj-activities").innerText(), /Broodstock nutrition/i);
-  await fish.locator('.lj-activities [data-product-id="larviva-broodstock"]').click();
+  // Activities lead the band but are announced as connected activities.
+  assert.match(await fish.locator('.lj-stages [data-stage-id="broodstock-nutrition"]').innerText(), /Connected activity/);
+  await fish.locator('.lj-lanes [data-product-id="larviva-broodstock"]').click();
   assert.match(await fish.locator("[data-lj-panel]").innerText(), /Maturation/);
 
   // Keyboard: arrow key on tabs switches to Shrimp and resets selection.
@@ -72,15 +72,17 @@ async function run() {
   assert.ok(!(await fish.isVisible()), "fish hidden after switch");
   assert.strictEqual(await shrimp.locator('[data-stage-id][aria-pressed="true"], [data-product-id][aria-pressed="true"]').count(), 0, "selection reset");
 
-  // Particle-size chart view (shrimp): boxes follow the product selection.
-  await shrimp.locator('[data-action="view"][data-view="chart"]').first().click();
-  assert.ok(await shrimp.locator(".lj-chart").isVisible(), "chart view shown");
-  assert.ok(!(await shrimp.locator(".lj-lanes").isVisible()), "product view hidden");
+  // Particle-size chart (shrimp): opens on demand; boxes select products.
+  var toggle = shrimp.locator('[data-action="chart"]');
+  assert.strictEqual(await toggle.getAttribute("aria-expanded"), "false");
+  await toggle.click();
+  assert.strictEqual(await toggle.getAttribute("aria-expanded"), "true");
+  assert.ok(await shrimp.locator(".lj-chart").isVisible(), "chart shown");
   assert.strictEqual(await shrimp.locator(".lj-chart__box").count(), 8);
   await shrimp.locator('.lj-chart__box[data-product-id="larviva-zoea"]').click();
   assert.match(await shrimp.locator("[data-lj-panel]").innerText(), /Z1 – M2/);
-  await shrimp.locator('.lj-chart [data-action="view"][data-view="products"]').click();
-  assert.ok(await shrimp.locator(".lj-lanes").isVisible(), "product view restored");
+  await toggle.click();
+  assert.ok(!(await shrimp.locator(".lj-chart").isVisible()), "chart hidden again");
   await shrimp.locator('.lj-lanes [data-product-id="larviva-zoea"]').click();
   assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 4);
 
@@ -121,7 +123,7 @@ async function run() {
   var ctx = await browser.newContext({ javaScriptEnabled: false });
   var nojs = await ctx.newPage();
   await nojs.goto(url);
-  var text = await nojs.locator("body").innerText();
+  var text = (await nojs.locator("body").textContent()).replace(/\s+/g, " ");
   ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL", "Co-feeding / Weaning", "Post-larvae"].forEach(function (s) {
     assert.ok(text.indexOf(s) !== -1, "static HTML contains " + s);
   });

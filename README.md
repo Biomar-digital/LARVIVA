@@ -2,22 +2,12 @@
 
 A compact, interactive module for the LARVIVA landing page on biomar.com. Visitors switch between the **Fish** and **Shrimp** portfolios and select stages or products. A detail panel updates as they go.
 
-It follows the approved reference design and the live biomar.com LARVIVA page. The background is white (`#ffffff`).
-- **Title:** changes with the portfolio ("Explore the shrimp hatchery journey") and has a one-line instruction beneath it.
-- **Stages:**
-  - **Layout:** a small number, an uppercase label and a large light-blue circle with the LARVIVA icon.
-  - **Timeline:** a stem drops from each circle to a shared timeline with one node per stage.
-  - **Selection:** the selected stage's node fills and its circle gets a ring.
-- **LARVIVA PRODUCTS:** light-blue cards sit under the stages they cover, each with a chevron and an underline. The selected card turns BioMar Blue with a Leafy Green underline.
-  - **LARVIVA PL:** one card listing PL 200 / PL 300 / PL 400, with each grade's particle size in the detail panel.
-- **Product thumbnails:** each product card carries its pack shot. Narrow cards drop the thumbnail so the name keeps its room.
-- **Fish activities:** "Connected hatchery activities" cards for LARVIVA Broodstock and MultiGain, each labelled with its activity (Broodstock nutrition, Live-feed enrichment) and kept outside the stage timeline.
-- **Particle size by larval stage (shrimp):** an interactive version of the presentation's "Penaeid larval stage versus accepted feed particle size" chart, reached with the Products / Particle size switch. Each grade is a box spanning its target sub-stages (Z1 … PL26) at its particle size, coloured with its label colour. Selecting a box or a product highlights it and its stage band.
-- **Grade colour codes:** grades in the product panel carry the official LARVIVA label colours (100 cyan, 200 light green, 300 orange, …).
-- **Feature card (right):**
-  - **When nothing is selected:** a BioMar hatchery photograph (the fish or shrimp beaker image from the LARVIVA page) with the portfolio intro.
-  - **For a stage:** a large stage illustration with its description and related products.
-  - **For a product:** a product-page view with the pack shot, "LARVIVA" above the product name, a short description, the attribute list, a particle-size scale and a navy "View product details" button.
+The module follows BioMar's own LARVIVA range slide, on a white (`#ffffff`) background:
+- **Chevron band:** stages run from light to dark blue, with white icons and labels underneath in sentence case. For fish, Broodstock nutrition and Live-feed enrichment lead the band as on the slide. They are marked "Supporting the hatchery" and announced as connected activities, not stages.
+- **LARVIVA family tiles:** the LARVIVA wordmark sits above the family name in its family colour, on a light tint, under the stages each product covers. Shrimp tiles overlap the way the use ranges do: Zoea spans zoea and mysis, and Mysis spans mysis and post-larvae.
+- **Details below, only when selected:** a compact card with the pack shot, description, attributes, colour-coded grades and the "View product details" button. When nothing is selected there is a single hint line, which keeps the module short (about 520 px for fish and 470 px for shrimp on desktop).
+- **Particle size by larval stage (shrimp):** opens on demand with "Show particle size by larval stage".
+- **No capitals** anywhere in the interface.
 
 > **Content status.** Product data now comes from the supplied BioMar documents:
 > - *LARVIVA particle sizes and colour code labels*
@@ -49,12 +39,12 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 
 | Element | Source |
 | --- | --- |
-| Stage circles, timeline, product cards with underline, selected card in BioMar Blue with a Leafy Green line | Approved reference design |
-| Montserrat, navy text, 6px radii, flat surfaces | biomar.com |
-| Product detail: pack shot, "LARVIVA" over the product name, attribute list, navy button | biomar.com product pages |
-| Colours | BioMar palette (Brand Guidelines 2026) |
+| Chevron band, white icons, labels beneath, family tiles with the LARVIVA wordmark | LARVIVA Marine Hatchery range slide |
+| Family and grade colours | LARVIVA particle sizes and colour code labels (text colours darkened where needed for AA contrast) |
+| Particle size by larval stage chart | LARVIVA Hatchery presentation 2025-03, slide 13 |
+| Montserrat, navy text, product links | biomar.com |
 
-Motion is limited to a small lift on hover and a short fade-up on load. All of it is disabled under reduced motion.
+The tile wordmark is set in text, not the real logo. For production, swap in the approved LARVIVA family logo files if the brand team prefers.
 
 ## Files
 

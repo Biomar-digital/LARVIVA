@@ -2,22 +2,21 @@
  * LARVIVA Interactive Hatchery Journey — styles.
  *
  * DESIGN TOKENS: everything brand-specific is a custom property in the first
- * block. The layout follows the approved reference design:
- *   - Title per portfolio ("Explore the shrimp hatchery journey") and a
- *     one-line instruction.
- *   - Stages: small number, uppercase label, a large light-blue icon circle
- *     and a stem down to a shared timeline with one node per stage.
- *   - "LARVIVA PRODUCTS": light-blue cards with a chevron and an underline;
- *     the selected card turns BioMar Blue with a Leafy Green underline.
- *   - Detail panel below, laid out like a biomar.com product page.
- * Colours: BioMar palette. Type: Montserrat (biomar.com) with Arial fallback.
- * Background: white (#ffffff) so it sits seamlessly on the website.
+ * block. The look follows BioMar's own LARVIVA range slides:
+ *   - A chevron band running from light to dark blue with white icons, and
+ *     stage labels underneath in sentence case (no capitals).
+ *   - LARVIVA family tiles: the LARVIVA wordmark over the family name in the
+ *     family colour, on a light tint of that colour.
+ *   - Details open beneath the band only when something is selected.
+ * Type: Montserrat (biomar.com), Arial fallback. Background: white (#ffffff).
+ *
+ * Family colours come from the LARVIVA label colour codes; text colours are
+ * darkened where needed to keep AA contrast on the tint.
  *
  * All selectors are prefixed .lj / lj- to avoid clashing with site CSS.
  */
 
 .lj {
-  /* Typography (website) */
   --lj-font: Montserrat, Arial, sans-serif;
 
   /* BioMar palette */
@@ -26,26 +25,53 @@
   --lj-sky-blue: #92cee8;
   --lj-crisp-blue: #c3e4ef;
   --lj-leafy-green: #97d130;
-  --lj-black-80: #575756;
   --lj-white: #ffffff;
 
-  /* Roles */
   --lj-heading: var(--lj-biomar-blue);
-  --lj-text: #152b4c;                       /* biomar.com text navy */
-  --lj-muted: #5c6b80;                      /* secondary text (AA on white) */
-  --lj-circle: rgba(195, 228, 239, 0.45);   /* Crisp Blue tint */
-  --lj-circle-active: var(--lj-crisp-blue);
-  --lj-line: var(--lj-sky-blue);
-  --lj-card: var(--lj-crisp-blue);
-  --lj-card-hover: #b1dbea;                 /* Crisp Blue, one step deeper */
-  --lj-card-line: var(--lj-sky-blue);
-  --lj-card-active: var(--lj-biomar-blue);
-  --lj-card-active-line: var(--lj-leafy-green);
-  --lj-panel: rgba(195, 228, 239, 0.25);
+  --lj-text: #152b4c;
+  --lj-muted: #5c6b80;
+  --lj-line: #e1edf3;
+  --lj-soft: #f4f9fb;
   --lj-focus: var(--lj-ocean-blue);
 
-  /* LARVIVA label colour codes per grade (LARVIVA particle sizes and colour
-     code labels). Referenced by `color` on each grade in the dataset. */
+  /* Chevron tones, light → dark (LARVIVA range slide). a1/a2 = the
+     connected activities that lead the fish band. */
+  --lj-tone-a1: #a6d6ef;
+  --lj-tone-a2: #c4e2f1;
+  --lj-tone-1: #b3dbee;
+  --lj-tone-2: #84c1e2;
+  --lj-tone-3: #4f9fcf;
+  --lj-tone-4: #2e6f96;
+  --lj-tone-5: #24597a;
+  --lj-chev-selected: var(--lj-biomar-blue);
+
+  /* LARVIVA family tiles: tint (background) + text colour. */
+  --lj-family-default: #dceef6;
+  --lj-on-family-default: var(--lj-biomar-blue);
+  --lj-family-broodstock: #f9d8c3;
+  --lj-on-family-broodstock: #a4460d;
+  --lj-family-multigain: #fbd2d6;
+  --lj-on-family-multigain: #b20d29;
+  --lj-family-prostart: #dcefc2;
+  --lj-on-family-prostart: #3f7a12;
+  --lj-family-prowean: #c9eaf7;
+  --lj-on-family-prowean: #00678c;
+  --lj-family-pronurse: #d3ecc4;
+  --lj-on-family-pronurse: #2a7330;
+  --lj-family-orbit: #d5e3ea;
+  --lj-on-family-orbit: #1f3e77;
+  --lj-family-zoea: #c9eaf7;
+  --lj-on-family-zoea: #00678c;
+  --lj-family-mysis: #dcefc2;
+  --lj-on-family-mysis: #3f7a12;
+  --lj-family-pl: #1f3e77;
+  --lj-on-family-pl: #ffffff;
+  --lj-family-inicio: #c3e4ef;
+  --lj-on-family-inicio: #0471ad;
+  --lj-family-zm: #1f3e77;
+  --lj-on-family-zm: #ffffff;
+
+  /* LARVIVA label colour codes per grade. */
   --lj-grade-default: var(--lj-sky-blue);
   --lj-grade-cyan: #00aeef;
   --lj-grade-lightgreen: #8dc63f;
@@ -57,10 +83,9 @@
   --lj-grade-navy: #1d3c8f;
   --lj-grade-red: #e4002b;
 
-  /* Shape and motion */
-  --lj-radius: 6px;
-  --lj-circle-size: 112px;
-  --lj-panel-width: 380px;
+  --lj-radius: 8px;
+  --lj-chev-height: 84px;
+  --lj-point: 22px;
   --lj-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   position: relative;
@@ -104,7 +129,8 @@
 }
 
 .lj-arrow,
-.lj-chevron {
+.lj-chevron,
+.lj-check {
   flex: none;
 }
 
@@ -113,42 +139,37 @@
 .lj-header {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
-  gap: 16px 32px;
-  margin-bottom: 26px;
+  gap: 12px 24px;
+  margin-bottom: 18px;
 }
 
 .lj-title {
   color: var(--lj-heading);
-  font-size: clamp(1.5rem, 1.15rem + 1.2vw, 2rem);
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.75rem);
   font-weight: 700;
   line-height: 1.2;
 }
 
-.lj-lead {
-  margin-top: 6px;
-  color: var(--lj-muted);
-  font-size: 0.9375rem;
-}
-
-/* Fish / Shrimp switch. */
 .lj-switch {
   display: inline-flex;
-  padding: 4px;
+  padding: 3px;
   border-radius: var(--lj-radius);
-  background: var(--lj-circle);
+  background: var(--lj-soft);
+  box-shadow: inset 0 0 0 1px var(--lj-line);
 }
 
 .lj-switch__tab {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 20px;
+  gap: 8px;
+  padding: 7px 16px;
   border: 0;
-  border-radius: 4px;
+  border-radius: 6px;
   background: transparent;
   color: var(--lj-heading);
+  font-size: 0.9375rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 200ms var(--lj-ease), color 200ms var(--lj-ease);
@@ -164,8 +185,8 @@
 }
 
 .lj-switch__icon {
-  width: 36px;
-  height: 14px;
+  width: 32px;
+  height: 12px;
 }
 
 /* ── Icons ────────────────────────────────────────────────────────────── */
@@ -185,7 +206,7 @@
 }
 
 .lj-icon__item + .lj-icon__item {
-  flex: 0 0 32%;
+  flex: 0 0 34%;
 }
 
 .lj-icon svg {
@@ -193,83 +214,34 @@
   height: 100%;
 }
 
-/* ── Layout ───────────────────────────────────────────────────────────── */
-
 .lj-portfolio[hidden] {
   display: none;
 }
 
-.lj-body {
-  display: grid;
-  gap: 28px;
-}
-
-@media (min-width: 1024px) {
-  .lj-body {
-    grid-template-columns: minmax(0, 1fr) var(--lj-panel-width);
-    align-items: start;
-  }
-
-  .lj-panel {
-    position: sticky;
-    top: 16px;
-  }
-}
-
-.lj-main {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 0;
-}
-
-.lj-section-title {
-  margin-top: 6px;
-  color: var(--lj-heading);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-/* ── Stages: circles, stems and timeline ──────────────────────────────── */
+/* ── Chevron band ─────────────────────────────────────────────────────── */
 
 .lj-stages {
-  position: relative;
   display: grid;
   grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
-  margin: 0 -8px;
   padding: 0;
   list-style: none;
 }
 
-/* The timeline runs through every node. */
-.lj-stages::after {
-  content: "";
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: 7px;
-  height: 2px;
-  background: var(--lj-line);
-}
-
 .lj-stages__item {
   display: flex;
-  justify-content: center;
-  padding: 0 8px;
+  min-width: 0;
 }
 
 .lj-stage {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0;
+  width: 100%;
+  padding: 0 0 4px;
   border: 0;
   background: none;
   color: var(--lj-heading);
+  text-align: center;
   transition: opacity 250ms var(--lj-ease);
 }
 
@@ -277,86 +249,73 @@
   cursor: pointer;
 }
 
-.lj-stage__head {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: var(--lj-circle-size);
-  min-height: 46px;
-  margin-bottom: 8px;
-  text-align: left;
-}
-
-.lj-stage__num {
-  color: var(--lj-sky-blue);
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.lj-stage__label {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  line-height: 1.25;
-  text-transform: uppercase;
-}
-
-.lj-stage__circle {
+/* Each chevron is notched on the left and pointed on the right; the point
+   reaches into the next chevron's notch, leaving a thin white seam. */
+.lj-stage__chev {
+  position: relative;
+  isolation: isolate;
   display: grid;
   place-items: center;
-  width: var(--lj-circle-size);
-  height: var(--lj-circle-size);
-  border-radius: 50%;
-  background: var(--lj-circle);
-  color: var(--lj-biomar-blue);
-  transition: background-color 250ms var(--lj-ease), transform 300ms var(--lj-ease), box-shadow 250ms var(--lj-ease);
+  width: calc(100% + var(--lj-point) - 6px);
+  margin-right: calc((var(--lj-point) - 6px) * -1);
+  height: var(--lj-chev-height);
+  padding: 0 calc(var(--lj-point) + 8px) 0 calc(var(--lj-point) + 4px);
+  color: var(--lj-white);
+}
+
+.lj-stage__chev::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--lj-chev);
+  clip-path: polygon(0 0, calc(100% - var(--lj-point)) 0, 100% 50%, calc(100% - var(--lj-point)) 100%, 0 100%, var(--lj-point) 50%);
+  transition: background-color 250ms var(--lj-ease), filter 250ms var(--lj-ease);
+}
+
+.lj-stages__item:last-child .lj-stage__chev {
+  width: 100%;
+  margin-right: 0;
 }
 
 .lj-stage__icon {
-  width: 84%;
-  height: 56%;
+  width: 100%;
+  max-width: 120px;
+  height: 46px;
+  transition: transform 300ms var(--lj-ease);
 }
 
-.lj-stage__stem {
-  width: 2px;
-  height: 18px;
-  background: var(--lj-line);
+.lj-stage__label {
+  margin-top: 8px;
+  padding: 0 6px;
+  font-size: 0.9375rem;
+  line-height: 1.25;
 }
 
-.lj-stage__node {
-  width: 16px;
-  height: 16px;
-  border: 2px solid var(--lj-biomar-blue);
-  border-radius: 50%;
-  background: var(--lj-white);
-  transition: background-color 250ms var(--lj-ease), transform 250ms var(--lj-ease);
+.lj-stage__kind {
+  color: var(--lj-muted);
+  font-size: 0.75rem;
 }
 
-.lj--interactive .lj-stage:hover .lj-stage__circle {
-  background: var(--lj-circle-active);
-  transform: translateY(-3px);
+.lj--interactive .lj-stage:hover .lj-stage__chev::before {
+  filter: brightness(0.94);
 }
 
-.lj-stage[aria-pressed="true"] .lj-stage__circle {
-  background: var(--lj-circle-active);
-  box-shadow: 0 0 0 3px var(--lj-white), 0 0 0 5px var(--lj-sky-blue);
+.lj--interactive .lj-stage:hover .lj-stage__icon {
+  transform: scale(1.06);
 }
 
-.lj-stage[aria-pressed="true"] .lj-stage__node {
-  background: var(--lj-biomar-blue);
-  transform: scale(1.15);
+.lj-stage[aria-pressed="true"] .lj-stage__chev::before {
+  background: var(--lj-chev-selected);
 }
 
-.lj-stage.is-related .lj-stage__circle {
-  background: var(--lj-circle-active);
-}
-
-.lj-stage.is-related .lj-stage__node {
-  background: var(--lj-biomar-blue);
+.lj-stage[aria-pressed="true"] .lj-stage__label,
+.lj-stage.is-related .lj-stage__label {
+  font-weight: 700;
 }
 
 .lj-stage.is-dimmed {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .lj-flag {
@@ -365,7 +324,7 @@
   gap: 4px;
   margin-top: 4px;
   padding: 0 8px;
-  border-radius: 4px;
+  border-radius: 999px;
   font-size: 0.6875rem;
   font-weight: 600;
 }
@@ -385,60 +344,42 @@
   display: inline-flex;
 }
 
-/* ── Product cards ────────────────────────────────────────────────────── */
+/* ── LARVIVA family tiles ─────────────────────────────────────────────── */
 
 .lj-lanes {
   display: grid;
   grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
   gap: 10px 0;
-  margin: 0 -5px;
-  padding: 0;
+  margin: 14px -5px 0;
+  padding: 12px 0;
   list-style: none;
+  border-radius: var(--lj-radius);
+  background: var(--lj-soft);
 }
 
 .lj-lanes__item {
   display: flex;
   min-width: 0;
-  padding: 0 5px;
+  padding: 0 10px;
   container-type: inline-size;
-}
-
-/* Narrow cards drop the thumbnail so the name keeps its room. */
-@container (max-width: 250px) {
-  .lj .lj-pill__thumb {
-    display: none;
-  }
 }
 
 .lj-pill {
   position: relative;
-  overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
   min-width: 0;
-  min-height: 56px;
-  padding: 9px 14px 12px;
+  min-height: 60px;
+  padding: 8px 12px;
   border: 0;
   border-radius: var(--lj-radius);
-  background: var(--lj-card);
-  color: var(--lj-heading);
-  text-align: left;
-  transition: background-color 200ms var(--lj-ease), color 200ms var(--lj-ease),
-    opacity 200ms var(--lj-ease), transform 250ms var(--lj-ease);
-}
-
-/* Underline along the bottom of each card. */
-.lj-pill::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 4px;
-  background: var(--lj-card-line);
-  transition: background-color 200ms var(--lj-ease);
+  background: var(--lj-accent);
+  color: var(--lj-on-accent);
+  text-align: center;
+  transition: transform 250ms var(--lj-ease), box-shadow 250ms var(--lj-ease), opacity 250ms var(--lj-ease);
 }
 
 .lj--interactive .lj-pill {
@@ -446,63 +387,64 @@
 }
 
 .lj--interactive .lj-pill:hover {
-  background: var(--lj-card-hover);
   transform: translateY(-2px);
-}
-
-.lj-pill__thumb {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 4px;
-  background: var(--lj-white);
-}
-
-.lj-pill__thumb img {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-
-.lj-pill__kicker {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  opacity: 0.8;
+  box-shadow: 0 8px 18px rgba(31, 62, 119, 0.14);
 }
 
 .lj-pill__text {
   display: flex;
-  flex: 1;
   flex-direction: column;
+  align-items: center;
   min-width: 0;
-  gap: 2px;
 }
 
 .lj-pill__name {
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.25;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.05;
+}
+
+/* Stand-in for the LARVIVA wordmark: thin, widely spaced. */
+.lj-pill__brand {
+  color: var(--lj-biomar-blue);
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
+  margin-right: -0.32em;
+}
+
+.lj-pill--bar .lj-pill__brand,
+.lj-pill--chip .lj-pill__brand {
+  margin-bottom: 3px;
+}
+
+[style*="--lj-on-accent: var(--lj-on-family-pl"] .lj-pill__brand,
+[style*="--lj-on-accent: var(--lj-on-family-zm"] .lj-pill__brand {
+  color: var(--lj-white);
+}
+
+.lj-pill__family {
+  font-size: 1.25rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .lj-pill__meta {
-  overflow: hidden;
+  margin-top: 3px;
   font-size: 0.75rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+}
+
+.lj-pill__kicker,
+.lj-pill__thumb,
+.lj-pill__stages,
+.lj-pill .lj-chevron {
+  display: none;
 }
 
 .lj-pill__stages {
-  font-size: 0.75rem;
-}
-
-.lj-pill--bar .lj-pill__stages,
-.lj-pill--activity .lj-pill__stages,
-.lj-pill--chip .lj-pill__stages {
+  display: block;
   position: absolute;
   width: 1px;
   height: 1px;
@@ -511,26 +453,20 @@
   white-space: nowrap;
 }
 
-.lj-chevron {
-  transition: transform 200ms var(--lj-ease);
-}
-
-.lj--interactive .lj-pill:hover .lj-chevron {
-  transform: translateX(3px);
+/* Feed type / size only where the tile is wide enough. */
+@container (max-width: 210px) {
+  .lj .lj-pill__meta {
+    display: none;
+  }
 }
 
 .lj-pill.is-selected,
 .lj--interactive .lj-pill.is-selected:hover {
-  background: var(--lj-card-active);
-  color: var(--lj-white);
-}
-
-.lj-pill.is-selected::after {
-  background: var(--lj-card-active-line);
+  box-shadow: 0 0 0 3px var(--lj-white), 0 0 0 5px var(--lj-biomar-blue);
 }
 
 .lj-pill.is-dimmed {
-  opacity: 0.45;
+  opacity: 0.35;
 }
 
 /* ── Motion ───────────────────────────────────────────────────────────── */
@@ -538,147 +474,113 @@
 @keyframes lj-up {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(8px);
   }
 }
 
 .lj--interactive .lj-stages__item,
 .lj--interactive .lj-lanes__item {
-  animation: lj-up 380ms var(--lj-ease) both;
-  animation-delay: calc(var(--i, 0) * 60ms);
+  animation: lj-up 360ms var(--lj-ease) both;
+  animation-delay: calc(var(--i, 0) * 50ms);
 }
 
 .lj--interactive .lj-lanes__item {
-  animation-delay: calc(var(--i, 0) * 60ms + 180ms);
+  animation-delay: calc(var(--i, 0) * 50ms + 150ms);
 }
 
-/* ── Connected activities ─────────────────────────────────────────────── */
-
-.lj-activities {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.lj-activities__intro {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 2px 10px;
-}
-
-.lj-activities__intro .lj-section-title {
-  margin: 0;
-}
-
-.lj-activities__note {
-  color: var(--lj-muted);
-  font-size: 0.8125rem;
-}
-
-.lj-activities__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 10px;
-  padding: 0;
-  list-style: none;
-}
-
-.lj-activities__list .lj-lanes__item {
-  padding: 0;
-}
-
-/* ── Detail panel ─────────────────────────────────────────────────────── */
+/* ── Details ──────────────────────────────────────────────────────────── */
 
 .lj-panel {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  border: 1px solid var(--lj-crisp-blue);
-  border-radius: var(--lj-radius);
-  background: var(--lj-white);
+  margin-top: 14px;
   scroll-margin-top: 16px;
 }
 
-.lj-panel > *,
-.lj-detail > * {
-  animation: lj-up 320ms var(--lj-ease) both;
-}
-
-.lj-detail {
+.lj-panel__hint {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--lj-muted);
+  font-size: 0.875rem;
 }
 
-/* Visual at the top of the feature card. */
-.lj-media {
-  position: relative;
-  overflow: hidden;
+.lj-panel__hint .lj-arrow {
+  color: var(--lj-ocean-blue);
+}
+
+.lj-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px 28px;
+  padding: 20px 22px;
+  border: 1px solid var(--lj-line);
+  border-radius: var(--lj-radius);
+  background: var(--lj-white);
+  animation: lj-up 300ms var(--lj-ease) both;
+}
+
+@media (min-width: 900px) {
+  .lj-card {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+
+  .lj-detail:has(.lj-card__media) {
+    grid-template-columns: 150px minmax(0, 1.4fr) minmax(0, 1fr);
+  }
+}
+
+.lj-card__media {
   display: grid;
   place-items: center;
-  height: 190px;
-  background: var(--lj-circle);
+  border-radius: 6px;
+  background: var(--lj-soft);
 }
 
-.lj-media img {
-  position: absolute;
-  inset: 0;
+.lj-card__media img {
   width: 100%;
-  height: 100%;
-}
-
-.lj-media--photo img {
-  object-fit: cover;
-}
-
-.lj-media--pack img {
-  padding: 18px;
+  height: 170px;
+  padding: 10px;
   object-fit: contain;
 }
 
-.lj-media__icon {
-  width: 62%;
-  height: 52%;
-  color: var(--lj-biomar-blue);
-}
-
-.lj-panel__body {
+.lj-card__body,
+.lj-card__side {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 22px 24px 4px;
-}
-
-.lj-panel__foot {
-  padding: 0 24px 20px;
+  min-width: 0;
 }
 
 .lj-panel__eyebrow {
   color: var(--lj-muted);
   font-size: 0.8125rem;
-  font-weight: 600;
 }
 
 .lj-panel__title {
-  margin: 2px 0 10px;
+  margin: 0 0 6px;
   color: var(--lj-heading);
-  font-size: 1.5rem;
+  font-size: 1.375rem;
   font-weight: 700;
   line-height: 1.2;
 }
 
 .lj-detail__brand {
   display: block;
-  font-size: 1rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.32em;
 }
 
 .lj-detail__name {
   display: block;
-  font-size: 2rem;
-  font-weight: 500;
+  color: var(--lj-on-accent);
+  font-size: 1.625rem;
+  font-weight: 600;
   line-height: 1.1;
+}
+
+.lj-detail[style*="on-family-pl"] .lj-detail__name,
+.lj-detail[style*="on-family-zm"] .lj-detail__name {
+  color: var(--lj-biomar-blue);
 }
 
 .lj-panel__title:focus {
@@ -694,58 +596,24 @@
   font-size: 0.9375rem;
 }
 
-.lj-panel__text + .lj-panel__text {
-  margin-top: 8px;
-}
-
 .lj-panel__text--muted {
   color: var(--lj-muted);
 }
 
-.lj-panel__hint {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 16px 0 18px;
-  font-size: 0.9375rem;
-  color: var(--lj-heading);
-  font-weight: 600;
-}
-
 .lj-panel__subtitle {
-  margin: 18px 0 10px;
+  margin-bottom: 8px;
   color: var(--lj-heading);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 
-
-
-.lj-chips {
-  display: grid;
-  gap: 8px;
-  width: 100%;
-  padding: 0;
-  list-style: none;
-}
-
-.lj-pill--chip {
-  min-height: 54px;
-}
-
-/* Attribute list, as on biomar.com product pages. */
 .lj-attrs {
   display: grid;
-  grid-template-columns: minmax(0, 7.5em) minmax(0, 1fr) !important;
+  grid-template-columns: minmax(0, 7em) minmax(0, 1fr);
+  gap: 4px 14px;
   width: 100%;
-  margin-top: 16px;
-  padding-top: 14px;
-  border-top: 1px solid var(--lj-crisp-blue);
-  grid-template-columns: max-content 1fr;
-  gap: 6px 18px;
-  font-size: 0.9375rem;
+  margin-top: 12px;
+  font-size: 0.875rem;
 }
 
 .lj-specs__row {
@@ -753,115 +621,88 @@
 }
 
 .lj-attrs dt {
-  font-weight: 700;
+  color: var(--lj-muted);
 }
 
-.lj-attrs dd {
-  font-variant-numeric: tabular-nums;
-}
-
-.lj-grades {
+.lj-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
   padding: 0;
   list-style: none;
 }
 
+.lj-pill--chip {
+  min-height: 52px;
+  padding: 6px 14px;
+}
 
+.lj-pill--chip .lj-pill__family {
+  font-size: 1.0625rem;
+}
 
-.lj-list {
-  margin-top: 8px;
-  padding-left: 1.1em;
+.lj-grades {
+  display: grid;
+  gap: 5px;
+  width: 100%;
+  padding: 0;
+  list-style: none;
+  font-size: 0.875rem;
+}
+
+.lj-grade {
+  display: grid;
+  grid-template-columns: 12px auto 1fr;
+  align-items: baseline;
+  column-gap: 8px;
+}
+
+.lj-grade::before {
+  content: "";
+  align-self: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--lj-grade);
+}
+
+.lj-grade__label {
+  font-weight: 700;
+}
+
+.lj-grade__use {
+  grid-column: 2 / -1;
+  color: var(--lj-muted);
+  font-size: 0.8125rem;
 }
 
 .lj-badge {
   display: inline-block;
   margin-left: 4px;
   padding: 0 6px;
-  border: 1px solid var(--lj-black-80);
+  border: 1px solid var(--lj-muted);
   border-radius: 4px;
-  color: var(--lj-black-80);
+  color: var(--lj-muted);
   font-size: 0.6875rem;
   font-weight: 600;
   vertical-align: 1px;
 }
 
-.lj-scale {
-  width: 100%;
-  margin-top: 16px;
-}
-
-.lj-scale__label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--lj-heading);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.lj-scale__track {
-  position: relative;
-  display: block;
-  height: 8px;
-  margin-top: 18px;
-  border-radius: 4px;
-  background: var(--lj-circle);
-}
-
-.lj-scale__range {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-radius: 4px;
-  background: var(--lj-crisp-blue);
-}
-
-.lj-scale__range.is-current {
-  top: -3px;
-  bottom: -3px;
-  background: var(--lj-biomar-blue);
-  box-shadow: 0 0 0 2px var(--lj-white);
-}
-
-.lj-scale__tag {
-  position: absolute;
-  bottom: calc(100% + 4px);
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--lj-heading);
-  font-size: 0.6875rem;
-  font-weight: 700;
-}
-
-.lj-scale__dot {
-  position: absolute;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  margin: -6px 0 0 -6px;
-  border: 2px solid var(--lj-white);
-  border-radius: 50%;
-  background: var(--lj-biomar-blue);
-}
-
-.lj-scale__axis {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 4px;
-  color: var(--lj-muted);
-  font-size: 0.75rem;
+.lj-list {
+  margin-top: 8px;
+  padding-left: 1.1em;
 }
 
 .lj-cta {
   display: inline-flex;
-  margin-bottom: 8px;
   align-items: center;
-  gap: 12px;
-  margin-top: 18px;
-  padding: 11px 22px;
-  border-radius: var(--lj-radius);
+  gap: 10px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: 6px;
   background: var(--lj-biomar-blue);
   color: var(--lj-white);
+  font-size: 0.9375rem;
   font-weight: 600;
   text-decoration: none;
   transition: background-color 200ms var(--lj-ease);
@@ -876,7 +717,7 @@
 }
 
 .lj-cta:hover .lj-arrow {
-  transform: translateX(4px);
+  transform: translateX(3px);
 }
 
 .lj-textbtn {
@@ -892,7 +733,7 @@
 }
 
 .lj-back {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .lj-back::before {
@@ -900,243 +741,48 @@
 }
 
 .lj-clear {
-  margin-top: 6px;
+  margin-top: 14px;
 }
 
-/* ── Footer ───────────────────────────────────────────────────────────── */
+/* ── Particle size by larval stage (shrimp) ───────────────────────────── */
 
-.lj-disclaimer {
-  margin-top: 18px;
-  color: var(--lj-muted);
-  font-size: 0.8125rem;
-  font-style: italic;
-}
-
-/* ── Static (no-JS / crawler) render ──────────────────────────────────── */
-
-.lj-portfolio__title {
-  margin: 0 0 16px;
-  color: var(--lj-heading);
-  font-size: 1.25rem;
-}
-
-.lj--static .lj-portfolio + .lj-portfolio {
-  margin-top: 40px;
-}
-
-/* With JS available the static list is replaced on load; hide it meanwhile
-   so the page doesn't jump. Crawlers still read it from the HTML. */
-.lj-js .lj--static .lj-index {
-  display: none;
-}
-
-.lj-index {
-  display: grid;
-  gap: 12px;
-}
-
-/* ── Mobile ───────────────────────────────────────────────────────────── */
-
-@media (max-width: 759px) {
-  .lj {
-    --lj-circle-size: 100px;
-  }
-
-  .lj-switch {
-    display: flex;
-    width: 100%;
-  }
-
-  .lj-switch__tab {
-    flex: 1;
-    justify-content: center;
-  }
-
-  /* The timeline scrolls sideways inside the module; the page never does. */
-  .lj-stages {
-    grid-template-columns: repeat(var(--lj-cols), 128px);
-    overflow-x: auto;
-    margin: 0 -16px;
-    padding: 0 16px 2px;
-    scroll-snap-type: x proximity;
-    scroll-padding: 0 16px;
-    scrollbar-width: none;
-  }
-
-  .lj-stages::-webkit-scrollbar {
-    display: none;
-  }
-
-  .lj-stages::after {
-    left: 16px;
-    right: auto;
-    width: calc(var(--lj-cols) * 128px);
-    bottom: 9px;
-  }
-
-  .lj-stages__item {
-    scroll-snap-align: start;
-  }
-
-  .lj-lanes {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-  }
-
-  .lj-lanes__item {
-    padding: 0;
-  }
-
-  .lj-pill--bar .lj-pill__stages {
-    position: static;
-    width: auto;
-    height: auto;
-    overflow: visible;
-    clip: auto;
-    white-space: normal;
-  }
-
-  .lj-pill__meta {
-    white-space: normal;
-  }
-
-  .lj-pill--segment {
-    display: none;
-  }
-
-  .lj-media {
-    height: 150px;
-  }
-}
-
-/* ── Reduced motion ───────────────────────────────────────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .lj *,
-  .lj *::before,
-  .lj *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-
-  .lj--interactive .lj-stage:hover .lj-stage__circle,
-  .lj--interactive .lj-pill:hover {
-    transform: none;
-  }
-}
-
-/* ── Forced colours (Windows high contrast) ───────────────────────────── */
-
-@media (forced-colors: active) {
-  .lj-pill,
-  .lj-stage__circle {
-    border: 1px solid CanvasText;
-  }
-
-  .lj-stage[aria-pressed="true"] .lj-stage__circle,
-  .lj-pill.is-selected {
-    outline: 3px solid Highlight;
-  }
-}
-
-/* ── Grade chips (label colour codes) ─────────────────────────────────── */
-
-.lj-grades {
-  display: grid;
-  gap: 4px;
-  padding: 0;
-  list-style: none;
-}
-
-.lj-grade {
-  display: grid;
-  grid-template-columns: 12px auto 1fr;
-  align-items: baseline;
-  column-gap: 8px;
-}
-
-.lj-grade::before {
-  content: "";
-  align-self: center;
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-  background: var(--lj-grade);
-}
-
-.lj-grade__label {
-  font-weight: 700;
-}
-
-.lj-grade__use {
-  grid-column: 2 / -1;
-  color: var(--lj-muted);
-  font-size: 0.8125rem;
-}
-
-/* ── Section head + Products / Chart switch ───────────────────────────── */
-
-.lj-section-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 16px;
-  margin: 6px 0 10px;
-}
-
-.lj-section-head .lj-section-title {
-  margin: 0;
-}
-
-.lj-views {
+.lj-chart-toggle {
   display: inline-flex;
+  margin-top: 12px;
 }
 
-.lj-views__btn {
-  padding: 5px 12px;
-  border: 1px solid var(--lj-biomar-blue);
-  background: var(--lj-white);
-  color: var(--lj-heading);
-  font-size: 0.8125rem;
-  font-weight: 600;
-  cursor: pointer;
+.lj-chart-toggle::before {
+  content: "+ ";
+  white-space: pre;
 }
 
-.lj-views__btn:first-child {
-  border-radius: var(--lj-radius) 0 0 var(--lj-radius);
+.lj-chart-toggle[aria-expanded="true"]::before {
+  content: "− ";
 }
-
-.lj-views__btn:last-child {
-  margin-left: -1px;
-  border-radius: 0 var(--lj-radius) var(--lj-radius) 0;
-}
-
-.lj-views__btn[aria-pressed="true"] {
-  background: var(--lj-biomar-blue);
-  color: var(--lj-white);
-}
-
-[data-lj-view][hidden] {
-  display: none;
-}
-
-/* ── Larval stage vs particle size chart ──────────────────────────────── */
 
 .lj-chart {
-  margin: 0;
+  margin-top: 12px;
+}
+
+.lj-chart[hidden] {
+  display: none;
+}
+
+.lj-chart__title {
+  margin-bottom: 8px;
+  color: var(--lj-heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
 }
 
 .lj-chart__frame {
   position: relative;
-  padding: 20px 0 40px 40px;
+  padding: 18px 0 40px 40px;
 }
 
 .lj-chart__plot {
   position: relative;
-  height: 250px;
+  height: 220px;
   border-left: 1px solid var(--lj-sky-blue);
   border-bottom: 1px solid var(--lj-sky-blue);
 }
@@ -1154,15 +800,13 @@
   top: 4px;
   left: 6px;
   color: var(--lj-heading);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
   white-space: nowrap;
 }
 
 .lj-chart__band.is-active {
-  background: var(--lj-circle);
+  background: rgba(195, 228, 239, 0.45);
 }
 
 .lj-chart__grid {
@@ -1249,7 +893,117 @@
   font-size: 0.8125rem;
 }
 
+/* ── Other products / activities (when not in the band) ───────────────── */
+
+.lj-activities {
+  margin-top: 14px;
+}
+
+.lj-activities__intro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  margin-bottom: 8px;
+}
+
+.lj-section-title,
+.lj-activities__title {
+  color: var(--lj-heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+}
+
+.lj-activities__note {
+  color: var(--lj-muted);
+  font-size: 0.8125rem;
+}
+
+.lj-activities__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
+
+.lj-disclaimer {
+  margin-top: 14px;
+  color: var(--lj-muted);
+  font-size: 0.75rem;
+  font-style: italic;
+}
+
+/* ── Static (no-JS / crawler) render ──────────────────────────────────── */
+
+.lj-portfolio__title {
+  margin: 0 0 12px;
+  color: var(--lj-heading);
+  font-size: 1.125rem;
+}
+
+.lj--static .lj-portfolio + .lj-portfolio {
+  margin-top: 32px;
+}
+
+.lj-js .lj--static .lj-index {
+  display: none;
+}
+
+.lj-index {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+/* ── Mobile ───────────────────────────────────────────────────────────── */
+
 @media (max-width: 759px) {
+  .lj {
+    --lj-chev-height: 70px;
+    --lj-point: 16px;
+  }
+
+  .lj-switch {
+    display: flex;
+    width: 100%;
+  }
+
+  .lj-switch__tab {
+    flex: 1;
+    justify-content: center;
+  }
+
+  /* Band and tiles scroll sideways together inside the module; the page
+     never does. */
+  .lj-portfolio {
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .lj-stages,
+  .lj-lanes {
+    min-width: calc(var(--lj-cols) * 112px);
+  }
+
+  .lj-stage__label {
+    font-size: 0.8125rem;
+  }
+
+  .lj-pill__family {
+    font-size: 1rem;
+  }
+
+  .lj-panel,
+  .lj-chart,
+  .lj-chart-toggle,
+  .lj-index {
+    position: sticky;
+    left: 0;
+    max-width: calc(100vw - 32px);
+  }
+
   .lj-chart__frame {
     overflow-x: auto;
   }
@@ -1258,4 +1012,40 @@
   .lj-chart__axis {
     min-width: 640px;
   }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .lj *,
+  .lj *::before,
+  .lj *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .lj--interactive .lj-pill:hover,
+  .lj--interactive .lj-stage:hover .lj-stage__icon {
+    transform: none;
+  }
+}
+
+/* ── Forced colours ───────────────────────────────────────────────────── */
+
+@media (forced-colors: active) {
+  .lj-stage__chev,
+  .lj-pill {
+    border: 1px solid CanvasText;
+  }
+
+  .lj-stage[aria-pressed="true"] .lj-stage__chev,
+  .lj-pill.is-selected {
+    outline: 3px solid Highlight;
+  }
+}
+
+/* Long grade lists (e.g. ProWean) use two columns. */
+.lj-grades:has(> :nth-child(4)) {
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
 }

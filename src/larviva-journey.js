@@ -175,6 +175,10 @@
       });
       var lookup = {};
       stages.concat(activities).forEach(function (s) { lookup[s.id] = s; });
+      // Columns of the band. Connected activities can lead the band (as on
+      // the LARVIVA range slide); they stay marked as activities, not stages.
+      var columns = (p.activitiesInBand ? activities : []).concat(stages);
+      columns.forEach(function (c, i) { c.col = i; });
 
       var products = (data.products || []).filter(function (pr) {
         return pr.portfolio === p.id && pr.published !== false && isInMarket(pr, market);
@@ -182,8 +186,8 @@
         var ids = (pr.stages || []).filter(function (id) { return lookup[id]; });
         return Object.assign({}, pr, {
           stageIds: ids,
-          stageIndices: ids.filter(function (id) { return lookup[id].kind === "stage"; })
-            .map(function (id) { return lookup[id].index; })
+          stageIndices: ids.filter(function (id) { return lookup[id].col != null; })
+            .map(function (id) { return lookup[id].col; })
             .sort(function (a, b) { return a - b; }),
           activityIds: ids.filter(function (id) { return lookup[id].kind === "activity"; }),
           particleSize: visibleSpec(pr.particleSize, settings),
@@ -200,6 +204,7 @@
       return Object.assign({}, p, {
         stages: stages,
         activities: activities,
+        columns: columns,
         lookup: lookup,
         products: products,
         productById: byId,
@@ -317,7 +322,6 @@
     if (hasText(ui.eyebrow)) html += '<p class="lj-eyebrow">' + esc(ui.eyebrow) + "</p>";
     var activePortfolio = model.portfolios.filter(function (p) { return p.id === active; })[0] || {};
     html += '<h2 class="lj-title" data-lj-title>' + esc(moduleTitle(ui, activePortfolio)) + "</h2>";
-    if (interactive && hasText(ui.instruction)) html += '<p class="lj-lead">' + esc(ui.instruction) + "</p>";
     html += "</div>";
 
     if (interactive && model.portfolios.length > 1) {
@@ -360,19 +364,24 @@
     }) + ">";
     html += '<h3 class="' + (o.interactive ? "lj-vh" : "lj-portfolio__title") + '" id="' + esc(o.uid + "-heading-" + p.id) + '">' +
       esc(p.title || p.label) + "</h3>";
-    html += '<div class="lj-body"><div class="lj-main">';
     html += renderStages(model, p, o);
-    html += '<div data-lj-view="products">' + renderLanes(model, p, o, true) +
-      renderActivities(model, p, o) + renderUnmapped(model, p, o) + "</div>";
-    if (p.stageChart) html += renderStageChart(model, p, o);
-    html += "</div>";
+    html += renderLanes(model, p, o);
+    if (!p.activitiesInBand) html += renderActivities(model, p, o);
+    html += renderUnmapped(model, p, o);
+    if (p.stageChart) {
+      if (o.interactive) {
+        html += '<button type="button" class="lj-textbtn lj-chart-toggle" data-action="chart" aria-expanded="false" aria-controls="' +
+          esc(o.uid + "-chart-" + p.id) + '">' + esc(model.ui.viewChart) + "</button>";
+      }
+      html += renderStageChart(model, p, o);
+    }
     if (o.interactive) {
       html += '<div class="lj-panel" id="' + esc(o.uid + "-detail-" + p.id) + '" data-lj-panel>' +
         renderPanel(model, p, { stage: null, product: null }, o) + "</div>";
     } else {
       html += renderProductIndex(model, p, o);
     }
-    return html + "</div></section>";
+    return html + "</section>";
   }
 
   function stageFlags(ui) {
@@ -380,28 +389,29 @@
       '<span class="lj-flag lj-flag--selected">' + checkIcon() + esc(ui.selectedState) + "</span>";
   }
 
-  // Stages: number and label, a large icon circle, and a stem down to a
-  // shared timeline with one node per stage.
+  // The band follows the LARVIVA range slide: joined chevrons running from
+  // light to dark with white icons, labels underneath in sentence case.
   function renderStages(model, p, o) {
-    if (!p.stages.length) return "";
+    if (!p.columns.length) return "";
     var ui = model.ui;
     var n = p.stages.length;
     var html = '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
-    html += '<ol class="lj-stages" style="--lj-cols: ' + n + '">';
-    p.stages.forEach(function (s, i) {
-      html += '<li class="lj-stages__item" style="--i: ' + i + ';">' + control(o.interactive, {
+    html += '<ol class="lj-stages" style="--lj-cols: ' + p.columns.length + '">';
+    p.columns.forEach(function (s, i) {
+      var tone = s.kind === "activity" ? "a" + (p.activities.indexOf(p.activities.filter(function (a) { return a.id === s.id; })[0]) + 1)
+        : String(s.index + 1);
+      html += '<li class="lj-stages__item' + (s.kind === "activity" ? " lj-stages__item--activity" : "") + '" style="--i: ' + i +
+        "; --lj-chev: var(--lj-tone-" + tone + ');">' + control(o.interactive, {
         "class": "lj-stage",
         "data-stage-id": s.id,
         "aria-pressed": "false",
         "aria-controls": o.uid + "-detail-" + p.id
       },
-        '<span class="lj-stage__head">' +
-        '<span class="lj-stage__num" aria-hidden="true">' + (i < 9 ? "0" : "") + (i + 1) + "</span>" +
-        '<span class="lj-vh">' + esc(fmt(ui.stageNumber, { n: i + 1, total: n })) + ": </span>" +
-        '<span class="lj-stage__label">' + esc(s.label) + "</span>" + stageFlags(ui) + "</span>" +
-        '<span class="lj-stage__circle" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
-        '<span class="lj-stage__stem" aria-hidden="true"></span>' +
-        '<span class="lj-stage__node" aria-hidden="true"></span>'
+        '<span class="lj-stage__chev" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
+        '<span class="lj-vh">' + esc(s.kind === "activity" ? ui.activityLabel : fmt(ui.stageNumber, { n: s.index + 1, total: n })) + ": </span>" +
+        '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
+        (s.kind === "activity" ? '<span class="lj-stage__kind" aria-hidden="true">' + esc(ui.activityShort) + "</span>" : "") +
+        stageFlags(ui)
       ) + "</li>";
     });
     return html + "</ol>";
@@ -411,10 +421,10 @@
     '<path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   function productLabel(model, product) {
-    var parts = splitName(product.name, model.settings.brandPrefix);
+    var parts = splitName(product.name, product.brand || model.settings.brandPrefix);
     return '<span class="lj-pill__name">' +
       (parts.brand ? '<span class="lj-pill__brand">' + esc(parts.brand) + "</span> " : "") +
-      esc(parts.rest) + "</span>";
+      '<span class="lj-pill__family">' + esc(parts.rest) + "</span></span>";
   }
 
   function stageNames(p, product) {
@@ -445,25 +455,17 @@
   var CHEVRON = '<svg class="lj-chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +
     '<path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  function viewSwitch(model, p, o, current) {
-    if (!p.stageChart || !o.interactive) return "";
-    var ui = model.ui;
-    return '<div class="lj-views">' + [["products", ui.viewProducts], ["chart", ui.viewChart]].map(function (v) {
-      return '<button type="button" class="lj-views__btn" data-action="view" data-view="' + v[0] + '" aria-pressed="' +
-        (v[0] === current ? "true" : "false") + '">' + esc(v[1]) + "</button>";
-    }).join("") + "</div>";
-  }
+
 
   function renderLanes(model, p, o) {
     if (!p.laneProducts.length) return "";
-    var html = '<div class="lj-section-head"><h4 class="lj-section-title">' + esc(model.ui.productsHeading) + "</h4>" +
-      viewSwitch(model, p, o, "products") + "</div>";
-    html += '<ul class="lj-lanes" style="--lj-cols: ' + p.stages.length + "; --lj-rows: " + p.rowCount + '">';
+    var html = '<h4 class="lj-vh">' + esc(model.ui.productsHeading) + "</h4>";
+    html += '<ul class="lj-lanes" style="--lj-cols: ' + p.columns.length + "; --lj-rows: " + p.rowCount + '">';
     p.laneProducts.forEach(function (product, i) {
       toRuns(product.stageIndices).forEach(function (run, r) {
         var place = "grid-column: " + (run[0] + 1) + " / " + (run[1] + 2) + "; grid-row: " + (product.row + 1) + "; --i: " + i + ";";
         if (r === 0) {
-          html += '<li class="lj-lanes__item" style="' + place + '">' + productPill(model, p, product, o, "bar", "", product.brandNote) + "</li>";
+          html += '<li class="lj-lanes__item" style="' + place + '">' + productPill(model, p, product, o, "bar") + "</li>";
         } else {
           // Extra segment for non-contiguous stages: visual only; the first
           // segment is the accessible control.
@@ -488,9 +490,8 @@
     function wPct(from, to) { return ((axis.indexOf(to) - axis.indexOf(from) + 1) / n * 100).toFixed(3) + "%"; }
     function yPct(v) { return (v / chart.max * 100).toFixed(3) + "%"; }
 
-    var html = '<figure class="lj-chart" data-lj-view="chart"' + (o.interactive ? " hidden" : "") + ">";
-    html += '<div class="lj-section-head"><h4 class="lj-section-title">' + esc(ui.chartTitle) + "</h4>" +
-      viewSwitch(model, p, o, "chart") + "</div>";
+    var html = '<figure class="lj-chart" id="' + esc(o.uid + "-chart-" + p.id) + '"' + (o.interactive ? " hidden" : "") + ">";
+    html += '<h4 class="lj-chart__title">' + esc(ui.chartTitle) + "</h4>";
     html += '<div class="lj-chart__frame" aria-hidden="true"><div class="lj-chart__plot">';
     // Stage bands along the top.
     p.stages.forEach(function (s) {
@@ -577,33 +578,15 @@
 
   // The panel is a feature card: a visual on top (portfolio photograph, stage
   // illustration or pack shot) and the matching content beneath.
+  // Details open beneath the band: a one-line hint when nothing is selected,
+  // otherwise a compact card for the stage or product.
   function renderPanel(model, p, state, o) {
     var ui = model.ui;
     var stage = state.stage ? p.lookup[state.stage] : null;
     var product = state.product ? p.productById[state.product] : null;
-    var html = "";
-
-    if (product) {
-      html += renderProductDetail(model, p, product, o, stage);
-    } else if (stage) {
-      html += renderStageDetail(model, p, stage, o);
-    } else {
-      if (hasText(p.image)) {
-        html += '<div class="lj-media lj-media--photo"><img src="' + esc(p.image) + '" alt="' + esc(p.imageAlt || "") +
-          '" loading="lazy" decoding="async"></div>';
-      }
-      html += '<div class="lj-panel__body">';
-      html += '<p class="lj-panel__eyebrow">' + esc(ui.panelEyebrow) + "</p>";
-      html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(p.title || p.label) + "</h4>";
-      if (hasText(p.intro)) html += '<p class="lj-panel__text">' + esc(p.intro) + "</p>";
-      html += '<p class="lj-panel__hint">' + ARROW + esc(ui.panelEmptyText) + "</p></div>";
-    }
-
-    if (stage || product) {
-      html += '<div class="lj-panel__foot"><button type="button" class="lj-textbtn lj-clear" data-action="clear">' +
-        esc(ui.clearSelection) + "</button></div>";
-    }
-    return html;
+    if (product) return renderProductDetail(model, p, product, o, stage);
+    if (stage) return renderStageDetail(model, p, stage, o);
+    return '<p class="lj-panel__hint">' + ARROW + esc(ui.panelEmptyText) + "</p>";
   }
 
   function renderStageDetail(model, p, stage, o) {
@@ -612,12 +595,13 @@
     var eyebrow = stage.kind === "stage"
       ? fmt(ui.stageNumber, { n: stage.index + 1, total: p.stages.length })
       : ui.activityLabel;
-    var html = '<div class="lj-media lj-media--icon">' + iconHtml(o.illustrations, stage.illustration, "lj-media__icon") + "</div>";
-    html += '<div class="lj-panel__body">';
+    var html = '<div class="lj-card lj-card--stage">';
+    html += '<div class="lj-card__body">';
     html += '<p class="lj-panel__eyebrow">' + esc(eyebrow) + "</p>";
     html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(stage.label) + "</h4>";
     if (hasText(stage.description)) html += '<p class="lj-panel__text">' + esc(stage.description) + "</p>";
-    html += '<h5 class="lj-section-title lj-panel__subtitle">' + esc(ui.relatedProductsHeading) + "</h5>";
+    html += "</div><div class=\"lj-card__side\">";
+    html += '<h5 class="lj-panel__subtitle">' + esc(ui.relatedProductsHeading) + "</h5>";
     if (!products.length) {
       html += '<p class="lj-panel__text lj-panel__text--muted">' + esc(ui.noRelatedProducts) + "</p>";
     } else {
@@ -627,7 +611,8 @@
       });
       html += "</ul>";
     }
-    return html + "</div>";
+    html += '<button type="button" class="lj-textbtn lj-clear" data-action="clear">' + esc(ui.clearSelection) + "</button>";
+    return html + "</div></div>";
   }
 
 
@@ -672,21 +657,17 @@
   }
 
 
-  // Laid out like a product page on biomar.com: pack shot, brand over a large
-  // product name, then an attribute list.
+  // Compact product card: pack shot, name and attributes, then grades and
+  // the link to the product page.
   function renderProductDetail(model, p, product, o, stage) {
     var ui = model.ui;
     var spec = product.particleSize;
-    var parts = splitName(product.name, model.settings.brandPrefix);
-    var firstStage = p.lookup[product.stageIds[0]];
-    var html = '<div class="lj-detail" style="' + accentStyle(product) + '">';
+    var parts = splitName(product.name, product.brand || model.settings.brandPrefix);
+    var html = '<div class="lj-card lj-detail" style="' + accentStyle(product) + '">';
     if (hasText(product.image)) {
-      html += '<div class="lj-media lj-media--pack"><img class="lj-detail__image" src="' + esc(product.image) +
-        '" alt="" loading="lazy" decoding="async"></div>';
-    } else if (firstStage) {
-      html += '<div class="lj-media lj-media--icon">' + iconHtml(o.illustrations || {}, firstStage.illustration, "lj-media__icon") + "</div>";
+      html += '<div class="lj-card__media"><img src="' + esc(product.image) + '" alt="" loading="lazy" decoding="async"></div>';
     }
-    html += '<div class="lj-panel__body">';
+    html += '<div class="lj-card__body">';
     if (stage && o.interactive) {
       html += '<button type="button" class="lj-textbtn lj-back" data-action="back-to-stage">' +
         esc(fmt(ui.backToStage, { stage: stage.label })) + "</button>";
@@ -694,39 +675,43 @@
     html += '<h4 class="lj-panel__title lj-detail__title" tabindex="-1">' +
       (parts.brand ? '<span class="lj-detail__brand">' + esc(parts.brand) + "</span> " : "") +
       '<span class="lj-detail__name">' + esc(parts.rest) + "</span></h4>";
+    if (hasText(product.description)) html += '<p class="lj-panel__text">' + esc(product.description) + "</p>";
 
     var rows = "";
-    rows += specRow(ui.fieldPortfolio, esc(p.title || p.label));
     if (hasText(product.productType)) rows += specRow(ui.fieldProductType, esc(product.productType));
     if (product.stageIds.length) rows += specRow(ui.fieldStages, esc(stageNames(p, product).join(", ")));
-    if (spec && spec.type === "set") {
-      rows += specRow(spec.label || ui.fieldParticleSize, '<ul class="lj-grades">' + spec.items.map(function (it) {
-        return '<li class="lj-grade" style="--lj-grade: var(--lj-grade-' + esc(it.color || "default") + ');">' +
-          gradeLine(it, spec.unit) + "</li>";
-      }).join("") + "</ul>" + (spec.verified === false ? '<span class="lj-badge">' + esc(ui.provisional) + "</span>" : ""));
-    } else if (spec) {
-      rows += specRow(ui.fieldParticleSize, esc(formatSize(spec)) +
-        (spec.verified === false ? ' <span class="lj-badge">' + esc(ui.provisional) + "</span>" : ""));
-    }
-    var gradesHaveUse = spec && spec.type === "set" && spec.items.some(function (it) { return it.useFrom; });
-    if (hasText(product.use) && !gradesHaveUse) rows += specRow(ui.fieldUse, esc(product.use));
     if (hasText(product.application)) rows += specRow(ui.fieldApplication, esc(product.application));
     if (product.variants.length) rows += specRow(ui.fieldVariants, esc(product.variants.join(", ")));
     if (hasText(product.packaging)) rows += specRow(ui.fieldPackaging, esc(product.packaging));
     if (hasText(product.health)) rows += specRow(ui.fieldHealth, esc(product.health));
     if (hasText(product.marketAvailability)) rows += specRow(ui.fieldMarkets, esc(product.marketAvailability));
-    if (hasText(product.description)) html += '<p class="lj-panel__text">' + esc(product.description) + "</p>";
-    html += '<dl class="lj-attrs">' + rows + "</dl>";
+    if (rows) html += '<dl class="lj-attrs">' + rows + "</dl>";
     if (product.technicalNotes.length) {
       html += '<ul class="lj-list">' + product.technicalNotes.map(function (n) {
         return "<li>" + esc(n) + "</li>";
       }).join("") + "</ul>";
     }
-    if (o.interactive && !p.stageChart) html += renderSizeScale(model, p, product);
+    html += "</div>";
 
+    html += '<div class="lj-card__side">';
+    if (spec) {
+      html += '<h5 class="lj-panel__subtitle">' + esc(spec.label || ui.fieldParticleSize) +
+        (spec.verified === false ? ' <span class="lj-badge">' + esc(ui.provisional) + "</span>" : "") + "</h5>";
+      if (spec.type === "set") {
+        html += '<ul class="lj-grades">' + spec.items.map(function (it) {
+          return '<li class="lj-grade" style="--lj-grade: var(--lj-grade-' + esc(it.color || "default") + ');">' +
+            gradeLine(it, spec.unit) + "</li>";
+        }).join("") + "</ul>";
+      } else {
+        html += '<p class="lj-panel__text">' + esc(formatSize(spec)) + "</p>";
+      }
+    }
     if (hasText(product.url)) {
       html += '<a class="lj-cta" href="' + esc(product.url) + '">' + esc(ui.viewDetails) +
         '<span class="lj-vh">: ' + esc(product.name) + "</span>" + ARROW + "</a>";
+    }
+    if (o.interactive) {
+      html += '<button type="button" class="lj-textbtn lj-clear" data-action="clear">' + esc(ui.clearSelection) + "</button>";
     }
     return html + "</div></div>";
   }
@@ -782,7 +767,12 @@
       this.selectProduct(target.getAttribute("data-product-id") || target.getAttribute("data-segment-of"), fromPanel);
     } else {
       var action = target.getAttribute("data-action");
-      if (action === "view") this.setView(target.getAttribute("data-view"));
+      if (action === "chart") {
+        var open = target.getAttribute("aria-expanded") !== "true";
+        target.setAttribute("aria-expanded", open ? "true" : "false");
+        var chartEl = this.el.querySelector("#" + target.getAttribute("aria-controls"));
+        if (chartEl) chartEl.hidden = !open;
+      }
       if (action === "clear") this.clear(true);
       if (action === "back-to-stage") {
         this.state.product = null;
@@ -824,19 +814,6 @@
     this.update();
     this.announce(fmt(this.model.ui.announcePortfolio, { portfolio: this.portfolio().label }));
     this.emit();
-  };
-
-  // Products / chart view within the active portfolio; selection is kept.
-  Journey.prototype.setView = function (view) {
-    var section = this.el.querySelector('[data-portfolio-panel="' + this.state.portfolio + '"]');
-    each(section.querySelectorAll("[data-lj-view]"), function (el) {
-      el.hidden = el.getAttribute("data-lj-view") !== view;
-    });
-    each(section.querySelectorAll('[data-action="view"]'), function (btn) {
-      btn.setAttribute("aria-pressed", btn.getAttribute("data-view") === view ? "true" : "false");
-    });
-    var focusTarget = section.querySelector('[data-lj-view="' + view + '"] [data-view="' + view + '"]');
-    if (focusTarget) focusTarget.focus();
   };
 
   Journey.prototype.selectStage = function (id) {
