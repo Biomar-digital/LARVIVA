@@ -59,9 +59,9 @@ async function run() {
   }), "focus moves to panel heading");
   if (shotDir) await page.screenshot({ path: path.join(shotDir, "desktop-product.png"), fullPage: true });
 
-  // Activity: broodstock is not a journey stage.
-  await fish.locator('.lj-activities [data-stage-id="broodstock-nutrition"]').click();
-  assert.match(await fish.locator("[data-lj-panel]").innerText(), /Connected activity/i);
+  // Activity: broodstock sits outside the journey, labelled with its activity.
+  assert.strictEqual(await fish.locator('.lj-stages [data-stage-id="broodstock-nutrition"]').count(), 0, "broodstock is not a stage");
+  assert.match(await fish.locator(".lj-activities").innerText(), /Broodstock nutrition/i);
   await fish.locator('.lj-activities [data-product-id="larviva-broodstock"]').click();
   assert.match(await fish.locator("[data-lj-panel]").innerText(), /Maturation/);
 
@@ -88,7 +88,7 @@ async function run() {
 
   // Compact: the module should stay short on desktop.
   var height = await page.locator("[data-larviva-journey]").evaluate(function (e) { return e.offsetHeight; });
-  assert.ok(height < 650, "desktop module height " + height + "px");
+  assert.ok(height < 800, "desktop module height " + height + "px");
 
   // ── Mobile ──
   var mobile = await open({ width: 375, height: 800 });

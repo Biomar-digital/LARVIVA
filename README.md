@@ -10,8 +10,12 @@ It follows the approved reference design and the live biomar.com LARVIVA page. T
   - **Selection:** the selected stage's node fills and its circle gets a ring.
 - **LARVIVA PRODUCTS:** light-blue cards sit under the stages they cover, each with a chevron and an underline. The selected card turns BioMar Blue with a Leafy Green underline.
   - **LARVIVA PL:** one card listing PL 200 / PL 300 / PL 400, with each grade's particle size in the detail panel.
-- **Fish activities:** Broodstock nutrition and Live-feed enrichment as icon circles beside their product cards, marked as not developmental stages.
-- **Detail panel (below):** laid out like a biomar.com product page. It shows the pack shot, "LARVIVA" above the product name, the attribute list, the description, a particle-size scale comparing the range, and a navy "View product details" button.
+- **Product thumbnails:** each product card carries its pack shot. Narrow cards drop the thumbnail so the name keeps its room.
+- **Fish activities:** "Connected hatchery activities" cards for LARVIVA Broodstock and MultiGain, each labelled with its activity (Broodstock nutrition, Live-feed enrichment) and kept outside the stage timeline.
+- **Feature card (right):**
+  - **When nothing is selected:** a BioMar hatchery photograph (the fish or shrimp beaker image from the LARVIVA page) with the portfolio intro.
+  - **For a stage:** a large stage illustration with its description and related products.
+  - **For a product:** a product-page view with the pack shot, "LARVIVA" above the product name, a short description, the attribute list, a particle-size scale and a navy "View product details" button.
 
 > **Content status.**
 > - **Product facts** come from the project brief and the supplied LARVIVA range sheets.
@@ -69,7 +73,8 @@ Motion is limited to a small lift on hover and a short fade-up on load. All of i
   - a *particle size across the range* scale, which places the product among the rest of the portfolio
 - **Switching Fish/Shrimp** resets the selection without reloading the page.
 - **Responsive:**
-  - **Desktop and tablet:** the panel sits below the product cards, at full width.
+  - **Desktop (≥ 1024 px):** the feature card sits to the right and stays in view while scrolling.
+  - **Tablet:** the feature card moves below.
   - **Mobile (< 760 px):** the timeline scrolls sideways inside the module, and the product cards stack and name their stages. The panel scrolls into view on selection. The page never scrolls sideways.
 
 ### Accessibility

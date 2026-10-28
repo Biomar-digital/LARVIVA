@@ -14,13 +14,14 @@
     "stageNumber": "Stage {n} of {total}",
     "activityLabel": "Connected activity",
     "productsHeading": "LARVIVA products",
-    "activitiesHeading": "Connected activities",
+    "activitiesHeading": "Connected hatchery activities",
     "activitiesNote": "Run alongside the larval journey – not developmental stages.",
     "otherProductsHeading": "Other products",
     "relatedStage": "Relevant",
     "selectedState": "Selected",
     "stagesPrefix": "Stages:",
     "panelEmptyTitle": "Start strong at every stage",
+    "panelEyebrow": "LARVIVA hatchery range",
     "panelEmptyText": "Select a stage to see the related LARVIVA products, or select a product for its details.",
     "relatedProductsHeading": "Related LARVIVA products",
     "noRelatedProducts": "No products are currently mapped to this stage.",
@@ -49,6 +50,8 @@
       "id": "fish",
       "label": "Fish",
       "titleLabel": "fish",
+      "image": "https://www.biomar.com/media/ifnlox4f/larviva-fish-hatchery-beaker.jpg?width=720&format=webp&quality=80",
+      "imageAlt": "Fish larvae in a laboratory beaker",
       "icon": [
         "Icon-LARVIVA-fish-larvae-02"
       ],
@@ -127,6 +130,8 @@
       "id": "shrimp",
       "label": "Shrimp",
       "titleLabel": "shrimp",
+      "image": "https://www.biomar.com/media/0sugyz2l/larviva-shrimp-hatchery-beaker.jpg?width=720&format=webp&quality=80",
+      "imageAlt": "Shrimp post-larvae in a laboratory beaker",
       "icon": [
         "Icon-Shrimp-LARVIVA-PL"
       ],

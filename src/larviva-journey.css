@@ -47,6 +47,7 @@
   /* Shape and motion */
   --lj-radius: 6px;
   --lj-circle-size: 112px;
+  --lj-panel-width: 360px;
   --lj-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   position: relative;
@@ -186,9 +187,20 @@
 }
 
 .lj-body {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  display: grid;
+  gap: 28px;
+}
+
+@media (min-width: 1024px) {
+  .lj-body {
+    grid-template-columns: minmax(0, 1fr) var(--lj-panel-width);
+    align-items: start;
+  }
+
+  .lj-panel {
+    position: sticky;
+    top: 16px;
+  }
 }
 
 .lj-main {
@@ -288,8 +300,8 @@
 }
 
 .lj-stage__icon {
-  width: 72%;
-  height: 46%;
+  width: 84%;
+  height: 56%;
 }
 
 .lj-stage__stem {
@@ -375,6 +387,14 @@
   display: flex;
   min-width: 0;
   padding: 0 5px;
+  container-type: inline-size;
+}
+
+/* Narrow cards drop the thumbnail so the name keeps its room. */
+@container (max-width: 250px) {
+  .lj .lj-pill__thumb {
+    display: none;
+  }
 }
 
 .lj-pill {
@@ -415,6 +435,30 @@
 .lj--interactive .lj-pill:hover {
   background: var(--lj-card-hover);
   transform: translateY(-2px);
+}
+
+.lj-pill__thumb {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 4px;
+  background: var(--lj-white);
+}
+
+.lj-pill__thumb img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.lj-pill__kicker {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  opacity: 0.8;
 }
 
 .lj-pill__text {
@@ -499,25 +543,20 @@
 
 .lj-activities {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px 16px;
-  margin-top: 10px;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 8px;
 }
 
 .lj-activities__intro {
   display: flex;
-  flex: 1 1 100%;
   flex-wrap: wrap;
   align-items: baseline;
   gap: 2px 10px;
 }
 
-.lj-activities__title {
-  color: var(--lj-heading);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.lj-activities__intro .lj-section-title {
+  margin: 0;
 }
 
 .lj-activities__note {
@@ -527,107 +566,79 @@
 
 .lj-activities__list {
   display: grid;
-  flex: 1 1 100%;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 10px;
   padding: 0;
   list-style: none;
 }
 
-.lj-activity {
-  display: flex;
-  align-items: stretch;
-  gap: 10px;
-}
-
-.lj-stage--activity {
-  flex-direction: row;
-  flex: none;
-  gap: 10px;
-  padding: 0 4px 0 0;
-  text-align: left;
-}
-
-.lj-stage__disc {
-  display: grid;
-  flex: none;
-  place-items: center;
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  background: var(--lj-circle);
-  transition: background-color 250ms var(--lj-ease);
-}
-
-.lj-stage--activity .lj-stage__icon {
-  width: 76%;
-  height: 56%;
-}
-
-.lj-stage--activity .lj-stage__label {
-  max-width: 9em;
-}
-
-.lj--interactive .lj-stage--activity:hover .lj-stage__disc,
-.lj-stage--activity[aria-pressed="true"] .lj-stage__disc,
-.lj-stage--activity.is-related .lj-stage__disc {
-  background: var(--lj-circle-active);
-}
-
-.lj-stage--activity[aria-pressed="true"] .lj-stage__disc {
-  box-shadow: 0 0 0 3px var(--lj-white), 0 0 0 5px var(--lj-sky-blue);
-}
-
-.lj-stage--activity .lj-flag {
-  margin: 0;
-}
-
-.lj-pill--activity {
-  flex: 1;
+.lj-activities__list .lj-lanes__item {
+  padding: 0;
 }
 
 /* ── Detail panel ─────────────────────────────────────────────────────── */
 
 .lj-panel {
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  padding: 24px 28px;
+  border: 1px solid var(--lj-crisp-blue);
   border-radius: var(--lj-radius);
-  background: var(--lj-panel);
+  background: var(--lj-white);
   scroll-margin-top: 16px;
 }
 
-.lj-panel > * {
-  animation: lj-up 300ms var(--lj-ease) both;
+.lj-panel > *,
+.lj-detail > * {
+  animation: lj-up 320ms var(--lj-ease) both;
 }
 
 .lj-detail {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Visual at the top of the feature card. */
+.lj-media {
+  position: relative;
+  overflow: hidden;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px 32px;
-  width: 100%;
+  place-items: center;
+  height: 190px;
+  background: var(--lj-circle);
 }
 
-@media (min-width: 900px) {
-  .lj-detail {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  }
-
-  .lj-detail:has(.lj-detail__media) {
-    grid-template-columns: 170px minmax(0, 1.1fr) minmax(0, 1fr);
-  }
-
-  .lj-detail > .lj-back {
-    grid-column: 1 / -1;
-  }
+.lj-media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
-.lj-detail__image {
-  display: block;
-  width: 100%;
-  height: 160px;
+.lj-media--photo img {
+  object-fit: cover;
+}
+
+.lj-media--pack img {
+  padding: 18px;
   object-fit: contain;
+}
+
+.lj-media__icon {
+  width: 62%;
+  height: 52%;
+  color: var(--lj-biomar-blue);
+}
+
+.lj-panel__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 22px 24px 4px;
+}
+
+.lj-panel__foot {
+  padding: 0 24px 20px;
 }
 
 .lj-panel__eyebrow {
@@ -682,12 +693,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  margin: 16px 0 18px;
+  font-size: 0.9375rem;
   color: var(--lj-heading);
   font-weight: 600;
 }
 
 .lj-panel__subtitle {
-  margin-bottom: 10px;
+  margin: 18px 0 10px;
   color: var(--lj-heading);
   font-size: 0.75rem;
   font-weight: 700;
@@ -695,21 +708,12 @@
   text-transform: uppercase;
 }
 
-.lj-stage-detail {
-  display: grid;
-  gap: 16px 32px;
-  width: 100%;
-}
 
-@media (min-width: 900px) {
-  .lj-stage-detail {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-  }
-}
 
 .lj-chips {
   display: grid;
   gap: 8px;
+  width: 100%;
   padding: 0;
   list-style: none;
 }
@@ -721,6 +725,10 @@
 /* Attribute list, as on biomar.com product pages. */
 .lj-attrs {
   display: grid;
+  width: 100%;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--lj-crisp-blue);
   grid-template-columns: max-content 1fr;
   gap: 6px 18px;
   font-size: 0.9375rem;
@@ -787,7 +795,7 @@
   height: 8px;
   margin-top: 18px;
   border-radius: 4px;
-  background: var(--lj-white);
+  background: var(--lj-circle);
 }
 
 .lj-scale__range {
@@ -836,6 +844,7 @@
 
 .lj-cta {
   display: inline-flex;
+  margin-bottom: 8px;
   align-items: center;
   gap: 12px;
   margin-top: 18px;
@@ -873,7 +882,7 @@
 }
 
 .lj-back {
-  justify-self: start;
+  margin-bottom: 10px;
 }
 
 .lj-back::before {
@@ -881,7 +890,7 @@
 }
 
 .lj-clear {
-  margin-top: 16px;
+  margin-top: 6px;
 }
 
 /* ── Footer ───────────────────────────────────────────────────────────── */
@@ -986,12 +995,8 @@
     display: none;
   }
 
-  .lj-activity {
-    flex-direction: column;
-  }
-
-  .lj-panel {
-    padding: 20px 18px;
+  .lj-media {
+    height: 150px;
   }
 }
 
