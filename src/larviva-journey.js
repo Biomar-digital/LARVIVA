@@ -231,57 +231,8 @@
 
   /* ── Markup (shared by browser and pre-render) ───────────────────────── */
 
-  /* ── Journey ribbon ──────────────────────────────────────────────────── */
-
-  // Stage bubbles grow along the journey and sit on a gentle arc; the ribbon
-  // behind them is a swoosh that thickens and tapers, echoing the BioMar
-  // swoosh. Geometry is in px vertically and 0–1000 horizontally.
-  var RIBBON_HEIGHT = 130;
-
-  function stageGeometry(count) {
-    var geo = [];
-    for (var i = 0; i < count; i++) {
-      var t = count > 1 ? i / (count - 1) : 0.5;
-      var size = Math.round(78 + 22 * t);
-      var center = 62 - 10 * Math.sin(Math.PI * t);
-      geo.push({ size: size, lift: Math.round(center - size / 2), x: (i + 0.5) / count * 1000, y: center });
-    }
-    return geo;
-  }
-
-  function ribbonPath(geo) {
-    var first = geo[0];
-    var last = geo[geo.length - 1];
-    var pts = [{ x: 0, y: first.y + 22 }].concat(geo, [{ x: 1000, y: last.y - 20 }]);
-    var mid = [];
-    // Catmull-Rom spline through the bubble centres, sampled.
-    for (var k = 0; k < pts.length - 1; k++) {
-      var p0 = pts[Math.max(k - 1, 0)], p1 = pts[k], p2 = pts[k + 1], p3 = pts[Math.min(k + 2, pts.length - 1)];
-      for (var j = 0; j < 14; j++) {
-        var s = j / 14, s2 = s * s, s3 = s2 * s;
-        mid.push({
-          x: 0.5 * (2 * p1.x + (-p0.x + p2.x) * s + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * s2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * s3),
-          y: 0.5 * (2 * p1.y + (-p0.y + p2.y) * s + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * s2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * s3)
-        });
-      }
-    }
-    mid.push(pts[pts.length - 1]);
-    function width(x) {
-      var t = x / 1000;
-      return 3 + 46 * Math.pow(t, 1.1) * (1 - Math.pow(t, 7));
-    }
-    var top = mid.map(function (m) { return m.x.toFixed(1) + " " + (m.y - width(m.x) / 2).toFixed(1); });
-    var bottom = mid.slice().reverse().map(function (m) { return m.x.toFixed(1) + " " + (m.y + width(m.x) / 2).toFixed(1); });
-    return "M" + top.join(" L") + " L" + bottom.join(" L") + " Z";
-  }
-
-  function renderRibbon(geo, id) {
-    return '<svg class="lj-ribbon" viewBox="0 0 1000 ' + RIBBON_HEIGHT + '" preserveAspectRatio="none" focusable="false">' +
-      '<defs><linearGradient id="' + esc(id) + '" x1="0" x2="1" y1="0" y2="0">' +
-      '<stop offset="0" style="stop-color: var(--lj-ribbon-start)"/><stop offset="1" style="stop-color: var(--lj-ribbon-end)"/>' +
-      "</linearGradient></defs>" +
-      '<path d="' + ribbonPath(geo) + '" fill="url(#' + esc(id) + ')"/></svg>';
-  }
+  // Hairline of fine ticks used under titles throughout BioMar presentations.
+  var TICKS = '<span class="lj-ticks" aria-hidden="true"></span>';
 
   function renderModule(model, options) {
     options = options || {};
@@ -316,7 +267,7 @@
       });
       html += "</div>";
     }
-    html += "</div>";
+    html += "</div>" + TICKS;
 
     model.portfolios.forEach(function (p) {
       html += renderPortfolio(model, p, Object.assign({ hidden: interactive && p.id !== active }, o));
@@ -358,25 +309,25 @@
       '<span class="lj-flag lj-flag--selected">' + checkIcon() + esc(ui.selectedState) + "</span>";
   }
 
+  // The journey is drawn as a value-chain band: joined chevrons running from
+  // light to dark as the animal develops.
   function renderStages(model, p, o) {
     if (!p.stages.length) return "";
     var ui = model.ui;
-    var geo = stageGeometry(p.stages.length);
     var html = '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
     html += '<ol class="lj-stages" style="--lj-cols: ' + p.stages.length + '">';
-    html += '<li class="lj-stages__ribbon" aria-hidden="true">' + renderRibbon(geo, o.uid + "-ribbon-" + p.id) + "</li>";
     p.stages.forEach(function (s, i) {
-      html += '<li class="lj-stages__item" style="grid-column: ' + (i + 1) + "; --lj-disc: " + geo[i].size +
-        "px; --lj-lift: " + geo[i].lift + "px; --i: " + i + ';">' + control(o.interactive, {
+      html += '<li class="lj-stages__item" style="--i: ' + i + ';">' + control(o.interactive, {
         "class": "lj-stage",
         "data-stage-id": s.id,
         "aria-pressed": "false",
         "aria-controls": o.uid + "-detail-" + p.id
       },
-        '<span class="lj-stage__disc" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
-        '<span class="lj-stage__num" aria-hidden="true">' + (i < 9 ? "0" : "") + (i + 1) + "</span>" +
-        '<span class="lj-vh">' + esc(fmt(ui.stageNumber, { n: i + 1, total: p.stages.length })) + ": </span>" +
+        '<span class="lj-stage__bg" aria-hidden="true"></span>' +
+        iconHtml(o.illustrations, s.illustration, "lj-stage__icon") +
         '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
+        '<span class="lj-stage__num" aria-hidden="true">' + (i < 9 ? "0" : "") + (i + 1) + "</span>" +
+        '<span class="lj-vh">, ' + esc(fmt(ui.stageNumber, { n: i + 1, total: p.stages.length })) + "</span>" +
         stageFlags(ui)
       ) + "</li>";
     });
@@ -408,7 +359,8 @@
       (hasText(meta) ? '<span class="lj-pill__meta">' + esc(meta) + "</span>" : "") +
       '<span class="lj-pill__stages"><span class="lj-vh">' + esc(model.ui.stagesPrefix) + " </span>" +
       esc(stageNames(p, product).join(" · ")) + "</span>" +
-      checkIcon()
+      checkIcon() +
+      '<span class="lj-pill__track" aria-hidden="true"></span>'
     );
   }
 
@@ -426,7 +378,7 @@
           // segment is the accessible control.
           html += '<li class="lj-lanes__item" style="' + place + '" aria-hidden="true">' +
             '<span class="lj-pill lj-pill--bar lj-pill--segment" data-segment-of="' + esc(product.id) + '" style="' +
-            accentStyle(product) + '">' + productLabel(model, product) + "</span></li>";
+            accentStyle(product) + '"><span class="lj-pill__track"></span></span></li>';
         }
       });
     });
@@ -490,7 +442,7 @@
     } else {
       html += '<p class="lj-panel__eyebrow">' + esc(p.title || p.label) + "</p>";
       html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(ui.panelEmptyTitle) + "</h4>";
-      html += '<span class="lj-hash" aria-hidden="true"></span>';
+      html += TICKS;
       if (hasText(p.intro)) html += '<p class="lj-panel__text lj-panel__intro">' + esc(p.intro) + "</p>";
       html += '<p class="lj-panel__hint">' + esc(ui.panelEmptyText) + "</p>";
     }
@@ -509,7 +461,7 @@
       : ui.activityLabel;
     var html = '<p class="lj-panel__eyebrow">' + esc(eyebrow) + "</p>";
     html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(stage.label) + "</h4>";
-    html += '<span class="lj-hash" aria-hidden="true"></span>';
+    html += TICKS;
     if (hasText(stage.description)) html += '<p class="lj-panel__text">' + esc(stage.description) + "</p>";
     html += '<h5 class="lj-panel__subtitle">' + esc(ui.relatedProductsHeading) + "</h5>";
     if (!products.length) {
@@ -565,11 +517,13 @@
     html += '<p class="lj-panel__eyebrow"><span class="lj-swatch" aria-hidden="true"></span>' +
       esc(fmt(ui.productEyebrow, { portfolio: p.label })) + "</p>";
     html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(product.name) + "</h4>";
-    html += '<span class="lj-hash" aria-hidden="true"></span>';
+    html += TICKS;
+    if (hasText(product.productType)) {
+      html += '<p class="lj-panel__tagline"><span class="lj-vh">' + esc(ui.fieldProductType) + ": </span>" + esc(product.productType) + "</p>";
+    }
     if (hasText(product.description)) html += '<p class="lj-panel__text">' + esc(product.description) + "</p>";
 
     var rows = "";
-    if (hasText(product.productType)) rows += specRow(ui.fieldProductType, esc(product.productType));
     if (spec) {
       rows += specRow(ui.fieldParticleSize, esc(formatSize(spec)) +
         (spec.verified === false ? ' <span class="lj-badge">' + esc(ui.provisional) + "</span>" : ""));
@@ -754,7 +708,7 @@
       var related = !!product && product.stageIds.indexOf(id) !== -1;
       btn.setAttribute("aria-pressed", id === state.stage ? "true" : "false");
       btn.classList.toggle("is-related", related && id !== state.stage);
-      btn.classList.toggle("is-dimmed", !!product && !related);
+      btn.classList.toggle("is-dimmed", product ? !related : !!stage && id !== state.stage);
     });
 
     var detail = section.querySelector("[data-lj-panel]");
