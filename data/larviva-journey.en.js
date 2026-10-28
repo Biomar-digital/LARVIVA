@@ -58,7 +58,6 @@
     },
 
     "ui": {
-      "eyebrow": "LARVIVA · Start strong. Stay strong.",
       "moduleTitle": "Explore the hatchery journey",
       "portfolioSwitchLabel": "Choose a hatchery portfolio",
       "instruction": "Select a stage or a product to explore the range.",
