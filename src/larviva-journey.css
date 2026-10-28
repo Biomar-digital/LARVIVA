@@ -2,72 +2,82 @@
  * LARVIVA Interactive Hatchery Journey — styles.
  *
  * DESIGN TOKENS: everything brand-specific is a custom property in the first
- * block below. When integrating, map these to the BioMar website design system
- * (colours, font family, radii, focus style) rather than editing the rules
- * further down. Values here are approximations taken from the LARVIVA range
- * sheets and are placeholders until confirmed by the design team.
+ * block. Values follow the BioMar Brand Guidelines 2026:
+ *   - Typeface: Avenir Next (Regular / Bold), Arial as the digital fallback.
+ *     Headlines bold, tracking 10; sub-headers bold, tracking 25.
+ *   - Colours: the BioMar colour palette and Black-% greys only.
+ *     Dark text is BioMar Blue; Black is used only where BioMar Blue fails
+ *     contrast (text on Shrimp Orange).
+ *   - Graphic elements: swoosh watermark (background) and the hashed
+ *     "line detail" under headings.
+ * Map these tokens to the website's design-system variables when integrating.
  *
- * Product family colours: each product's `colorToken` in the dataset maps to
- * --lj-family-<token>. Colour is never the only identifier — every product
- * also carries its name and feed type as text.
+ * Product family colours: a product's `colorToken` in the dataset maps to
+ * --lj-family-<token> (fill) and --lj-on-family-<token> (text on that fill).
+ * Colour is never the only identifier: every product shows its name.
  *
- * All selectors are prefixed with .lj / lj- to avoid clashing with site CSS.
+ * All selectors are prefixed .lj / lj- to avoid clashing with site CSS.
  */
 
 .lj {
-  /* Typography — replace with the BioMar web font stack. */
-  --lj-font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Typography */
+  --lj-font: "Avenir Next", "Avenir Next LT Pro", Avenir, Arial, sans-serif;
 
-  /* Core palette */
-  --lj-navy: #233a74;
-  --lj-navy-dark: #172a57;
-  --lj-ink: #1b2540;
-  --lj-ink-muted: #4c576d;
-  --lj-line: #d6dde7;
-  --lj-surface: #ffffff;
-  --lj-surface-alt: #f3f5f8;
-  --lj-focus: #0a5fd1;
+  /* BioMar colour palette */
+  --lj-biomar-blue: #1f3e77;
+  --lj-ocean-blue: #0471ad;
+  --lj-sky-blue: #92cee8;
+  --lj-crisp-blue: #c3e4ef;
+  --lj-leafy-green: #97d130;
+  --lj-wheat-yellow: #eab318;
+  --lj-shrimp-orange: #dd6928;
+  --lj-black-80: #575756;
+  --lj-black-20: #dadada;
+  --lj-black-10: #ededed;
+  --lj-white: #ffffff;
 
-  /* Journey stage tones, light → dark (from the range sheets). */
-  --lj-stage-1-bg: #d3ecf9;
-  --lj-stage-1-fg: var(--lj-ink);
-  --lj-stage-2-bg: #b6dcf2;
-  --lj-stage-2-fg: var(--lj-ink);
-  --lj-stage-3-bg: #74bce4;
-  --lj-stage-3-fg: var(--lj-ink);
-  --lj-stage-4-bg: #2f6f99;
-  --lj-stage-4-fg: #ffffff;
-  --lj-stage-5-bg: #1f557d;
-  --lj-stage-5-fg: #ffffff;
-  --lj-stage-selected-bg: var(--lj-navy);
-  --lj-stage-selected-fg: #ffffff;
+  /* Module surfaces (derived from BioMar Blue) */
+  --lj-card-bg: var(--lj-biomar-blue);
+  --lj-tile-bg: #284a88;
+  --lj-tile-line: rgba(195, 228, 239, 0.28);
+  --lj-watermark: rgba(146, 206, 232, 0.07);
+  --lj-focus: var(--lj-wheat-yellow);
 
-  /* Product family colours (dataset `colorToken`). */
-  --lj-family-default: #7a8aa3;
-  --lj-family-multigain: #d6283c;
-  --lj-family-prostart: #86bd3f;
-  --lj-family-pronurse: #2f9a4c;
-  --lj-family-prowean: #2ea8dc;
-  --lj-family-broodstock: #ec7a24;
-  --lj-family-orbit: #6a92a6;
-  --lj-family-zoea: #35ade1;
-  --lj-family-mysis: #8cc63f;
-  --lj-family-pl200: #2b7db6;
-  --lj-family-pl300: #3a9e53;
-  --lj-family-pl400: #f07d26;
-  --lj-family-zm: #233a74;
+  /* Product family colours */
+  --lj-family-default: var(--lj-crisp-blue);
+  --lj-on-family-default: var(--lj-biomar-blue);
+  --lj-family-prostart: var(--lj-leafy-green);
+  --lj-family-prowean: var(--lj-sky-blue);
+  --lj-family-pronurse: var(--lj-wheat-yellow);
+  --lj-family-orbit: var(--lj-white);
+  --lj-family-broodstock: var(--lj-shrimp-orange);
+  --lj-on-family-broodstock: #000000;
+  --lj-family-multigain: var(--lj-crisp-blue);
+  --lj-family-zoea: var(--lj-sky-blue);
+  --lj-family-mysis: var(--lj-leafy-green);
+  --lj-family-pl200: var(--lj-crisp-blue);
+  --lj-family-pl300: var(--lj-wheat-yellow);
+  --lj-family-pl400: var(--lj-shrimp-orange);
+  --lj-on-family-pl400: #000000;
+  --lj-family-zm: var(--lj-ocean-blue);
+  --lj-on-family-zm: var(--lj-white);
 
   /* Shape and motion */
-  --lj-radius: 10px;
-  --lj-radius-sm: 6px;
-  --lj-gap: 24px;
-  --lj-panel-width: 340px;
-  --lj-transition: 180ms ease;
+  --lj-radius: 20px;
+  --lj-radius-tile: 14px;
+  --lj-panel-width: 330px;
+  --lj-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: 28px 32px 22px;
+  border-radius: var(--lj-radius);
+  background: var(--lj-card-bg);
+  color: var(--lj-white);
   font-family: var(--lj-font);
-  color: var(--lj-ink);
-  line-height: 1.5;
   font-size: 1rem;
+  line-height: 1.5;
 }
 
 .lj *,
@@ -81,9 +91,13 @@
   color: inherit;
 }
 
+.lj :where(h2, h3, h4, h5, p, ul, ol, dl, dd, figure) {
+  margin: 0;
+}
+
 .lj :focus-visible {
   outline: 3px solid var(--lj-focus);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 .lj-vh {
@@ -98,356 +112,344 @@
   border: 0;
 }
 
-/* ── Header and portfolio switch ──────────────────────────────────────── */
+.lj-watermark {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  fill: var(--lj-watermark);
+  pointer-events: none;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────── */
 
 .lj-header {
-  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 22px;
+}
+
+.lj-eyebrow {
+  color: var(--lj-sky-blue);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
 }
 
 .lj-title {
-  margin: 0 0 6px;
-  color: var(--lj-navy);
-  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.1rem);
-  line-height: 1.2;
+  color: var(--lj-white);
+  font-size: clamp(1.5rem, 1.15rem + 1.2vw, 2rem);
   font-weight: 700;
-}
-
-.lj-intro {
-  margin: 0 0 18px;
-  max-width: 62ch;
-  color: var(--lj-ink-muted);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
 }
 
 .lj-switch {
   display: inline-flex;
   padding: 4px;
   border-radius: 999px;
-  background: var(--lj-surface-alt);
-  border: 1px solid var(--lj-line);
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--lj-tile-line);
 }
 
 .lj-switch__tab {
-  min-width: 112px;
-  padding: 10px 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  justify-content: center;
+  padding: 8px 20px;
   border: 0;
   border-radius: 999px;
   background: transparent;
-  font-weight: 600;
+  color: var(--lj-white);
+  font-weight: 700;
+  letter-spacing: 0.025em;
   cursor: pointer;
-  transition: background-color var(--lj-transition), color var(--lj-transition);
+  transition: background-color 200ms var(--lj-ease), color 200ms var(--lj-ease);
 }
 
 .lj-switch__tab:hover {
-  background: #e3e8ef;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .lj-switch__tab[aria-selected="true"] {
-  background: var(--lj-navy);
-  color: #fff;
+  background: var(--lj-white);
+  color: var(--lj-biomar-blue);
 }
 
-.lj-instruction {
+.lj-switch__icon {
+  width: 34px;
+  height: 14px;
+}
+
+/* ── Icons ────────────────────────────────────────────────────────────── */
+
+.lj-icon {
   display: flex;
-  gap: 8px;
-  align-items: flex-start;
-  margin: 14px 0 0;
-  color: var(--lj-ink-muted);
-  font-size: 0.95rem;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.lj-instruction::before {
-  content: "i";
-  flex: none;
-  display: inline-grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  margin-top: 1px;
-  border-radius: 50%;
-  background: var(--lj-navy);
-  color: #fff;
-  font-size: 0.75rem;
-  font-weight: 700;
-  font-style: italic;
+.lj-icon__item {
+  display: flex;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
 }
 
-/* ── Portfolio layout ─────────────────────────────────────────────────── */
+.lj-icon__item + .lj-icon__item {
+  flex: 0 0 30%;
+}
+
+.lj-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Layout ───────────────────────────────────────────────────────────── */
 
 .lj-portfolio[hidden] {
   display: none;
 }
 
-.lj-portfolio__head {
-  margin-bottom: 16px;
-}
-
-.lj-portfolio__title {
-  margin: 0;
-  color: var(--lj-navy);
-  font-size: 1.3rem;
-}
-
-.lj-portfolio__intro {
-  margin: 4px 0 0;
-  color: var(--lj-ink-muted);
-}
-
-.lj-portfolio__body {
+.lj-body {
   display: grid;
-  gap: var(--lj-gap);
+  gap: 20px;
 }
 
 @media (min-width: 1024px) {
-  .lj-portfolio__body {
+  .lj-body {
     grid-template-columns: minmax(0, 1fr) var(--lj-panel-width);
-    align-items: start;
+    align-items: stretch;
   }
 }
 
-.lj-portfolio__main {
+.lj-main {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   min-width: 0;
-}
-
-.lj-section-title {
-  margin: 24px 0 10px;
-  color: var(--lj-navy);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.lj-section-title:first-child {
-  margin-top: 0;
-}
-
-.lj-note {
-  margin: -4px 0 12px;
-  color: var(--lj-ink-muted);
-  font-size: 0.875rem;
 }
 
 /* ── Journey stages ───────────────────────────────────────────────────── */
 
 .lj-stages {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
-  gap: 4px;
-  margin: 0;
+  gap: 12px;
   padding: 0;
   list-style: none;
 }
 
+/* Hashed connector (BioMar line detail) running through the journey. */
+.lj-stages::before {
+  content: "";
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: repeating-linear-gradient(90deg, var(--lj-sky-blue) 0 4px, transparent 4px 9px);
+  opacity: 0.6;
+}
+
 .lj-stages__item {
+  position: relative;
   display: flex;
 }
 
 .lj-stage {
-  --lj-stage-bg: var(--lj-stage-1-bg);
-  --lj-stage-fg: var(--lj-stage-1-fg);
   position: relative;
-  isolation: isolate;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
+  gap: 2px;
   width: 100%;
-  min-height: 150px;
-  padding: 12px 22px 14px 30px;
-  border: 0;
-  background: transparent;
-  color: var(--lj-stage-fg);
+  padding: 12px 10px 12px;
+  border: 1px solid var(--lj-tile-line);
+  border-radius: var(--lj-radius-tile);
+  background: var(--lj-tile-bg);
+  color: var(--lj-white);
   text-align: center;
-  transition: opacity var(--lj-transition);
+  transition: background-color 220ms var(--lj-ease), color 220ms var(--lj-ease),
+    border-color 220ms var(--lj-ease), opacity 220ms var(--lj-ease), transform 220ms var(--lj-ease);
 }
 
 .lj--interactive .lj-stage {
   cursor: pointer;
 }
 
-/* Chevron shape is drawn on a background layer so focus outlines are not clipped. */
-.lj-stage__bg {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--lj-stage-bg);
-  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 18px 50%);
-  transition: background-color var(--lj-transition), filter var(--lj-transition);
+.lj--interactive .lj-stage:hover {
+  border-color: var(--lj-sky-blue);
+  transform: translateY(-2px);
 }
 
-.lj-stages__item:first-child .lj-stage__bg {
-  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%);
-  border-radius: var(--lj-radius-sm) 0 0 var(--lj-radius-sm);
-}
-
-.lj-stages__item:first-child .lj-stage {
-  padding-left: 16px;
-}
-
-.lj-stages__item:nth-child(2) .lj-stage { --lj-stage-bg: var(--lj-stage-2-bg); --lj-stage-fg: var(--lj-stage-2-fg); }
-.lj-stages__item:nth-child(3) .lj-stage { --lj-stage-bg: var(--lj-stage-3-bg); --lj-stage-fg: var(--lj-stage-3-fg); }
-.lj-stages__item:nth-child(4) .lj-stage { --lj-stage-bg: var(--lj-stage-4-bg); --lj-stage-fg: var(--lj-stage-4-fg); }
-.lj-stages__item:nth-child(n+5) .lj-stage { --lj-stage-bg: var(--lj-stage-5-bg); --lj-stage-fg: var(--lj-stage-5-fg); }
-
-.lj-stage:hover .lj-stage__bg {
-  filter: brightness(0.95);
-}
-
-.lj-stage[aria-pressed="true"] {
-  --lj-stage-bg: var(--lj-stage-selected-bg);
-  --lj-stage-fg: var(--lj-stage-selected-fg);
-}
-
-.lj-stage.is-related .lj-stage__bg {
-  box-shadow: inset 0 -6px 0 var(--lj-navy);
-}
-
-.lj-stage.is-dimmed {
-  opacity: 0.55;
-}
-
-.lj-stage__art {
-  display: block;
+.lj-stage__icon {
   width: 100%;
-  max-width: 120px;
-  margin-bottom: auto;
-  opacity: 0.9;
+  max-width: 150px;
+  height: 52px;
+  margin-bottom: 6px;
+  color: var(--lj-sky-blue);
+  transition: color 220ms var(--lj-ease), transform 300ms var(--lj-ease);
 }
 
-.lj-stage__art svg,
-.lj-stage__art img {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-.lj-stage__step {
+.lj-stage__num {
+  color: var(--lj-sky-blue);
   font-size: 0.75rem;
-  opacity: 0.85;
+  font-weight: 700;
+  letter-spacing: 0.1em;
 }
 
 .lj-stage__label {
   font-weight: 700;
+  font-size: 0.9375rem;
   line-height: 1.25;
 }
 
-.lj-stage__flag {
+.lj-flag {
   display: none;
   align-items: center;
   gap: 4px;
   margin-top: 6px;
-  padding: 1px 8px;
+  padding: 1px 10px;
   border-radius: 999px;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 700;
+  letter-spacing: 0.025em;
 }
 
-.lj-stage__flag--related {
-  background: var(--lj-navy);
-  color: #fff;
+.lj-flag--related {
+  background: var(--lj-leafy-green);
+  color: var(--lj-biomar-blue);
 }
 
-.lj-stage__flag--selected {
-  background: #fff;
-  color: var(--lj-navy);
+.lj-flag--selected {
+  background: var(--lj-biomar-blue);
+  color: var(--lj-white);
 }
 
-.lj-stage.is-related .lj-stage__flag--related,
-.lj-stage[aria-pressed="true"] .lj-stage__flag--selected {
+.lj-stage.is-related .lj-flag--related,
+.lj-stage[aria-pressed="true"] .lj-flag--selected {
   display: inline-flex;
+}
+
+.lj-stage[aria-pressed="true"] {
+  border-color: var(--lj-white);
+  background: var(--lj-white);
+  color: var(--lj-biomar-blue);
+}
+
+.lj-stage[aria-pressed="true"] .lj-stage__icon,
+.lj-stage[aria-pressed="true"] .lj-stage__num {
+  color: var(--lj-biomar-blue);
+}
+
+.lj-stage[aria-pressed="true"] .lj-stage__icon {
+  transform: scale(1.06);
+}
+
+.lj-stage.is-related {
+  border: 2px solid var(--lj-leafy-green);
+  padding: 11px 9px 11px;
+}
+
+.lj-stage.is-dimmed > * {
+  opacity: 0.45;
 }
 
 /* ── Product bars ─────────────────────────────────────────────────────── */
 
 .lj-lanes {
   display: grid;
-  gap: 6px;
-  margin: 0;
-  padding: 8px 0;
-  list-style: none;
-  border-radius: var(--lj-radius);
-  background-color: var(--lj-surface-alt);
-  background-image: linear-gradient(to right, var(--lj-line) 1px, transparent 1px);
-  background-size: calc(100% / var(--lj-cols)) 100%;
-}
-
-.lj-lane {
-  display: grid;
   grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
-  padding: 0 6px;
-  column-gap: 12px;
+  grid-auto-rows: 40px;
+  gap: 8px 12px;
+  padding: 10px;
+  margin: 0 -10px;
+  list-style: none;
+  border-radius: var(--lj-radius-tile);
+  background: rgba(0, 0, 0, 0.16);
 }
 
-.lj-product {
+.lj-lanes__item {
+  display: flex;
+  min-width: 0;
+  container-type: inline-size;
+}
+
+/* Short bars show the name only; the feed type stays in the panel. */
+@media (min-width: 760px) {
+  @container (max-width: 250px) {
+    .lj-pill--bar .lj-pill__meta {
+      display: none;
+    }
+  }
+}
+
+.lj-pill {
   position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  min-height: 48px;
+  align-items: center;
+  gap: 4px 10px;
   width: 100%;
-  padding: 8px 12px 8px 16px;
-  border: 1px solid color-mix(in srgb, var(--lj-accent) 45%, #ffffff);
-  border-left: 6px solid var(--lj-accent);
-  border-radius: var(--lj-radius-sm);
-  background: color-mix(in srgb, var(--lj-accent) 14%, #ffffff);
-  color: var(--lj-ink);
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 16px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--lj-accent);
+  color: var(--lj-on-accent);
+  font-size: 0.875rem;
+  line-height: 1.2;
   text-align: left;
-  transition: background-color var(--lj-transition), opacity var(--lj-transition), box-shadow var(--lj-transition);
+  transition: background-color 220ms var(--lj-ease), color 220ms var(--lj-ease),
+    border-color 220ms var(--lj-ease), box-shadow 220ms var(--lj-ease), transform 220ms var(--lj-ease);
 }
 
-.lj--interactive .lj-product {
+.lj--interactive .lj-pill {
   cursor: pointer;
 }
 
-.lj--interactive .lj-product:hover {
-  background: color-mix(in srgb, var(--lj-accent) 24%, #ffffff);
+.lj--interactive .lj-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
 }
 
-.lj-product.is-related {
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--lj-accent) 70%, var(--lj-navy));
-}
-
-.lj-product[aria-pressed="true"],
-.lj-product.is-selected {
-  background: color-mix(in srgb, var(--lj-accent) 30%, #ffffff);
-  box-shadow: 0 0 0 3px var(--lj-navy);
-}
-
-/* Dimmed, not removed. Text stays above 4.5:1 against the dimmed background. */
-.lj-product.is-dimmed {
-  border-color: var(--lj-line);
-  border-left-color: color-mix(in srgb, var(--lj-accent) 35%, #ffffff);
-  background: var(--lj-surface);
-  color: var(--lj-ink-muted);
-  box-shadow: none;
-}
-
-.lj-product__name {
+.lj-pill__name {
+  flex: none;
   font-weight: 700;
-  line-height: 1.25;
+  white-space: nowrap;
 }
 
-.lj-product__brand {
+.lj-pill__brand {
   font-weight: 400;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   letter-spacing: 0.12em;
 }
 
-.lj-product__type,
-.lj-product__size {
-  font-size: 0.8125rem;
-}
-
-.lj-product__size {
+.lj-pill__meta {
+  overflow: hidden;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-variant-numeric: tabular-nums;
-  font-weight: 600;
 }
 
-/* On desktop, a bar's position under the stages shows its coverage; the
-   stage names stay available to screen readers. They become visible text
-   wherever the bar is not aligned with the journey (mobile, cards, chips). */
-.lj-product--bar .lj-product__stages {
+.lj-pill__stages {
+  font-size: 0.75rem;
+}
+
+/* On the journey, a bar's position shows which stages it covers; the stage
+   names remain available to screen readers. */
+.lj-pill--bar .lj-pill__stages,
+.lj-pill--activity .lj-pill__stages {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -456,240 +458,194 @@
   white-space: nowrap;
 }
 
-.lj-product__stages {
-  font-size: 0.75rem;
-  color: var(--lj-ink-muted);
-}
-
-/* Inside an activity card the activity is already the card's heading. */
-.lj-activity .lj-product__stages {
+.lj-check {
   display: none;
+  flex: none;
+  margin-left: auto;
 }
 
-.lj-product--segment {
-  pointer-events: auto;
-  cursor: pointer;
+.lj-pill.is-selected {
+  border-color: var(--lj-white);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35), 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.lj-pill.is-selected .lj-check {
+  display: block;
+}
+
+/* Dimmed, not removed: becomes an outline pill with white text (AA contrast). */
+.lj-pill.is-dimmed {
+  border-color: rgba(195, 228, 239, 0.35);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  box-shadow: none;
+}
+
+/* Bars grow in along the journey when a portfolio is shown. */
+@keyframes lj-grow {
+  from {
+    opacity: 0;
+    transform: scaleX(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.lj--interactive .lj-lanes__item {
+  transform-origin: left center;
+  animation: lj-grow 520ms var(--lj-ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 80ms);
 }
 
 /* ── Connected activities ─────────────────────────────────────────────── */
 
 .lj-activities {
-  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  padding-top: 12px;
+  border-top: 3px solid transparent;
+  border-image: repeating-linear-gradient(90deg, var(--lj-tile-line) 0 4px, transparent 4px 9px) 3;
+}
+
+.lj-activities__intro {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 10px;
+}
+
+.lj-activities__title {
+  color: var(--lj-sky-blue);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+}
+
+.lj-activities__note {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.75rem;
+  line-height: 1.35;
 }
 
 .lj-activities__list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 12px;
-  margin: 0;
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  gap: 10px;
   padding: 0;
   list-style: none;
 }
 
 .lj-activity {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-  border: 1px dashed #9aa8bd;
-  border-radius: var(--lj-radius);
-  background: var(--lj-surface);
+  flex: 1 1 300px;
+  align-items: center;
+  gap: 6px;
+  padding: 5px;
+  border: 1px dashed var(--lj-tile-line);
+  border-radius: 999px;
 }
 
 .lj-stage--activity {
-  --lj-stage-bg: var(--lj-surface-alt);
-  --lj-stage-fg: var(--lj-ink);
-  display: grid;
-  grid-template-columns: 72px minmax(0, 1fr);
-  grid-template-areas: "art step" "art label" "art flag";
-  justify-items: start;
-  align-content: center;
-  column-gap: 12px;
-  min-height: 0;
-  padding: 8px 12px;
+  flex-direction: row;
+  flex: 1 1 auto;
+  gap: 8px;
+  width: auto;
+  padding: 4px 12px 4px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
   text-align: left;
 }
 
-.lj-stage--activity .lj-stage__bg {
-  clip-path: none;
-  border-radius: var(--lj-radius-sm);
-}
-
-.lj-stage--activity .lj-stage__art {
-  grid-area: art;
-  width: 72px;
+.lj-stage--activity .lj-stage__icon {
+  flex: none;
+  width: 52px;
+  height: 28px;
   margin: 0;
 }
 
-.lj-stage--activity .lj-stage__step { grid-area: step; }
-.lj-stage--activity .lj-stage__label { grid-area: label; }
-.lj-stage--activity .lj-stage__flag { grid-area: flag; margin-top: 2px; }
-
-.lj-activity__products,
-.lj-unmapped,
-.lj-chips {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.lj-stage--activity .lj-stage__label {
+  font-size: 0.8125rem;
 }
 
-/* ── Particle size chart ──────────────────────────────────────────────── */
-
-.lj-chart {
-  margin: 8px 0 0;
-  padding: 16px;
-  border: 1px solid var(--lj-line);
-  border-radius: var(--lj-radius);
-  background: var(--lj-surface);
-}
-
-.lj-chart .lj-section-title {
+.lj-stage--activity .lj-flag {
   margin-top: 0;
 }
 
-.lj-chart__rows {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+.lj-stage--activity.is-related {
+  border: 0;
+  padding: 4px 12px 4px 8px;
 }
 
-.lj-chart__row {
-  display: grid;
-  grid-template-columns: 200px minmax(0, 1fr);
-  grid-template-areas: "label track" "value track";
-  align-items: center;
-  column-gap: 16px;
-  row-gap: 0;
-  padding: 6px 0;
-  font-size: 0.875rem;
-  transition: opacity var(--lj-transition);
+.lj-pill--activity {
+  flex: 0 1 auto;
+  width: auto;
+  min-height: 34px;
+  padding: 4px 14px;
 }
 
-.lj-chart__row.is-dimmed {
-  opacity: 0.45;
-}
-
-.lj-chart__row.is-selected .lj-chart__label,
-.lj-chart__row.is-related .lj-chart__label {
-  font-weight: 700;
-}
-
-.lj-chart__label { grid-area: label; }
-.lj-chart__track { grid-area: track; }
-
-.lj-chart__value {
-  grid-area: value;
-  font-size: 0.8125rem;
-  font-variant-numeric: tabular-nums;
-  color: var(--lj-ink-muted);
-}
-
-.lj-chart__track,
-.lj-chart__axis {
-  position: relative;
-  height: 14px;
-}
-
-.lj-chart__track {
-  border-radius: 999px;
-  background: var(--lj-surface-alt);
-}
-
-.lj-chart__range {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  border-radius: 999px;
-  background: var(--lj-accent);
-}
-
-.lj-chart__dot {
-  position: absolute;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  margin: -6px 0 0 -6px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: var(--lj-accent);
-  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lj-accent) 60%, #000);
-}
-
-.lj-chart__row.is-selected .lj-chart__track {
-  box-shadow: 0 0 0 2px var(--lj-navy);
-}
-
-.lj-chart__axis {
-  margin: 6px 0 0 calc(200px + 16px);
-  height: 18px;
-  font-size: 0.75rem;
-  color: var(--lj-ink-muted);
-  border-top: 1px solid var(--lj-line);
-}
-
-.lj-chart__axis span {
-  position: absolute;
-  top: 2px;
-  transform: translateX(-50%);
-  font-variant-numeric: tabular-nums;
-}
-
-.lj-chart__axis .lj-chart__unit {
-  right: 0;
-  left: auto !important;
-  top: 16px;
-  transform: none;
-}
-
-.lj-chart .lj-note {
-  margin: 18px 0 0;
+.lj-pill--activity .lj-pill__meta {
+  display: none;
 }
 
 /* ── Detail panel ─────────────────────────────────────────────────────── */
 
 .lj-panel {
-  padding: 20px;
-  border: 1px solid var(--lj-line);
-  border-radius: var(--lj-radius);
-  background: var(--lj-surface);
-  box-shadow: 0 2px 10px rgba(23, 42, 87, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 22px 22px 18px;
+  border-radius: var(--lj-radius-tile);
+  background: var(--lj-white);
+  color: var(--lj-biomar-blue);
   scroll-margin-top: 16px;
 }
 
-@media (min-width: 1024px) {
-  .lj-panel {
-    position: sticky;
-    top: 16px;
+.lj-detail {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  animation: lj-fade 260ms var(--lj-ease);
+}
+
+@keyframes lj-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
   }
 }
 
-.lj-detail {
-  border-top: 6px solid var(--lj-accent);
-  margin: -20px -20px 0;
-  padding: 16px 20px 0;
-  border-radius: var(--lj-radius) var(--lj-radius) 0 0;
-}
-
-.lj-backlink + .lj-detail {
-  margin-top: 8px;
-}
-
-.lj-eyebrow {
-  margin: 0 0 2px;
-  font-size: 0.75rem;
+.lj-panel__eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--lj-ocean-blue);
+  font-size: 0.8125rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--lj-ink-muted);
+  letter-spacing: 0.025em;
+}
+
+.lj-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--lj-accent);
+  box-shadow: inset 0 0 0 1px rgba(31, 62, 119, 0.25);
 }
 
 .lj-panel__title {
-  margin: 0 0 8px;
-  color: var(--lj-navy);
-  font-size: 1.3rem;
-  line-height: 1.25;
+  margin-top: 2px;
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
 }
 
 .lj-panel__title:focus {
@@ -697,104 +653,169 @@
 }
 
 .lj-panel__title:focus-visible {
-  outline: 3px solid var(--lj-focus);
+  outline: 3px solid var(--lj-ocean-blue);
+}
+
+/* BioMar line detail: hashed divider between header and body text. */
+.lj-hash {
+  display: block;
+  width: 56px;
+  height: 3px;
+  margin: 10px 0 12px;
+  background: repeating-linear-gradient(90deg, var(--lj-sky-blue) 0 4px, transparent 4px 8px);
+}
+
+.lj-panel__text {
+  font-size: 0.9375rem;
+  letter-spacing: -0.01em;
+}
+
+.lj-panel__hint {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--lj-crisp-blue);
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 .lj-panel__subtitle {
   margin: 16px 0 8px;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.025em;
 }
 
-.lj-panel__text {
-  margin: 0 0 12px;
+.lj-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0;
+  list-style: none;
+}
+
+.lj-pill--chip {
+  width: auto;
+  min-height: 34px;
+  padding: 4px 14px;
+  border-color: rgba(31, 62, 119, 0.12);
+}
+
+.lj-pill--chip .lj-pill__stages,
+.lj-pill--chip .lj-pill__meta {
+  display: none;
 }
 
 .lj-specs {
-  margin: 12px 0 0;
-  border-top: 1px solid var(--lj-line);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 16px;
+  width: 100%;
+  margin-top: 14px;
 }
 
-.lj-specs__row {
-  padding: 10px 0;
-  border-bottom: 1px solid var(--lj-line);
+.lj-specs__row--wide {
+  grid-column: 1 / -1;
 }
 
 .lj-specs dt {
-  font-size: 0.75rem;
+  color: var(--lj-ocean-blue);
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--lj-ink-muted);
 }
 
 .lj-specs dd {
-  margin: 2px 0 0;
+  font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
-}
-
-.lj-specs__sub {
-  display: block;
-  font-size: 0.8125rem;
-  color: var(--lj-ink-muted);
 }
 
 .lj-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 4px 0 0;
+  gap: 4px;
+  margin-top: 2px;
   padding: 0;
   list-style: none;
 }
 
 .lj-tags li {
-  padding: 2px 10px;
+  padding: 1px 9px;
   border-radius: 999px;
-  background: var(--lj-surface-alt);
-  border: 1px solid var(--lj-line);
-  font-size: 0.875rem;
+  background: var(--lj-black-10);
+  font-size: 0.8125rem;
 }
 
 .lj-list {
-  margin: 4px 0 0;
   padding-left: 1.1em;
 }
 
 .lj-badge {
   display: inline-block;
-  margin-left: 4px;
-  padding: 0 8px;
+  padding: 0 7px;
   border-radius: 999px;
-  border: 1px solid #b7791f;
-  background: #fff7e6;
-  color: #7a4a00;
-  font-size: 0.75rem;
-  font-weight: 600;
+  border: 1px solid var(--lj-black-80);
+  color: var(--lj-black-80);
+  font-size: 0.6875rem;
+  font-weight: 700;
   vertical-align: 1px;
 }
 
-.lj-minibar {
+.lj-scale {
+  width: 100%;
+  margin-top: 14px;
+}
+
+.lj-scale__label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--lj-ocean-blue);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.lj-scale__track {
   position: relative;
   display: block;
-  height: 8px;
-  margin-top: 8px;
+  height: 12px;
   border-radius: 999px;
-  background: var(--lj-surface-alt);
+  background: var(--lj-black-10);
 }
 
-.lj-minibar span {
+.lj-scale__range {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 2px;
+  bottom: 2px;
   border-radius: 999px;
-  background: var(--lj-accent);
+  background: var(--lj-black-20);
 }
 
-.lj-minibar__scale {
+.lj-scale__range.is-current {
+  top: -2px;
+  bottom: -2px;
+  background: var(--lj-accent);
+  box-shadow: 0 0 0 2px var(--lj-biomar-blue);
+}
+
+.lj-scale__dot {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: var(--lj-accent);
+  box-shadow: 0 0 0 2px var(--lj-biomar-blue);
+}
+
+.lj-scale__axis {
   display: flex;
   justify-content: space-between;
+  margin-top: 3px;
+  color: var(--lj-black-80);
   font-size: 0.6875rem;
-  color: var(--lj-ink-muted);
 }
 
 .lj-cta {
@@ -802,11 +823,11 @@
   align-items: center;
   gap: 8px;
   margin-top: 16px;
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 999px;
-  background: var(--lj-navy);
-  color: #fff;
-  font-weight: 600;
+  background: var(--lj-biomar-blue);
+  color: var(--lj-white);
+  font-weight: 700;
   text-decoration: none;
 }
 
@@ -815,121 +836,139 @@
 }
 
 .lj-cta:hover {
-  background: var(--lj-navy-dark);
+  background: var(--lj-ocean-blue);
 }
 
-.lj-backlink,
-.lj-clear {
-  padding: 4px 0;
+.lj-textbtn {
+  padding: 2px 0;
   border: 0;
   background: none;
-  color: var(--lj-navy);
-  font-size: 0.875rem;
-  font-weight: 600;
+  color: var(--lj-ocean-blue);
+  font-size: 0.8125rem;
+  font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
 }
 
-.lj-backlink::before {
+.lj-back {
+  margin-bottom: 8px;
+}
+
+.lj-back::before {
   content: "← ";
 }
 
 .lj-clear {
-  display: block;
-  margin-top: 14px;
+  margin-top: auto;
+  padding-top: 14px;
 }
+
+/* ── Footer ───────────────────────────────────────────────────────────── */
 
 .lj-disclaimer {
-  margin: 16px 0 0;
-  padding-top: 12px;
-  border-top: 1px solid var(--lj-line);
-  font-size: 0.8125rem;
-  color: var(--lj-ink-muted);
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.75rem;
+  line-height: 1.4;
 }
 
-/* ── Static (no-JS / crawler) product index ───────────────────────────── */
+/* ── Static (no-JS / crawler) render ──────────────────────────────────── */
 
-.lj-index {
-  display: grid;
-  gap: 16px;
-}
-
-.lj-index__item {
-  padding: 20px;
-  border: 1px solid var(--lj-line);
-  border-radius: var(--lj-radius);
+.lj-portfolio__title {
+  margin: 8px 0 14px;
+  font-size: 1.25rem;
 }
 
 .lj--static .lj-portfolio + .lj-portfolio {
-  margin-top: 40px;
+  margin-top: 32px;
 }
 
-/* ── Tablet ───────────────────────────────────────────────────────────── */
+/* With JS available the static list is replaced on load; hide it meanwhile
+   so the page doesn't jump. Crawlers still read it from the HTML. */
+.lj-js .lj--static .lj-index {
+  display: none;
+}
 
-@media (max-width: 1023px) {
-  .lj-chart__row {
-    grid-template-columns: 150px minmax(0, 1fr);
-  }
-
-  .lj-chart__axis {
-    margin-left: calc(150px + 16px);
-  }
+.lj-index {
+  display: grid;
+  gap: 12px;
+  align-content: start;
 }
 
 /* ── Mobile ───────────────────────────────────────────────────────────── */
 
 @media (max-width: 759px) {
-  /* Stages become a horizontally scrollable strip of cards; the page itself
-     never scrolls sideways. */
+  .lj {
+    padding: 20px 16px 16px;
+    border-radius: 16px;
+  }
+
+  .lj-header {
+    margin-bottom: 16px;
+  }
+
+  .lj-switch {
+    display: flex;
+    width: 100%;
+  }
+
+  .lj-switch__tab {
+    flex: 1;
+    min-width: 0;
+  }
+
+  /* Stages become a horizontally scrollable strip; the page never scrolls
+     sideways. */
   .lj-stages {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     overflow-x: auto;
     margin: 0 -16px;
-    padding: 4px 16px 10px;
+    padding: 2px 16px 6px;
     scroll-snap-type: x mandatory;
     scroll-padding: 0 16px;
-    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .lj-stages::-webkit-scrollbar {
+    display: none;
+  }
+
+  .lj-stages::before {
+    left: 16px;
+    right: 16px;
   }
 
   .lj-stages__item {
     flex: 0 0 auto;
-    width: 46%;
-    min-width: 140px;
-    max-width: 180px;
+    width: 132px;
     scroll-snap-align: start;
   }
 
-  .lj-stages .lj-stage {
-    min-height: 132px;
-    padding: 10px 12px 12px;
-  }
-
-  .lj-stage__bg,
-  .lj-stages__item:first-child .lj-stage__bg {
-    clip-path: none;
-    border-radius: var(--lj-radius);
-  }
-
-  /* Product bars become a list of full-width cards with stage names shown. */
+  /* Bars become wrapping pills that name their stages. */
   .lj-lanes {
+    display: flex;
+    flex-wrap: wrap;
     gap: 8px;
-    padding: 0;
-    background: none;
+    margin: 0;
+    padding: 8px;
   }
 
-  .lj-lane {
-    display: block;
-    padding: 0;
+  .lj-lanes__item {
+    flex: 1 1 calc(50% - 4px);
   }
 
-  .lj-product--segment {
-    display: none;
+  .lj-pill--bar {
+    flex-wrap: wrap;
+    align-content: center;
+    border-radius: 14px;
+    padding: 8px 12px;
   }
 
-  .lj-product--bar .lj-product__stages {
+  .lj-pill--bar .lj-pill__stages {
     position: static;
+    flex-basis: 100%;
     width: auto;
     height: auto;
     overflow: visible;
@@ -937,44 +976,46 @@
     white-space: normal;
   }
 
-  .lj-product {
-    min-height: 56px;
+  .lj-pill--bar .lj-pill__meta {
+    flex-basis: 100%;
   }
 
-  .lj-activities__list {
-    grid-template-columns: 1fr;
+  .lj-pill--segment {
+    display: none;
   }
 
-  .lj-chart {
-    padding: 12px;
+  .lj--interactive .lj-lanes__item {
+    animation-name: lj-fade;
   }
 
-  .lj-chart__row {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas: "label value" "track track";
-    row-gap: 4px;
+  .lj-activity {
+    flex-wrap: wrap;
+    border-radius: 16px;
   }
 
-  .lj-chart__axis {
-    margin-left: 0;
+  .lj-pill__meta {
+    white-space: normal;
+  }
+
+  .lj-pill__name {
+    white-space: normal;
+  }
+
+  .lj-stage__icon {
+    height: 40px;
+  }
+
+  .lj-stages::before {
+    top: 34px;
+  }
+
+  /* Keep the idle panel short on phones: the hint is enough. */
+  .lj-panel__intro {
+    display: none;
   }
 
   .lj-panel {
-    padding: 16px;
-  }
-
-  .lj-detail {
-    margin: -16px -16px 0;
-    padding: 14px 16px 0;
-  }
-
-  .lj-switch {
-    display: flex;
-  }
-
-  .lj-switch__tab {
-    flex: 1;
-    min-width: 0;
+    padding: 18px 16px 16px;
   }
 }
 
@@ -984,20 +1025,27 @@
   .lj *,
   .lj *::before,
   .lj *::after {
+    animation: none !important;
     transition: none !important;
     scroll-behavior: auto !important;
+  }
+
+  .lj--interactive .lj-stage:hover,
+  .lj--interactive .lj-pill:hover {
+    transform: none;
   }
 }
 
 /* ── Forced colours (Windows high contrast) ───────────────────────────── */
 
 @media (forced-colors: active) {
-  .lj-stage__bg {
+  .lj-stage,
+  .lj-pill {
     border: 1px solid CanvasText;
   }
 
-  .lj-stage[aria-pressed="true"] .lj-stage__bg,
-  .lj-product[aria-pressed="true"] {
+  .lj-stage[aria-pressed="true"],
+  .lj-pill.is-selected {
     outline: 3px solid Highlight;
   }
 }

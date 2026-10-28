@@ -19,7 +19,8 @@
  *   name               Product name exactly as it should be displayed.
  *   portfolio          "fish" | "shrimp" (must match a portfolios[].id).
  *   family             Product family name (used for grouping and screen readers).
- *   colorToken         Key of a --lj-family-<token> colour in src/larviva-journey.css.
+ *   colorToken         Key of a --lj-family-<token> colour in src/larviva-journey.css
+ *                      (all family colours come from the BioMar colour palette).
  *   productType        Feed type, e.g. "Microencapsulated feed". null = hidden.
  *   stages             Ids of stages and/or activities this product is relevant to.
  *                      Empty = product is listed under "Other products" without a mapping.
@@ -57,72 +58,74 @@
     },
 
     "ui": {
-      "moduleTitle": "Explore the LARVIVA hatchery journey",
-      "moduleIntro": "LARVIVA feeds are developed for specific stages and feeding applications in fish and shrimp hatcheries.",
+      "eyebrow": "LARVIVA · Start strong. Stay strong.",
+      "moduleTitle": "Explore the hatchery journey",
       "portfolioSwitchLabel": "Choose a hatchery portfolio",
-      "instruction": "Stages and products are interactive. Select a stage to see the related LARVIVA products, or select a product to see its details.",
+      "instruction": "Select a stage or a product to explore the range.",
       "stagesHeading": "Development stages",
       "stageNumber": "Stage {n} of {total}",
       "activityLabel": "Connected activity",
-      "productsHeading": "Product families by stage",
-      "activitiesHeading": "Connected hatchery activities",
-      "activitiesNote": "These activities run alongside the larval journey. They are not developmental stages.",
+      "productsHeading": "LARVIVA products by stage",
+      "activitiesHeading": "Connected activities",
+      "activitiesNote": "Run alongside the larval journey – not developmental stages.",
       "otherProductsHeading": "Other products",
       "relatedStage": "Relevant",
       "selectedState": "Selected",
       "stagesPrefix": "Stages:",
-      "panelEmptyTitle": "Select a stage or product",
+      "panelEmptyTitle": "Start strong at every stage",
+      "panelEmptyText": "Select a stage to see the related LARVIVA products, or select a product for its details.",
       "relatedProductsHeading": "Related LARVIVA products",
       "noRelatedProducts": "No products are currently mapped to this stage.",
-      "backToStage": "Back to stage: {stage}",
+      "backToStage": "Back to {stage}",
       "clearSelection": "Clear selection",
-      "productEyebrow": "{portfolio} hatchery · Product",
+      "productEyebrow": "{portfolio} hatchery",
       "fieldProductType": "Feed type",
-      "fieldStages": "Relevant stages",
-      "fieldApplication": "Primary application",
-      "fieldVariants": "Available diets",
+      "fieldStages": "Stages",
+      "fieldApplication": "Application",
+      "fieldVariants": "Diets",
       "fieldParticleSize": "Particle size",
       "fieldTechnicalNotes": "Technical notes",
       "fieldMarkets": "Market availability",
+      "sizeScaleLabel": "Particle size across the range",
       "viewDetails": "View product details",
-      "provisional": "Provisional – to be verified",
-      "provisionalChartNote": "Particle sizes shown are provisional and subject to verification.",
+      "provisional": "Provisional",
       "announceStage": "{stage} selected. {count} related products highlighted.",
       "announceProduct": "{product} selected. Product details updated.",
       "announcePortfolio": "{portfolio} portfolio shown.",
       "announceCleared": "Selection cleared.",
-      "disclaimer": "Product selection depends on species, rearing system, local conditions and other factors – not on developmental stage alone. Contact your BioMar representative for feeding recommendations."
+      "disclaimer": "Product selection depends on species, rearing system and local conditions – not on stage alone. Contact your BioMar representative for feeding recommendations."
     },
 
     "portfolios": [
       {
         "id": "fish",
         "label": "Fish",
+        "icon": ["Icon-LARVIVA-fish-larvae-02"],
         "title": "Marine fish hatchery",
         "intro": "From first feeding to nursery, with broodstock nutrition and live-feed enrichment supporting the hatchery.",
         "stages": [
           {
             "id": "first-feeding",
             "label": "First feeding",
-            "illustration": "fish-first-feeding",
+            "illustration": ["Icon-LARVIVA-fish-larvae-02"],
             "description": "Larvae begin feeding externally as their yolk reserves are used up. Live feed is typically used at this stage, and microdiets can be introduced alongside it."
           },
           {
             "id": "co-feeding-weaning",
             "label": "Co-feeding / Weaning",
-            "illustration": "fish-co-feeding",
+            "illustration": ["Icon-LARVIVA-fish-larvae-02", "Icon-Fish-LARVIVA-rotifer"],
             "description": "Live feed and formulated feed are offered together while larvae are gradually weaned onto a formulated diet."
           },
           {
             "id": "post-weaning",
             "label": "Post-weaning",
-            "illustration": "fish-post-weaning",
+            "illustration": ["placeholder-fish-fry"],
             "description": "Larvae and early fry are fully weaned onto formulated feed, with feed particle size increasing as they grow."
           },
           {
             "id": "nursery",
             "label": "Nursery",
-            "illustration": "fish-nursery",
+            "illustration": ["placeholder-fish-juvenile"],
             "description": "Juveniles are grown on in nursery systems, including recirculating aquaculture systems (RAS), before transfer to on-growing."
           }
         ],
@@ -130,18 +133,17 @@
           {
             "id": "broodstock-nutrition",
             "label": "Broodstock nutrition",
-            "illustration": "fish-broodstock",
+            "illustration": ["placeholder-fish-broodstock"],
             "description": "Nutrition for the broodstock that produce the hatchery's eggs, with diets for maintenance and maturation."
           },
           {
             "id": "live-feed-enrichment",
             "label": "Live-feed enrichment",
-            "illustration": "fish-live-feed",
+            "illustration": ["Icon-Fish-LARVIVA-rotifer", "Icon-Fish-LARVIVA-artemia"],
             "description": "Enrichment of rotifers and Artemia before they are fed to larvae."
           }
         ],
         "sizeChart": {
-          "title": "Feed grades by average particle size",
           "unit": "µm",
           "min": 0,
           "max": 1200,
@@ -151,31 +153,31 @@
       {
         "id": "shrimp",
         "label": "Shrimp",
+        "icon": ["Icon-Shrimp-LARVIVA-PL"],
         "title": "Shrimp hatchery",
         "intro": "From the first feeding larval stages to post-larvae, with feed particle size increasing through the range.",
         "stages": [
           {
             "id": "zoea",
             "label": "Zoea",
-            "illustration": "shrimp-zoea",
+            "illustration": ["Icon-Shrimp-LARVIVA-zoea"],
             "description": "The first feeding larval stage after the nauplius. Zoea take very fine feed particles."
           },
           {
             "id": "mysis",
             "label": "Mysis",
-            "illustration": "shrimp-mysis",
+            "illustration": ["Icon-Shrimp-LARVIVA-mysis"],
             "description": "Larvae develop a more shrimp-like form and take larger feed particles than at the zoea stage."
           },
           {
             "id": "post-larvae",
             "label": "Post-larvae",
-            "illustration": "shrimp-post-larvae",
+            "illustration": ["Icon-Shrimp-LARVIVA-PL"],
             "description": "Post-larvae resemble small shrimp and move on to progressively larger feed particles as they grow."
           }
         ],
         "activities": [],
         "sizeChart": {
-          "title": "Particle size across the range",
           "unit": "µm",
           "min": 0,
           "max": 500,

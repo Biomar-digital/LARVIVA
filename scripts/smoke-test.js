@@ -41,7 +41,7 @@ async function run() {
   // Select a stage: related products highlighted, others dimmed.
   await fish.locator('[data-stage-id="nursery"]').click();
   assert.strictEqual(await fish.locator('.lj-stages [data-stage-id="nursery"]').getAttribute("aria-pressed"), "true");
-  assert.ok(await fish.locator('.lj-lanes [data-product-id="larviva-pronurse"]').evaluate(function (e) { return e.classList.contains("is-related"); }));
+  assert.ok(await fish.locator('.lj-lanes [data-product-id="larviva-pronurse"]').evaluate(function (e) { return !e.classList.contains("is-dimmed"); }));
   assert.ok(await fish.locator('.lj-lanes [data-product-id="larviva-prostart"]').evaluate(function (e) { return e.classList.contains("is-dimmed"); }));
   assert.ok(await fish.locator('.lj-lanes [data-product-id="larviva-prostart"]').isVisible(), "dimmed product not removed");
   assert.match(await fish.locator("[data-lj-panel] .lj-panel__title").innerText(), /Nursery/);
@@ -50,7 +50,7 @@ async function run() {
   // Select a product from the panel: details + its stages highlighted.
   await fish.locator('[data-lj-panel] [data-product-id="larviva-prowean"]').click();
   assert.match(await fish.locator("[data-lj-panel] .lj-panel__title").innerText(), /ProWean/);
-  var related = await fish.locator(".lj-stages .lj-stage.is-related").evaluateAll(function (els) {
+  var related = await fish.locator('.lj-stages .lj-stage.is-related, .lj-stages .lj-stage[aria-pressed="true"]').evaluateAll(function (els) {
     return els.map(function (e) { return e.getAttribute("data-stage-id"); });
   });
   assert.deepStrictEqual(related, ["co-feeding-weaning", "post-weaning", "nursery"]);
@@ -71,7 +71,7 @@ async function run() {
   assert.ok(await shrimp.isVisible(), "shrimp visible after switch");
   assert.ok(!(await fish.isVisible()), "fish hidden after switch");
   assert.strictEqual(await shrimp.locator('[aria-pressed="true"]').count(), 0, "selection reset");
-  assert.strictEqual(await shrimp.locator(".lj-chart__row").count(), 5);
+  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 5);
 
   // Keyboard activation of a product.
   await shrimp.locator('.lj-lanes [data-product-id="larviva-pl300"]').focus();
@@ -85,6 +85,10 @@ async function run() {
   // Toggle off.
   await page.keyboard.press("Enter");
   assert.strictEqual(await shrimp.locator('.lj-lanes [aria-pressed="true"]').count(), 0);
+
+  // Compact: the module should stay short on desktop.
+  var height = await page.locator("[data-larviva-journey]").evaluate(function (e) { return e.offsetHeight; });
+  assert.ok(height < 650, "desktop module height " + height + "px");
 
   // ── Mobile ──
   var mobile = await open({ width: 375, height: 800 });
