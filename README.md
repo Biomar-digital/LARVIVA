@@ -2,11 +2,11 @@
 
 A compact, interactive module for the LARVIVA landing page, styled to the **BioMar Brand Guidelines 2026**. Visitors switch between the **Fish** and **Shrimp** portfolios and select stages or products. A detail panel updates as they go.
 
-It is one BioMar Blue card, about 560 px tall on desktop.
-- **Journey:** stage tiles carrying the LARVIVA icons.
-- **Products:** pills packed beneath the stages they cover.
+It sits on a white (`#ffffff`) background so it blends into the page, and is about 540 px tall on desktop.
+- **Journey:** round stage "bubbles" carrying the LARVIVA icons ride a flowing swoosh ribbon. The bubbles grow stage by stage, and the ribbon thickens and then tapers like the BioMar swoosh.
+- **Products:** pills packed beneath the stages they cover, with fine guides dropping from each stage.
 - **Fish activities:** a slim row for connected activities.
-- **Detail panel:** a white panel on the right.
+- **Detail panel:** a soft Crisp Blue, leaf-shaped panel on the right.
 
 > **Content status.** Product facts come from the project brief and the supplied LARVIVA range sheets. Every particle size is flagged `verified: false` and shows a "Provisional" badge. They must be checked against approved technical documentation before publication. Stage descriptions are draft copy. No product URLs are set, so no "View product details" links appear yet.
 
@@ -29,9 +29,9 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 | BioMar palette: BioMar Blue `#1f3e77`, Ocean Blue `#0471ad`, Sky Blue `#92cee8`, Crisp Blue `#c3e4ef`, Leafy Green `#97d130`, Wheat Yellow `#eab318`, Shrimp Orange `#dd6928`, Black-% greys | All colours are tokens at the top of `src/larviva-journey.css`. No off-palette colours are used. |
 | Dark text is BioMar Blue; Black only where BioMar Blue can't be used | Text on Shrimp Orange is black, because BioMar Blue on orange fails contrast. |
 | Avenir Next, Regular/Bold; Arial for digital when Avenir is unavailable | `--lj-font`. Headlines are bold with tracking 10, sub-headers bold with tracking 25. |
-| Typography on BioMar Blue: headline Crisp/Sky Blue or White, body White | Header and card text. |
-| Line detail (hashed 3 pt line) | The connector through the stages, the activities divider and the divider under panel titles. |
-| Swoosh watermark on BioMar Blue | Card background. **The shapes are drawn to approximate it.** Replace `WATERMARK` in `src/larviva-journey.js` with the official watermark artwork, because the guidelines don't allow modified versions. |
+| Typography on white: headline and body BioMar Blue, accents Ocean Blue | Header, labels and panel. |
+| Line detail (hashed 3 pt line) | The divider under panel titles. |
+| BioMar swoosh: movement, progress, continuity | The journey ribbon is generated as a swoosh form (`ribbonPath` in `src/larviva-journey.js`). It is an interpretation rather than the official swoosh file, so Global Marketing should confirm it. |
 | Aquaculture iconography | The supplied LARVIVA icons, recoloured through `currentColor`. |
 
 ## Files
@@ -52,8 +52,8 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 - **On load**, Fish is selected. The panel shows a short welcome and the instruction.
 - **Journey:** stage tiles run in a row, linked by a hashed line. Product pills sit beneath the stages they cover and grow in when a portfolio appears. Pills are packed into as few rows as possible, so adding products keeps the module short. A product can span several stages.
 - **Connected activities:** Broodstock nutrition and Live-feed enrichment sit in a dashed row labelled "not developmental stages". Each has its product: LARVIVA Broodstock and MultiGain.
-- **Selecting a stage** fills its tile white. Related products stay solid, while unrelated ones become outline pills that remain visible and selectable. The panel shows the stage description and the related products.
-- **Selecting a product** gives it a white ring and a check mark. Its stages get a green border and a "Relevant" tag.
+- **Selecting a stage** turns its bubble BioMar Blue with a soft pulse ring, and the icon gently "swims". Related products stay solid, while unrelated ones become outline pills that remain visible and selectable. The panel shows the stage description and the related products.
+- **Selecting a product** gives it a ring and a check mark. Its stage bubbles get a Leafy Green ring and a "Relevant" tag.
 - **The product panel** shows:
   - the name, feed type, particle size, stages, application and diets (empty fields are never shown)
   - a *particle size across the range* scale, which places the product among the rest of the portfolio
@@ -61,13 +61,13 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 - **Responsive:**
   - **Desktop:** the panel sits to the right.
   - **Tablet:** the panel moves below.
-  - **Mobile (< 760 px):** the stages become a swipeable strip and the products become two-column cards that name their stages. The panel goes below and scrolls into view on selection. The page never scrolls sideways.
+  - **Mobile (< 760 px):** the bubbles and ribbon become a swipeable strip, and the products become two-column cards that name their stages. The panel goes below and scrolls into view on selection. The page never scrolls sideways.
 
 ### Accessibility
 - **Controls:** the Fish/Shrimp switch follows the WAI-ARIA tabs pattern, with arrow keys, Home and End. Stages and products are `<button aria-pressed>`.
 - **Screen readers:** a live region announces changes. Product pills include their stage names as text.
 - **Non-colour cues:** the "Selected" and "Relevant" labels, the check mark and the outline-vs-filled pill styles all carry meaning without colour.
-- **Focus and motion:** focus states are visible (Wheat Yellow on blue). Reduced motion turns off every animation, and forced-colours mode is supported.
+- **Focus and motion:** focus states are visible (Ocean Blue). Motion is limited to entrance, hover and selection, and reduced motion turns all of it off. Forced-colours mode is supported.
 - **Headings:** the module starts at `h2`.
 
 ### SEO
@@ -99,7 +99,7 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 5. **Before go-live:**
    - verify the particle sizes and set `showUnverifiedSpecs: false`
    - add the product URLs
-   - replace the `placeholder-*` icons and the watermark with approved artwork
+   - replace the `placeholder-*` icons with approved artwork and get the journey ribbon approved
    - get the copy approved
    - remove the prototype banner
 

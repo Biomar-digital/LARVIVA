@@ -231,14 +231,57 @@
 
   /* ── Markup (shared by browser and pre-render) ───────────────────────── */
 
-  // Decorative background in the spirit of the BioMar swoosh watermark.
-  // Replace with the official watermark artwork (see README).
-  var WATERMARK =
-    '<svg class="lj-watermark" viewBox="0 0 1200 600" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">' +
-    '<path d="M1080 -60 C1170 40 1190 230 1100 380 C1030 500 880 580 700 640 C870 540 990 430 1030 290 C1065 165 1040 50 990 -10 C1010 -60 1050 -80 1080 -60 Z"/>' +
-    '<path d="M1260 470 C1150 330 980 280 830 300 C790 305 780 335 810 350 C950 335 1100 380 1260 500 Z"/>' +
-    '<path d="M760 -40 C800 20 805 110 770 170 C750 205 715 200 720 165 C735 95 735 30 700 -30 Z"/>' +
-    "</svg>";
+  /* ── Journey ribbon ──────────────────────────────────────────────────── */
+
+  // Stage bubbles grow along the journey and sit on a gentle arc; the ribbon
+  // behind them is a swoosh that thickens and tapers, echoing the BioMar
+  // swoosh. Geometry is in px vertically and 0–1000 horizontally.
+  var RIBBON_HEIGHT = 130;
+
+  function stageGeometry(count) {
+    var geo = [];
+    for (var i = 0; i < count; i++) {
+      var t = count > 1 ? i / (count - 1) : 0.5;
+      var size = Math.round(78 + 22 * t);
+      var center = 62 - 10 * Math.sin(Math.PI * t);
+      geo.push({ size: size, lift: Math.round(center - size / 2), x: (i + 0.5) / count * 1000, y: center });
+    }
+    return geo;
+  }
+
+  function ribbonPath(geo) {
+    var first = geo[0];
+    var last = geo[geo.length - 1];
+    var pts = [{ x: 0, y: first.y + 22 }].concat(geo, [{ x: 1000, y: last.y - 20 }]);
+    var mid = [];
+    // Catmull-Rom spline through the bubble centres, sampled.
+    for (var k = 0; k < pts.length - 1; k++) {
+      var p0 = pts[Math.max(k - 1, 0)], p1 = pts[k], p2 = pts[k + 1], p3 = pts[Math.min(k + 2, pts.length - 1)];
+      for (var j = 0; j < 14; j++) {
+        var s = j / 14, s2 = s * s, s3 = s2 * s;
+        mid.push({
+          x: 0.5 * (2 * p1.x + (-p0.x + p2.x) * s + (2 * p0.x - 5 * p1.x + 4 * p2.x - p3.x) * s2 + (-p0.x + 3 * p1.x - 3 * p2.x + p3.x) * s3),
+          y: 0.5 * (2 * p1.y + (-p0.y + p2.y) * s + (2 * p0.y - 5 * p1.y + 4 * p2.y - p3.y) * s2 + (-p0.y + 3 * p1.y - 3 * p2.y + p3.y) * s3)
+        });
+      }
+    }
+    mid.push(pts[pts.length - 1]);
+    function width(x) {
+      var t = x / 1000;
+      return 3 + 46 * Math.pow(t, 1.1) * (1 - Math.pow(t, 7));
+    }
+    var top = mid.map(function (m) { return m.x.toFixed(1) + " " + (m.y - width(m.x) / 2).toFixed(1); });
+    var bottom = mid.slice().reverse().map(function (m) { return m.x.toFixed(1) + " " + (m.y + width(m.x) / 2).toFixed(1); });
+    return "M" + top.join(" L") + " L" + bottom.join(" L") + " Z";
+  }
+
+  function renderRibbon(geo, id) {
+    return '<svg class="lj-ribbon" viewBox="0 0 1000 ' + RIBBON_HEIGHT + '" preserveAspectRatio="none" focusable="false">' +
+      '<defs><linearGradient id="' + esc(id) + '" x1="0" x2="1" y1="0" y2="0">' +
+      '<stop offset="0" style="stop-color: var(--lj-ribbon-start)"/><stop offset="1" style="stop-color: var(--lj-ribbon-end)"/>' +
+      "</linearGradient></defs>" +
+      '<path d="' + ribbonPath(geo) + '" fill="url(#' + esc(id) + ')"/></svg>';
+  }
 
   function renderModule(model, options) {
     options = options || {};
@@ -251,7 +294,7 @@
     var ui = model.ui;
     var active = model.defaultPortfolio;
 
-    var html = '<div class="lj' + (interactive ? " lj--interactive" : " lj--static") + '">' + WATERMARK;
+    var html = '<div class="lj' + (interactive ? " lj--interactive" : " lj--static") + '">';
     html += '<div class="lj-header"><div class="lj-header__text">';
     if (hasText(ui.eyebrow)) html += '<p class="lj-eyebrow">' + esc(ui.eyebrow) + "</p>";
     html += '<h2 class="lj-title">' + esc(ui.moduleTitle) + "</h2></div>";
@@ -318,16 +361,19 @@
   function renderStages(model, p, o) {
     if (!p.stages.length) return "";
     var ui = model.ui;
+    var geo = stageGeometry(p.stages.length);
     var html = '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
     html += '<ol class="lj-stages" style="--lj-cols: ' + p.stages.length + '">';
+    html += '<li class="lj-stages__ribbon" aria-hidden="true">' + renderRibbon(geo, o.uid + "-ribbon-" + p.id) + "</li>";
     p.stages.forEach(function (s, i) {
-      html += '<li class="lj-stages__item">' + control(o.interactive, {
+      html += '<li class="lj-stages__item" style="grid-column: ' + (i + 1) + "; --lj-disc: " + geo[i].size +
+        "px; --lj-lift: " + geo[i].lift + "px; --i: " + i + ';">' + control(o.interactive, {
         "class": "lj-stage",
         "data-stage-id": s.id,
         "aria-pressed": "false",
         "aria-controls": o.uid + "-detail-" + p.id
       },
-        iconHtml(o.illustrations, s.illustration, "lj-stage__icon") +
+        '<span class="lj-stage__disc" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
         '<span class="lj-stage__num" aria-hidden="true">' + (i < 9 ? "0" : "") + (i + 1) + "</span>" +
         '<span class="lj-vh">' + esc(fmt(ui.stageNumber, { n: i + 1, total: p.stages.length })) + ": </span>" +
         '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
@@ -403,7 +449,7 @@
         "aria-pressed": "false",
         "aria-controls": o.uid + "-detail-" + p.id
       },
-        iconHtml(o.illustrations, a.illustration, "lj-stage__icon") +
+        '<span class="lj-stage__disc" aria-hidden="true">' + iconHtml(o.illustrations, a.illustration, "lj-stage__icon") + "</span>" +
         '<span class="lj-vh">' + esc(ui.activityLabel) + ": </span>" +
         '<span class="lj-stage__label">' + esc(a.label) + "</span>" +
         stageFlags(ui)
