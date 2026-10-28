@@ -71,10 +71,10 @@ async function run() {
   assert.ok(await shrimp.isVisible(), "shrimp visible after switch");
   assert.ok(!(await fish.isVisible()), "fish hidden after switch");
   assert.strictEqual(await shrimp.locator('[aria-pressed="true"]').count(), 0, "selection reset");
-  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 5);
+  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 3);
 
   // Keyboard activation of a product.
-  await shrimp.locator('.lj-lanes [data-product-id="larviva-pl300"]').focus();
+  await shrimp.locator('.lj-lanes [data-product-id="larviva-pl"]').focus();
   await page.keyboard.press("Enter");
   var panelText = await shrimp.locator("[data-lj-panel]").innerText();
   assert.match(panelText, /250–375 µm/);
@@ -111,7 +111,7 @@ async function run() {
   var nojs = await ctx.newPage();
   await nojs.goto(url);
   var text = await nojs.locator("body").innerText();
-  ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL 400", "Co-feeding / Weaning", "Post-larvae"].forEach(function (s) {
+  ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL", "Co-feeding / Weaning", "Post-larvae"].forEach(function (s) {
     assert.ok(text.indexOf(s) !== -1, "static HTML contains " + s);
   });
   assert.ok(text.indexOf("LARVIVA ZM") === -1, "unpublished products are not rendered");

@@ -7,13 +7,13 @@
     "brandPrefix": "LARVIVA"
   },
   "ui": {
-    "moduleTitle": "Explore the hatchery journey",
+    "moduleTitle": "Explore the {portfolio} hatchery journey",
     "portfolioSwitchLabel": "Choose a hatchery portfolio",
-    "instruction": "Select a stage or a product to explore the range.",
+    "instruction": "Select a development stage or product to explore the LARVIVA range.",
     "stagesHeading": "Development stages",
     "stageNumber": "Stage {n} of {total}",
     "activityLabel": "Connected activity",
-    "productsHeading": "LARVIVA products by stage",
+    "productsHeading": "LARVIVA products",
     "activitiesHeading": "Connected activities",
     "activitiesNote": "Run alongside the larval journey – not developmental stages.",
     "otherProductsHeading": "Other products",
@@ -21,14 +21,13 @@
     "selectedState": "Selected",
     "stagesPrefix": "Stages:",
     "panelEmptyTitle": "Start strong at every stage",
-    "statStages": "Development stages",
-    "statProducts": "LARVIVA products",
     "panelEmptyText": "Select a stage to see the related LARVIVA products, or select a product for its details.",
     "relatedProductsHeading": "Related LARVIVA products",
     "noRelatedProducts": "No products are currently mapped to this stage.",
     "backToStage": "Back to {stage}",
     "clearSelection": "Clear selection",
     "productEyebrow": "{portfolio} hatchery",
+    "fieldPortfolio": "Hatchery",
     "fieldProductType": "Feed type",
     "fieldStages": "Stages",
     "fieldApplication": "Application",
@@ -49,6 +48,7 @@
     {
       "id": "fish",
       "label": "Fish",
+      "titleLabel": "fish",
       "icon": [
         "Icon-LARVIVA-fish-larvae-02"
       ],
@@ -126,6 +126,7 @@
     {
       "id": "shrimp",
       "label": "Shrimp",
+      "titleLabel": "shrimp",
       "icon": [
         "Icon-Shrimp-LARVIVA-PL"
       ],
@@ -155,6 +156,14 @@
             "Icon-Shrimp-LARVIVA-PL"
           ],
           "description": "Post-larvae resemble small shrimp and move on to progressively larger feed particles as they grow."
+        },
+        {
+          "id": "shrimp-nursery",
+          "label": "Nursery",
+          "illustration": [
+            "Icon-Shrimp-LARVIVA-juvenile"
+          ],
+          "description": "Juvenile shrimp are grown on in nursery systems before transfer to on-growing."
         }
       ],
       "activities": [],
@@ -202,6 +211,7 @@
       },
       "technicalNotes": [],
       "url": null,
+      "image": "https://www.biomar.com/media/qn3lc3de/larviva_alubags_25kg_prostart-200.png?width=480&format=webp&quality=80",
       "markets": null,
       "marketAvailability": null,
       "published": true,
@@ -237,6 +247,7 @@
       },
       "technicalNotes": [],
       "url": null,
+      "image": "https://www.biomar.com/media/ds4d0fbl/larviva_bucket_prowean-300.png?width=480&format=webp&quality=80",
       "markets": null,
       "marketAvailability": null,
       "published": true,
@@ -268,6 +279,7 @@
       },
       "technicalNotes": [],
       "url": null,
+      "image": null,
       "markets": null,
       "marketAvailability": null,
       "published": true,
@@ -289,6 +301,7 @@
       "particleSize": null,
       "technicalNotes": [],
       "url": null,
+      "image": "https://www.biomar.com/media/kbpnev30/fish-starter-top-performance-larviva-orbit.png?width=480&format=webp&quality=80",
       "markets": null,
       "marketAvailability": null,
       "published": true,
@@ -321,6 +334,7 @@
       },
       "technicalNotes": [],
       "url": null,
+      "image": "https://www.biomar.com/media/q2kdp0j1/larviva-broodstock-maintenance-bucket.png?width=480&format=webp&quality=80",
       "markets": null,
       "marketAvailability": null,
       "published": true,
@@ -346,6 +360,7 @@
       },
       "technicalNotes": [],
       "url": null,
+      "image": "https://www.biomar.com/media/jinltwtq/larviva-multigain-alubag.png?width=480&format=webp&quality=80",
       "markets": null,
       "marketAvailability": null,
       "published": true,
@@ -372,7 +387,8 @@
         "verified": false
       },
       "technicalNotes": [],
-      "url": null,
+      "url": "https://www.biomar.com/feed-services/all-feed/larviva-zoea-shrimp",
+      "image": "https://www.biomar.com/media/qrahdotw/larviva-zoea-can.png?width=480&format=webp&quality=80",
       "markets": null,
       "marketAvailability": null,
       "published": true,
@@ -399,18 +415,19 @@
         "verified": false
       },
       "technicalNotes": [],
-      "url": null,
+      "url": "https://www.biomar.com/feed-services/all-feed/larviva-mysis-shrimp",
+      "image": "https://www.biomar.com/media/ztbbkybd/larviva-mysis-can.png?width=480&format=webp&quality=80",
       "markets": null,
       "marketAvailability": null,
       "published": true,
       "order": 20
     },
     {
-      "id": "larviva-pl200",
-      "name": "LARVIVA PL 200",
+      "id": "larviva-pl",
+      "name": "LARVIVA PL",
       "portfolio": "shrimp",
       "family": "LARVIVA PL",
-      "colorToken": "pl200",
+      "colorToken": "pl",
       "productType": "Extruded granules",
       "stages": [
         "post-larvae"
@@ -419,72 +436,34 @@
       "description": "Extruded and granulated post-larval shrimp feed.",
       "variants": [],
       "particleSize": {
-        "type": "range",
-        "min": 150,
-        "max": 250,
+        "type": "range-set",
         "unit": "µm",
+        "items": [
+          {
+            "label": "PL 200",
+            "min": 150,
+            "max": 250
+          },
+          {
+            "label": "PL 300",
+            "min": 250,
+            "max": 375
+          },
+          {
+            "label": "PL 400",
+            "min": 375,
+            "max": 500
+          }
+        ],
         "verified": false
       },
       "technicalNotes": [],
-      "url": null,
+      "url": "https://www.biomar.com/feed-services/all-feed/larviva-pl-shrimp",
+      "image": "https://www.biomar.com/media/xgwk022k/larviva-pl-can-larval-shrimp-feed-400.png?width=480&format=webp&quality=80",
       "markets": null,
       "marketAvailability": null,
       "published": true,
       "order": 30
-    },
-    {
-      "id": "larviva-pl300",
-      "name": "LARVIVA PL 300",
-      "portfolio": "shrimp",
-      "family": "LARVIVA PL",
-      "colorToken": "pl300",
-      "productType": "Extruded granules",
-      "stages": [
-        "post-larvae"
-      ],
-      "application": "Post-larval shrimp feeding.",
-      "description": "Extruded and granulated post-larval shrimp feed.",
-      "variants": [],
-      "particleSize": {
-        "type": "range",
-        "min": 250,
-        "max": 375,
-        "unit": "µm",
-        "verified": false
-      },
-      "technicalNotes": [],
-      "url": null,
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
-      "order": 40
-    },
-    {
-      "id": "larviva-pl400",
-      "name": "LARVIVA PL 400",
-      "portfolio": "shrimp",
-      "family": "LARVIVA PL",
-      "colorToken": "pl400",
-      "productType": "Extruded granules",
-      "stages": [
-        "post-larvae"
-      ],
-      "application": "Post-larval shrimp feeding.",
-      "description": "Extruded and granulated post-larval shrimp feed.",
-      "variants": [],
-      "particleSize": {
-        "type": "range",
-        "min": 375,
-        "max": 500,
-        "unit": "µm",
-        "verified": false
-      },
-      "technicalNotes": [],
-      "url": null,
-      "markets": null,
-      "marketAvailability": null,
-      "published": true,
-      "order": 50
     },
     {
       "id": "larviva-zm",
@@ -500,6 +479,7 @@
       "particleSize": null,
       "technicalNotes": [],
       "url": null,
+      "image": null,
       "markets": null,
       "marketAvailability": null,
       "published": false,

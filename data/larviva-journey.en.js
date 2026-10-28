@@ -31,11 +31,14 @@
  *                        { type: "range",  min, max, unit, verified }
  *                        { type: "grades", values: [..], unit, label, verified }
  *                        { type: "text",   value, verified }
+ *                        { type: "range-set", unit, verified,
+ *                          items: [{ label, min, max }, ..] }   (one product, several grades)
  *                      verified:false values are only shown while
  *                      settings.showUnverifiedSpecs is true, and are labelled
  *                      "Provisional" in the interface.
  *   technicalNotes     Array of short strings. Empty = hidden.
  *   url                Product detail page. null = the "View product details" link is omitted.
+ *   image              Pack shot shown in the detail panel. null = no image.
  *   markets            null = all markets, or e.g. ["NO", "VN"] to restrict.
  *   marketAvailability Free text shown to visitors, e.g. "Available in Vietnam". null = hidden.
  *   published          false = never shown (use for products not yet mapped).
@@ -58,13 +61,13 @@
     },
 
     "ui": {
-      "moduleTitle": "Explore the hatchery journey",
+      "moduleTitle": "Explore the {portfolio} hatchery journey",
       "portfolioSwitchLabel": "Choose a hatchery portfolio",
-      "instruction": "Select a stage or a product to explore the range.",
+      "instruction": "Select a development stage or product to explore the LARVIVA range.",
       "stagesHeading": "Development stages",
       "stageNumber": "Stage {n} of {total}",
       "activityLabel": "Connected activity",
-      "productsHeading": "LARVIVA products by stage",
+      "productsHeading": "LARVIVA products",
       "activitiesHeading": "Connected activities",
       "activitiesNote": "Run alongside the larval journey – not developmental stages.",
       "otherProductsHeading": "Other products",
@@ -72,14 +75,13 @@
       "selectedState": "Selected",
       "stagesPrefix": "Stages:",
       "panelEmptyTitle": "Start strong at every stage",
-      "statStages": "Development stages",
-      "statProducts": "LARVIVA products",
       "panelEmptyText": "Select a stage to see the related LARVIVA products, or select a product for its details.",
       "relatedProductsHeading": "Related LARVIVA products",
       "noRelatedProducts": "No products are currently mapped to this stage.",
       "backToStage": "Back to {stage}",
       "clearSelection": "Clear selection",
       "productEyebrow": "{portfolio} hatchery",
+      "fieldPortfolio": "Hatchery",
       "fieldProductType": "Feed type",
       "fieldStages": "Stages",
       "fieldApplication": "Application",
@@ -101,6 +103,7 @@
       {
         "id": "fish",
         "label": "Fish",
+        "titleLabel": "fish",
         "icon": ["Icon-LARVIVA-fish-larvae-02"],
         "title": "Marine fish hatchery",
         "intro": "From first feeding to nursery, with broodstock nutrition and live-feed enrichment supporting the hatchery.",
@@ -154,6 +157,7 @@
       {
         "id": "shrimp",
         "label": "Shrimp",
+        "titleLabel": "shrimp",
         "icon": ["Icon-Shrimp-LARVIVA-PL"],
         "title": "Shrimp hatchery",
         "intro": "From the first feeding larval stages to post-larvae, with feed particle size increasing through the range.",
@@ -175,6 +179,12 @@
             "label": "Post-larvae",
             "illustration": ["Icon-Shrimp-LARVIVA-PL"],
             "description": "Post-larvae resemble small shrimp and move on to progressively larger feed particles as they grow."
+          },
+          {
+            "id": "shrimp-nursery",
+            "label": "Nursery",
+            "illustration": ["Icon-Shrimp-LARVIVA-juvenile"],
+            "description": "Juvenile shrimp are grown on in nursery systems before transfer to on-growing."
           }
         ],
         "activities": [],
@@ -202,6 +212,7 @@
         "particleSize": { "type": "grades", "values": [100, 200, 300, 400], "unit": "µm", "label": "Average particle size grades", "verified": false },
         "technicalNotes": [],
         "url": null,
+        "image": "https://www.biomar.com/media/qn3lc3de/larviva_alubags_25kg_prostart-200.png?width=480&format=webp&quality=80",
         "markets": null,
         "marketAvailability": null,
         "published": true,
@@ -221,6 +232,7 @@
         "particleSize": { "type": "grades", "values": [100, 300, 500, 700, 900], "unit": "µm", "label": "Average particle size grades", "verified": false },
         "technicalNotes": [],
         "url": null,
+        "image": "https://www.biomar.com/media/ds4d0fbl/larviva_bucket_prowean-300.png?width=480&format=webp&quality=80",
         "markets": null,
         "marketAvailability": null,
         "published": true,
@@ -240,6 +252,7 @@
         "particleSize": { "type": "grades", "values": [500, 800, 1100], "unit": "µm", "label": "Average particle size grades", "verified": false },
         "technicalNotes": [],
         "url": null,
+        "image": null,
         "markets": null,
         "marketAvailability": null,
         "published": true,
@@ -259,6 +272,7 @@
         "particleSize": null,
         "technicalNotes": [],
         "url": null,
+        "image": "https://www.biomar.com/media/kbpnev30/fish-starter-top-performance-larviva-orbit.png?width=480&format=webp&quality=80",
         "markets": null,
         "marketAvailability": null,
         "published": true,
@@ -278,6 +292,7 @@
         "particleSize": { "type": "grades", "values": [8], "unit": "mm", "label": "Pellet size", "verified": false },
         "technicalNotes": [],
         "url": null,
+        "image": "https://www.biomar.com/media/q2kdp0j1/larviva-broodstock-maintenance-bucket.png?width=480&format=webp&quality=80",
         "markets": null,
         "marketAvailability": null,
         "published": true,
@@ -297,6 +312,7 @@
         "particleSize": { "type": "text", "value": "Powder", "verified": false },
         "technicalNotes": [],
         "url": null,
+        "image": "https://www.biomar.com/media/jinltwtq/larviva-multigain-alubag.png?width=480&format=webp&quality=80",
         "markets": null,
         "marketAvailability": null,
         "published": true,
@@ -316,7 +332,8 @@
         "variants": [],
         "particleSize": { "type": "range", "min": 10, "max": 70, "unit": "µm", "verified": false },
         "technicalNotes": [],
-        "url": null,
+        "url": "https://www.biomar.com/feed-services/all-feed/larviva-zoea-shrimp",
+        "image": "https://www.biomar.com/media/qrahdotw/larviva-zoea-can.png?width=480&format=webp&quality=80",
         "markets": null,
         "marketAvailability": null,
         "published": true,
@@ -335,68 +352,41 @@
         "variants": [],
         "particleSize": { "type": "range", "min": 70, "max": 150, "unit": "µm", "verified": false },
         "technicalNotes": [],
-        "url": null,
+        "url": "https://www.biomar.com/feed-services/all-feed/larviva-mysis-shrimp",
+        "image": "https://www.biomar.com/media/ztbbkybd/larviva-mysis-can.png?width=480&format=webp&quality=80",
         "markets": null,
         "marketAvailability": null,
         "published": true,
         "order": 20
       },
       {
-        "id": "larviva-pl200",
-        "name": "LARVIVA PL 200",
+        "id": "larviva-pl",
+        "name": "LARVIVA PL",
         "portfolio": "shrimp",
         "family": "LARVIVA PL",
-        "colorToken": "pl200",
+        "colorToken": "pl",
         "productType": "Extruded granules",
         "stages": ["post-larvae"],
         "application": "Post-larval shrimp feeding.",
         "description": "Extruded and granulated post-larval shrimp feed.",
         "variants": [],
-        "particleSize": { "type": "range", "min": 150, "max": 250, "unit": "µm", "verified": false },
+        "particleSize": {
+          "type": "range-set",
+          "unit": "µm",
+          "items": [
+            { "label": "PL 200", "min": 150, "max": 250 },
+            { "label": "PL 300", "min": 250, "max": 375 },
+            { "label": "PL 400", "min": 375, "max": 500 }
+          ],
+          "verified": false
+        },
         "technicalNotes": [],
-        "url": null,
+        "url": "https://www.biomar.com/feed-services/all-feed/larviva-pl-shrimp",
+        "image": "https://www.biomar.com/media/xgwk022k/larviva-pl-can-larval-shrimp-feed-400.png?width=480&format=webp&quality=80",
         "markets": null,
         "marketAvailability": null,
         "published": true,
         "order": 30
-      },
-      {
-        "id": "larviva-pl300",
-        "name": "LARVIVA PL 300",
-        "portfolio": "shrimp",
-        "family": "LARVIVA PL",
-        "colorToken": "pl300",
-        "productType": "Extruded granules",
-        "stages": ["post-larvae"],
-        "application": "Post-larval shrimp feeding.",
-        "description": "Extruded and granulated post-larval shrimp feed.",
-        "variants": [],
-        "particleSize": { "type": "range", "min": 250, "max": 375, "unit": "µm", "verified": false },
-        "technicalNotes": [],
-        "url": null,
-        "markets": null,
-        "marketAvailability": null,
-        "published": true,
-        "order": 40
-      },
-      {
-        "id": "larviva-pl400",
-        "name": "LARVIVA PL 400",
-        "portfolio": "shrimp",
-        "family": "LARVIVA PL",
-        "colorToken": "pl400",
-        "productType": "Extruded granules",
-        "stages": ["post-larvae"],
-        "application": "Post-larval shrimp feeding.",
-        "description": "Extruded and granulated post-larval shrimp feed.",
-        "variants": [],
-        "particleSize": { "type": "range", "min": 375, "max": 500, "unit": "µm", "verified": false },
-        "technicalNotes": [],
-        "url": null,
-        "markets": null,
-        "marketAvailability": null,
-        "published": true,
-        "order": 50
       },
       {
         "id": "larviva-zm",
@@ -412,6 +402,7 @@
         "particleSize": null,
         "technicalNotes": [],
         "url": null,
+        "image": null,
         "markets": null,
         "marketAvailability": null,
         "published": false,

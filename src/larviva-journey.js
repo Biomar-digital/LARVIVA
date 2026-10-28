@@ -156,6 +156,7 @@
     if (spec.type === "range" && (spec.min == null || spec.max == null)) return null;
     if (spec.type === "grades" && !(spec.values && spec.values.length)) return null;
     if (spec.type === "text" && !hasText(spec.value)) return null;
+    if (spec.type === "range-set" && !(spec.items && spec.items.length)) return null;
     return spec;
   }
 
@@ -220,6 +221,9 @@
     if (!spec) return "";
     if (spec.type === "range") return spec.min + "–" + spec.max + " " + spec.unit;
     if (spec.type === "grades") return spec.values.join(" · ") + " " + spec.unit;
+    if (spec.type === "range-set") {
+      return spec.items.map(function (it) { return it.label + ": " + it.min + "–" + it.max + " " + spec.unit; }).join(", ");
+    }
     return spec.value;
   }
 
@@ -229,7 +233,21 @@
     if (spec.type === "grades") {
       return spec.values.every(function (v) { return v >= scale.min && v <= scale.max; });
     }
+    if (spec.type === "range-set") {
+      return spec.items.every(function (it) { return it.min >= scale.min && it.max <= scale.max; });
+    }
     return false;
+  }
+
+  // Short line under a product name: "Microencapsulated | 10–70 µm", or the
+  // grade names for a product with several grades.
+  function cardMeta(product) {
+    var spec = product.particleSize;
+    if (spec && spec.type === "range-set") return spec.items.map(function (it) { return it.label; }).join(" / ");
+    return [
+      hasText(product.productType) ? String(product.productType).replace(/\s+feed$/i, "") : "",
+      spec && spec.type === "range" ? formatSize(spec) : ""
+    ].filter(hasText).join("  |  ");
   }
 
   function pct(value, scale) {
@@ -237,6 +255,10 @@
   }
 
   /* ── Markup (shared by browser and pre-render) ───────────────────────── */
+
+  function moduleTitle(ui, p) {
+    return fmt(ui.moduleTitle, { portfolio: p.titleLabel || String(p.label || "").toLowerCase() });
+  }
 
   function renderModule(model, options) {
     options = options || {};
@@ -252,15 +274,14 @@
     var html = '<div class="lj' + (interactive ? " lj--interactive" : " lj--static") + '">';
     html += '<div class="lj-header"><div class="lj-header__text">';
     if (hasText(ui.eyebrow)) html += '<p class="lj-eyebrow">' + esc(ui.eyebrow) + "</p>";
-    html += '<h2 class="lj-title">' + esc(ui.moduleTitle) + "</h2>";
+    var activePortfolio = model.portfolios.filter(function (p) { return p.id === active; })[0] || {};
+    html += '<h2 class="lj-title" data-lj-title>' + esc(moduleTitle(ui, activePortfolio)) + "</h2>";
     if (interactive && hasText(ui.instruction)) html += '<p class="lj-lead">' + esc(ui.instruction) + "</p>";
     html += "</div>";
 
     if (interactive && model.portfolios.length > 1) {
-      var activeIndex = Math.max(0, model.portfolios.map(function (p) { return p.id; }).indexOf(active));
       html += '<div class="lj-switch" role="tablist" aria-label="' + esc(ui.portfolioSwitchLabel) +
-        '" style="--lj-tabs: ' + model.portfolios.length + "; --lj-tab: " + activeIndex + ';">' +
-        '<span class="lj-switch__thumb" aria-hidden="true"></span>';
+        '">';
       model.portfolios.forEach(function (p) {
         var selected = p.id === active;
         html += "<button" + attrs({
@@ -318,15 +339,14 @@
       '<span class="lj-flag lj-flag--selected">' + checkIcon() + esc(ui.selectedState) + "</span>";
   }
 
-  // The journey card: stage icons over a progress track. The track fills to
-  // the selected stage and shows the selected product's span in its colour.
+  // Stages: number and label, a large icon circle, and a stem down to a
+  // shared timeline with one node per stage.
   function renderStages(model, p, o) {
     if (!p.stages.length) return "";
     var ui = model.ui;
     var n = p.stages.length;
-    var html = '<div class="lj-journey" style="--lj-cols: ' + n + '" data-lj-journey><div class="lj-journey__inner">';
-    html += '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
-    html += '<ol class="lj-stages">';
+    var html = '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
+    html += '<ol class="lj-stages" style="--lj-cols: ' + n + '">';
     p.stages.forEach(function (s, i) {
       html += '<li class="lj-stages__item" style="--i: ' + i + ';">' + control(o.interactive, {
         "class": "lj-stage",
@@ -334,21 +354,20 @@
         "aria-pressed": "false",
         "aria-controls": o.uid + "-detail-" + p.id
       },
-        '<span class="lj-stage__visual" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
+        '<span class="lj-stage__head">' +
         '<span class="lj-stage__num" aria-hidden="true">' + (i < 9 ? "0" : "") + (i + 1) + "</span>" +
         '<span class="lj-vh">' + esc(fmt(ui.stageNumber, { n: i + 1, total: n })) + ": </span>" +
-        '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
-        stageFlags(ui)
+        '<span class="lj-stage__label">' + esc(s.label) + "</span>" + stageFlags(ui) + "</span>" +
+        '<span class="lj-stage__circle" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
+        '<span class="lj-stage__stem" aria-hidden="true"></span>' +
+        '<span class="lj-stage__node" aria-hidden="true"></span>'
       ) + "</li>";
     });
-    html += "</ol>";
-    html += '<div class="lj-track" aria-hidden="true"><span class="lj-track__fill"></span><span class="lj-track__span"></span>';
-    p.stages.forEach(function (s, i) {
-      html += '<span class="lj-track__dot" style="left: ' + ((i + 0.5) / n * 100).toFixed(3) + '%"></span>';
-    });
-    html += "</div></div></div>";
-    return html;
+    return html + "</ol>";
   }
+
+  var ARROW = '<svg class="lj-arrow" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">' +
+    '<path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   function productLabel(model, product) {
     var parts = splitName(product.name, model.settings.brandPrefix);
@@ -362,8 +381,7 @@
   }
 
   function productPill(model, p, product, o, variant, style) {
-    var spec = product.particleSize;
-    var meta = spec && spec.type === "range" ? formatSize(spec) : (product.productType || "");
+    var meta = cardMeta(product);
     return control(o.interactive, {
       "class": "lj-pill" + (variant ? " lj-pill--" + variant : ""),
       style: accentStyle(product) + (style || ""),
@@ -371,18 +389,20 @@
       "aria-pressed": "false",
       "aria-controls": o.uid + "-detail-" + p.id
     },
-      productLabel(model, product) +
+      '<span class="lj-pill__text">' + productLabel(model, product) +
       (hasText(meta) ? '<span class="lj-pill__meta">' + esc(meta) + "</span>" : "") +
       '<span class="lj-pill__stages"><span class="lj-vh">' + esc(model.ui.stagesPrefix) + " </span>" +
-      esc(stageNames(p, product).join(" · ")) + "</span>" +
-      checkIcon() +
-      '<span class="lj-pill__track" aria-hidden="true"></span>'
+      esc(stageNames(p, product).join(" · ")) + "</span></span>" +
+      CHEVRON
     );
   }
 
+  var CHEVRON = '<svg class="lj-chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +
+    '<path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
   function renderLanes(model, p, o) {
     if (!p.laneProducts.length) return "";
-    var html = '<h4 class="lj-vh">' + esc(model.ui.productsHeading) + "</h4>";
+    var html = '<h4 class="lj-section-title">' + esc(model.ui.productsHeading) + "</h4>";
     html += '<ul class="lj-lanes" style="--lj-cols: ' + p.stages.length + "; --lj-rows: " + p.rowCount + '">';
     p.laneProducts.forEach(function (product, i) {
       toRuns(product.stageIndices).forEach(function (run, r) {
@@ -394,7 +414,7 @@
           // segment is the accessible control.
           html += '<li class="lj-lanes__item" style="' + place + '" aria-hidden="true">' +
             '<span class="lj-pill lj-pill--bar lj-pill--segment" data-segment-of="' + esc(product.id) + '" style="' +
-            accentStyle(product) + '"><span class="lj-pill__track"></span></span></li>';
+            accentStyle(product) + '"></span></li>';
         }
       });
     });
@@ -456,13 +476,7 @@
     } else if (stage) {
       html += renderStageDetail(model, p, stage, o);
     } else {
-      html += '<p class="lj-panel__eyebrow">' + esc(p.title || p.label) + "</p>";
-      html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(ui.panelEmptyTitle) + "</h4>";
-      if (hasText(p.intro)) html += '<p class="lj-panel__text lj-panel__intro">' + esc(p.intro) + "</p>";
-      html += '<dl class="lj-stats">' +
-        '<div class="lj-stats__item"><dt>' + esc(ui.statStages) + "</dt><dd>" + p.stages.length + "</dd></div>" +
-        '<div class="lj-stats__item"><dt>' + esc(ui.statProducts) + "</dt><dd>" + p.products.length + "</dd></div></dl>";
-      html += '<p class="lj-panel__hint">' + esc(ui.panelEmptyText) + "</p>";
+      html += '<p class="lj-panel__hint">' + ARROW + esc(ui.panelEmptyText) + "</p>";
     }
 
     if (stage || product) {
@@ -477,9 +491,11 @@
     var eyebrow = stage.kind === "stage"
       ? fmt(ui.stageNumber, { n: stage.index + 1, total: p.stages.length })
       : ui.activityLabel;
-    var html = '<p class="lj-panel__eyebrow">' + esc(eyebrow) + "</p>";
+    var html = '<div class="lj-stage-detail"><div class="lj-stage-detail__text">';
+    html += '<p class="lj-panel__eyebrow">' + esc(eyebrow) + "</p>";
     html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(stage.label) + "</h4>";
     if (hasText(stage.description)) html += '<p class="lj-panel__text">' + esc(stage.description) + "</p>";
+    html += '</div><div class="lj-stage-detail__products">';
     html += '<h5 class="lj-panel__subtitle">' + esc(ui.relatedProductsHeading) + "</h5>";
     if (!products.length) {
       html += '<p class="lj-panel__text">' + esc(ui.noRelatedProducts) + "</p>";
@@ -490,8 +506,9 @@
       });
       html += "</ul>";
     }
-    return html;
+    return html + "</div></div>";
   }
+
 
   function specRow(label, valueHtml, wide) {
     return '<div class="lj-specs__row' + (wide ? " lj-specs__row--wide" : "") + '"><dt>' + esc(label) + "</dt><dd>" + valueHtml + "</dd></div>";
@@ -506,16 +523,21 @@
   function renderSizeScale(model, p, product) {
     var scale = p.sizeChart;
     if (!onScale(product.particleSize, scale)) return "";
+    function bar(min, max, cls, label) {
+      return '<span class="lj-scale__range' + cls + '" style="left: ' + pct(min, scale) +
+        "; width: calc(" + pct(max, scale) + " - " + pct(min, scale) + ');">' +
+        (label ? '<span class="lj-scale__tag">' + esc(label) + "</span>" : "") + "</span>";
+    }
     var marks = p.products.filter(function (pr) { return onScale(pr.particleSize, scale); }).map(function (pr) {
       var spec = pr.particleSize;
-      var cls = pr.id === product.id ? " is-current" : "";
-      var style = accentStyle(pr);
-      if (spec.type === "range") {
-        return '<span class="lj-scale__range' + cls + '" style="' + style + " left: " + pct(spec.min, scale) +
-          "; width: calc(" + pct(spec.max, scale) + " - " + pct(spec.min, scale) + ');"></span>';
+      var current = pr.id === product.id;
+      var cls = current ? " is-current" : "";
+      if (spec.type === "range") return bar(spec.min, spec.max, cls, current ? "" : "");
+      if (spec.type === "range-set") {
+        return spec.items.map(function (it) { return bar(it.min, it.max, cls, current ? it.label.replace(/^\D+\s*/, "") : ""); }).join("");
       }
-      return pr.id === product.id ? spec.values.map(function (v) {
-        return '<span class="lj-scale__dot is-current" style="' + style + " left: " + pct(v, scale) + ';"></span>';
+      return current ? spec.values.map(function (v) {
+        return '<span class="lj-scale__dot is-current" style="left: ' + pct(v, scale) + ';"></span>';
       }).join("") : "";
     }).join("");
     return '<div class="lj-scale" aria-hidden="true"><span class="lj-scale__label">' + esc(model.ui.sizeScaleLabel) + "</span>" +
@@ -523,44 +545,55 @@
       '<span class="lj-scale__axis"><span>' + esc(scale.min) + "</span><span>" + esc(scale.max + " " + scale.unit) + "</span></span></div>";
   }
 
+  // Laid out like a product page on biomar.com: pack shot, brand over a large
+  // product name, then an attribute list.
   function renderProductDetail(model, p, product, o, stage) {
     var ui = model.ui;
     var spec = product.particleSize;
+    var parts = splitName(product.name, model.settings.brandPrefix);
     var html = '<div class="lj-detail" style="' + accentStyle(product) + '">';
     if (stage && o.interactive) {
       html += '<button type="button" class="lj-textbtn lj-back" data-action="back-to-stage">' +
         esc(fmt(ui.backToStage, { stage: stage.label })) + "</button>";
     }
-    html += '<p class="lj-panel__eyebrow"><span class="lj-swatch" aria-hidden="true"></span>' +
-      esc(fmt(ui.productEyebrow, { portfolio: p.label })) + "</p>";
-    html += '<h4 class="lj-panel__title" tabindex="-1">' + esc(product.name) + "</h4>";
-    if (hasText(product.productType)) {
-      html += '<p class="lj-panel__tagline"><span class="lj-vh">' + esc(ui.fieldProductType) + ": </span>" + esc(product.productType) + "</p>";
+    if (hasText(product.image)) {
+      html += '<div class="lj-detail__media"><img class="lj-detail__image" src="' + esc(product.image) + '" alt="" loading="lazy" decoding="async"></div>';
     }
-    if (hasText(product.description)) html += '<p class="lj-panel__text">' + esc(product.description) + "</p>";
+    html += '<div class="lj-detail__main"><h4 class="lj-panel__title lj-detail__title" tabindex="-1">' +
+      (parts.brand ? '<span class="lj-detail__brand">' + esc(parts.brand) + "</span> " : "") +
+      '<span class="lj-detail__name">' + esc(parts.rest) + "</span></h4>";
 
     var rows = "";
-    if (spec) {
+    rows += specRow(ui.fieldPortfolio, esc(p.title || p.label));
+    if (hasText(product.productType)) rows += specRow(ui.fieldProductType, esc(product.productType));
+    if (product.stageIds.length) rows += specRow(ui.fieldStages, esc(stageNames(p, product).join(", ")));
+    if (spec && spec.type === "range-set") {
+      rows += specRow(ui.fieldParticleSize, '<ul class="lj-grades">' + spec.items.map(function (it) {
+        return "<li><span>" + esc(it.label) + "</span> " + esc(it.min + "–" + it.max + " " + spec.unit) + "</li>";
+      }).join("") + "</ul>" + (spec.verified === false ? '<span class="lj-badge">' + esc(ui.provisional) + "</span>" : ""));
+    } else if (spec) {
       rows += specRow(ui.fieldParticleSize, esc(formatSize(spec)) +
         (spec.verified === false ? ' <span class="lj-badge">' + esc(ui.provisional) + "</span>" : ""));
     }
-    if (product.stageIds.length) rows += specRow(ui.fieldStages, tags(stageNames(p, product)), true);
-    if (hasText(product.application)) rows += specRow(ui.fieldApplication, esc(product.application), true);
-    if (product.variants.length) rows += specRow(ui.fieldVariants, tags(product.variants), true);
+    if (product.variants.length) rows += specRow(ui.fieldVariants, esc(product.variants.join(", ")));
+    if (hasText(product.marketAvailability)) rows += specRow(ui.fieldMarkets, esc(product.marketAvailability));
+    html += '<dl class="lj-attrs">' + rows + "</dl></div>";
+
+    html += '<div class="lj-detail__more">';
+    if (hasText(product.description)) html += '<p class="lj-panel__text">' + esc(product.description) + "</p>";
+    if (hasText(product.application)) html += '<p class="lj-panel__text lj-panel__text--muted">' + esc(product.application) + "</p>";
     if (product.technicalNotes.length) {
-      rows += specRow(ui.fieldTechnicalNotes, '<ul class="lj-list">' + product.technicalNotes.map(function (n) {
+      html += '<ul class="lj-list">' + product.technicalNotes.map(function (n) {
         return "<li>" + esc(n) + "</li>";
-      }).join("") + "</ul>", true);
+      }).join("") + "</ul>";
     }
-    if (hasText(product.marketAvailability)) rows += specRow(ui.fieldMarkets, esc(product.marketAvailability), true);
-    if (rows) html += '<dl class="lj-specs">' + rows + "</dl>";
     if (o.interactive) html += renderSizeScale(model, p, product);
 
     if (hasText(product.url)) {
       html += '<a class="lj-cta" href="' + esc(product.url) + '">' + esc(ui.viewDetails) +
-        '<span class="lj-vh">: ' + esc(product.name) + "</span></a>";
+        '<span class="lj-vh">: ' + esc(product.name) + "</span>" + ARROW + "</a>";
     }
-    return html + "</div>";
+    return html + "</div></div>";
   }
 
   // No-JS / crawler fallback: every product's details as plain HTML.
@@ -642,16 +675,16 @@
   Journey.prototype.setPortfolio = function (id) {
     if (id === this.state.portfolio) return;
     this.state = { portfolio: id, stage: null, product: null };
-    var tablist = this.el.querySelector('[role="tablist"]');
-    each(this.el.querySelectorAll('[role="tab"]'), function (tab, i) {
+    each(this.el.querySelectorAll('[role="tab"]'), function (tab) {
       var on = tab.getAttribute("data-portfolio") === id;
-      if (on && tablist) tablist.style.setProperty("--lj-tab", i);
       tab.setAttribute("aria-selected", on ? "true" : "false");
       if (on) tab.removeAttribute("tabindex"); else tab.setAttribute("tabindex", "-1");
     });
     each(this.el.querySelectorAll("[data-portfolio-panel]"), function (panel) {
       panel.hidden = panel.getAttribute("data-portfolio-panel") !== id;
     });
+    var title = this.el.querySelector("[data-lj-title]");
+    if (title) title.textContent = moduleTitle(this.model.ui, this.portfolio());
     this.update();
     this.announce(fmt(this.model.ui.announcePortfolio, { portfolio: this.portfolio().label }));
     this.emit();
@@ -729,23 +762,7 @@
       btn.classList.toggle("is-dimmed", product ? !related : !!stage && id !== state.stage);
     });
 
-    var journey = section.querySelector("[data-lj-journey]");
-    if (journey) {
-      var n = p.stages.length;
-      var fill = stage && stage.kind === "stage" ? (stage.index + 0.5) / n * 100 : 0;
-      var span = product && product.stageIndices.length ? product.stageIndices : null;
-      journey.style.setProperty("--lj-fill", fill.toFixed(3) + "%");
-      journey.classList.toggle("has-span", !!span);
-      if (span) {
-        journey.style.setProperty("--lj-span-start", (span[0] / n * 100).toFixed(3) + "%");
-        journey.style.setProperty("--lj-span-end", ((span[span.length - 1] + 1) / n * 100).toFixed(3) + "%");
-        journey.style.setProperty("--lj-accent", accentToken(product));
-      }
-    }
-
     var detail = section.querySelector("[data-lj-panel]");
-    if (product) detail.style.setProperty("--lj-glow", "color-mix(in srgb, " + accentToken(product) + " 55%, transparent)");
-    else detail.style.removeProperty("--lj-glow");
     detail.innerHTML = renderPanel(this.model, p, state, {
       uid: this.uid,
       interactive: true,
@@ -765,6 +782,11 @@
     });
     each(section.querySelectorAll("[data-segment-of]"), function (el) {
       productState(el, el.getAttribute("data-segment-of"));
+    });
+
+    // A pack shot that fails to load is removed rather than left as a gap.
+    each(detail.querySelectorAll(".lj-detail__image"), function (img) {
+      img.addEventListener("error", function () { img.remove(); });
     });
 
     if (opts.focusPanel) {

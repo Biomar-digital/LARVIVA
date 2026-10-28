@@ -1,14 +1,25 @@
 # LARVIVA Interactive Hatchery Journey — prototype
 
-A compact, interactive module for the LARVIVA landing page, styled to the **BioMar Brand Guidelines 2026**. Visitors switch between the **Fish** and **Shrimp** portfolios and select stages or products. A detail panel updates as they go.
+A compact, interactive module for the LARVIVA landing page on biomar.com. Visitors switch between the **Fish** and **Shrimp** portfolios and select stages or products. A detail panel updates as they go.
 
-It sits on a white (`#ffffff`) background so it blends into the page, and is about 540 px tall on desktop.
-- **Journey:** a soft Crisp/Sky Blue gradient card with glassy icon tiles for each stage, over a live progress track. The track fills to the selected stage and lights up the selected product's span in its colour.
-- **Products:** tinted product bars beneath the stages they cover, packed into as few rows as possible. They "wipe in" along the journey.
-- **Fish activities:** a slim row for connected activities.
-- **Detail panel:** a white floating card with a colour glow that takes the selected product's colour. It holds spec tiles and a particle-size comparison scale, and when idle shows live stat tiles (number of stages and products).
+It follows the approved reference design and the live biomar.com LARVIVA page. The background is white (`#ffffff`).
+- **Title:** changes with the portfolio ("Explore the shrimp hatchery journey") and has a one-line instruction beneath it.
+- **Stages:**
+  - **Layout:** a small number, an uppercase label and a large light-blue circle with the LARVIVA icon.
+  - **Timeline:** a stem drops from each circle to a shared timeline with one node per stage.
+  - **Selection:** the selected stage's node fills and its circle gets a ring.
+- **LARVIVA PRODUCTS:** light-blue cards sit under the stages they cover, each with a chevron and an underline. The selected card turns BioMar Blue with a Leafy Green underline.
+  - **LARVIVA PL:** one card listing PL 200 / PL 300 / PL 400, with each grade's particle size in the detail panel.
+- **Fish activities:** Broodstock nutrition and Live-feed enrichment as icon circles beside their product cards, marked as not developmental stages.
+- **Detail panel (below):** laid out like a biomar.com product page. It shows the pack shot, "LARVIVA" above the product name, the attribute list, the description, a particle-size scale comparing the range, and a navy "View product details" button.
 
-> **Content status.** Product facts come from the project brief and the supplied LARVIVA range sheets. Every particle size is flagged `verified: false` and shows a "Provisional" badge. They must be checked against approved technical documentation before publication. Stage descriptions are draft copy. No product URLs are set, so no "View product details" links appear yet.
+> **Content status.**
+> - **Product facts** come from the project brief and the supplied LARVIVA range sheets.
+> - **Particle sizes** are all flagged `verified: false` and show a "Provisional" badge. They must be checked against approved technical documentation.
+> - **Stage descriptions** are draft copy.
+> - **Product links:** LARVIVA Zoea, Mysis and PL link to their existing biomar.com product pages. The fish products' pages on biomar.com are per species (for example `larviva-prowean-sea-bass`), so no single link is set for them. Pick a target page per market, or add species to the module.
+> - **Pack shots:** taken from biomar.com product pages and served through the site's own image resizer. There is none for ProNurse, as no page was found. The PL image is the site's PL 400 can.
+> - **Shrimp Nursery stage:** added to match the reference design. No LARVIVA product is mapped to it, because the sources place LARVIVA PL at post-larvae only.
 
 ## Run it
 
@@ -22,23 +33,22 @@ npm run build   # regenerate icons, JSON export and pre-rendered HTML after edit
 npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, height)
 ```
 
-## Brand guidelines applied
+## Design
 
-| Guideline | Where |
+| Element | Source |
 | --- | --- |
-| BioMar palette: BioMar Blue `#1f3e77`, Ocean Blue `#0471ad`, Sky Blue `#92cee8`, Crisp Blue `#c3e4ef`, Leafy Green `#97d130`, Wheat Yellow `#eab318`, Shrimp Orange `#dd6928`, Black-% greys | All colours are tokens at the top of `src/larviva-journey.css`. No off-palette colours are used. |
-| Dark text is BioMar Blue; Black only where BioMar Blue can't be used | Text on Shrimp Orange is black, because BioMar Blue on orange fails contrast. |
-| Avenir Next, Regular/Bold; Arial for digital when Avenir is unavailable | `--lj-font`. Headlines are bold with tracking 10, sub-headers bold with tracking 25. |
-| Typography on white: headline and body BioMar Blue, accents Ocean Blue | Header, labels and panel. |
-| Line detail | Not used, as it read too much like the slide deck. |
-| Contemporary web patterns | A segmented Fish/Shrimp control with a sliding thumb, glass tiles, gradient surfaces, spring-eased hover and selection motion, and a progress track. All of it stays within the BioMar palette. |
-| Aquaculture iconography | The supplied LARVIVA icons, recoloured through `currentColor`. |
+| Stage circles, timeline, product cards with underline, selected card in BioMar Blue with a Leafy Green line | Approved reference design |
+| Montserrat, navy text, 6px radii, flat surfaces | biomar.com |
+| Product detail: pack shot, "LARVIVA" over the product name, attribute list, navy button | biomar.com product pages |
+| Colours | BioMar palette (Brand Guidelines 2026) |
+
+Motion is limited to a small lift on hover and a short fade-up on load. All of it is disabled under reduced motion.
 
 ## Files
 
 | File | What it is | Who edits it |
 | --- | --- | --- |
-| `data/larviva-journey.en.js` | **Product dataset**: stages, activities, products and UI strings. Pure JSON, with the field reference at the top of the file. | Marketing / content |
+| `data/larviva-journey.en.js` | **Product dataset**: stages, activities, products (including `url` and `image`) and UI strings. Pure JSON, with the field reference at the top of the file. | Marketing / content |
 | `data/larviva-journey.en.json` | Generated JSON copy for CMS import or a `data-src` endpoint. | Generated |
 | `assets/icons/*.svg` | **Icons.** `Icon-*.svg` are the supplied LARVIVA icons. `placeholder-*.svg` (fry, juvenile, broodstock) are stand-ins for stages with no supplied icon and must be replaced with approved artwork. | Design |
 | `src/larviva-illustrations.js` | Icon registry, generated from `assets/icons/` by the build. | Generated |
@@ -52,16 +62,15 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 - **On load**, Fish is selected. The panel shows a short welcome and the instruction.
 - **Journey:** stage tiles run in a row, linked by a hashed line. Product pills sit beneath the stages they cover and grow in when a portfolio appears. Pills are packed into as few rows as possible, so adding products keeps the module short. A product can span several stages.
 - **Connected activities:** Broodstock nutrition and Live-feed enrichment sit in a dashed row labelled "not developmental stages". Each has its product: LARVIVA Broodstock and MultiGain.
-- **Selecting a stage** fills its tile with the BioMar gradient, moves the progress track to it and fades the other stages. Related products stay coloured, while unrelated ones turn grey but remain visible and selectable. The panel shows the stage description and the related products.
-- **Selecting a product** fills its bar with the product colour and adds a check mark. Its span lights up on the track, and its stages get a green ring and a "Relevant" tag.
+- **Selecting a stage** fills its timeline node, rings its circle and fades the other stages and the unrelated product cards (still selectable). The panel below shows the stage description and the related products.
+- **Selecting a product** turns its card BioMar Blue with a green underline. Its stages get a filled node and a "Relevant" tag, and the panel shows the product page view.
 - **The product panel** shows:
   - the name, feed type, particle size, stages, application and diets (empty fields are never shown)
   - a *particle size across the range* scale, which places the product among the rest of the portfolio
 - **Switching Fish/Shrimp** resets the selection without reloading the page.
 - **Responsive:**
-  - **Desktop:** the panel sits to the right.
-  - **Tablet:** the panel moves below.
-  - **Mobile (< 760 px):** the journey card scrolls sideways inside itself, and the products become a list that names their stages. The panel goes below and scrolls into view on selection. The page never scrolls sideways.
+  - **Desktop and tablet:** the panel sits below the product cards, at full width.
+  - **Mobile (< 760 px):** the timeline scrolls sideways inside the module, and the product cards stack and name their stages. The panel scrolls into view on selection. The page never scrolls sideways.
 
 ### Accessibility
 - **Controls:** the Fish/Shrimp switch follows the WAI-ARIA tabs pattern, with arrow keys, Home and End. Stages and products are `<button aria-pressed>`.
