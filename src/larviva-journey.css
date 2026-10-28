@@ -1,0 +1,1003 @@
+/*
+ * LARVIVA Interactive Hatchery Journey — styles.
+ *
+ * DESIGN TOKENS: everything brand-specific is a custom property in the first
+ * block below. When integrating, map these to the BioMar website design system
+ * (colours, font family, radii, focus style) rather than editing the rules
+ * further down. Values here are approximations taken from the LARVIVA range
+ * sheets and are placeholders until confirmed by the design team.
+ *
+ * Product family colours: each product's `colorToken` in the dataset maps to
+ * --lj-family-<token>. Colour is never the only identifier — every product
+ * also carries its name and feed type as text.
+ *
+ * All selectors are prefixed with .lj / lj- to avoid clashing with site CSS.
+ */
+
+.lj {
+  /* Typography — replace with the BioMar web font stack. */
+  --lj-font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Core palette */
+  --lj-navy: #233a74;
+  --lj-navy-dark: #172a57;
+  --lj-ink: #1b2540;
+  --lj-ink-muted: #4c576d;
+  --lj-line: #d6dde7;
+  --lj-surface: #ffffff;
+  --lj-surface-alt: #f3f5f8;
+  --lj-focus: #0a5fd1;
+
+  /* Journey stage tones, light → dark (from the range sheets). */
+  --lj-stage-1-bg: #d3ecf9;
+  --lj-stage-1-fg: var(--lj-ink);
+  --lj-stage-2-bg: #b6dcf2;
+  --lj-stage-2-fg: var(--lj-ink);
+  --lj-stage-3-bg: #74bce4;
+  --lj-stage-3-fg: var(--lj-ink);
+  --lj-stage-4-bg: #2f6f99;
+  --lj-stage-4-fg: #ffffff;
+  --lj-stage-5-bg: #1f557d;
+  --lj-stage-5-fg: #ffffff;
+  --lj-stage-selected-bg: var(--lj-navy);
+  --lj-stage-selected-fg: #ffffff;
+
+  /* Product family colours (dataset `colorToken`). */
+  --lj-family-default: #7a8aa3;
+  --lj-family-multigain: #d6283c;
+  --lj-family-prostart: #86bd3f;
+  --lj-family-pronurse: #2f9a4c;
+  --lj-family-prowean: #2ea8dc;
+  --lj-family-broodstock: #ec7a24;
+  --lj-family-orbit: #6a92a6;
+  --lj-family-zoea: #35ade1;
+  --lj-family-mysis: #8cc63f;
+  --lj-family-pl200: #2b7db6;
+  --lj-family-pl300: #3a9e53;
+  --lj-family-pl400: #f07d26;
+  --lj-family-zm: #233a74;
+
+  /* Shape and motion */
+  --lj-radius: 10px;
+  --lj-radius-sm: 6px;
+  --lj-gap: 24px;
+  --lj-panel-width: 340px;
+  --lj-transition: 180ms ease;
+
+  font-family: var(--lj-font);
+  color: var(--lj-ink);
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.lj *,
+.lj *::before,
+.lj *::after {
+  box-sizing: border-box;
+}
+
+.lj :where(button) {
+  font: inherit;
+  color: inherit;
+}
+
+.lj :focus-visible {
+  outline: 3px solid var(--lj-focus);
+  outline-offset: 2px;
+}
+
+.lj-vh {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Header and portfolio switch ──────────────────────────────────────── */
+
+.lj-header {
+  margin-bottom: 20px;
+}
+
+.lj-title {
+  margin: 0 0 6px;
+  color: var(--lj-navy);
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.1rem);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.lj-intro {
+  margin: 0 0 18px;
+  max-width: 62ch;
+  color: var(--lj-ink-muted);
+}
+
+.lj-switch {
+  display: inline-flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--lj-surface-alt);
+  border: 1px solid var(--lj-line);
+}
+
+.lj-switch__tab {
+  min-width: 112px;
+  padding: 10px 22px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--lj-transition), color var(--lj-transition);
+}
+
+.lj-switch__tab:hover {
+  background: #e3e8ef;
+}
+
+.lj-switch__tab[aria-selected="true"] {
+  background: var(--lj-navy);
+  color: #fff;
+}
+
+.lj-instruction {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 14px 0 0;
+  color: var(--lj-ink-muted);
+  font-size: 0.95rem;
+}
+
+.lj-instruction::before {
+  content: "i";
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--lj-navy);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* ── Portfolio layout ─────────────────────────────────────────────────── */
+
+.lj-portfolio[hidden] {
+  display: none;
+}
+
+.lj-portfolio__head {
+  margin-bottom: 16px;
+}
+
+.lj-portfolio__title {
+  margin: 0;
+  color: var(--lj-navy);
+  font-size: 1.3rem;
+}
+
+.lj-portfolio__intro {
+  margin: 4px 0 0;
+  color: var(--lj-ink-muted);
+}
+
+.lj-portfolio__body {
+  display: grid;
+  gap: var(--lj-gap);
+}
+
+@media (min-width: 1024px) {
+  .lj-portfolio__body {
+    grid-template-columns: minmax(0, 1fr) var(--lj-panel-width);
+    align-items: start;
+  }
+}
+
+.lj-portfolio__main {
+  min-width: 0;
+}
+
+.lj-section-title {
+  margin: 24px 0 10px;
+  color: var(--lj-navy);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.lj-section-title:first-child {
+  margin-top: 0;
+}
+
+.lj-note {
+  margin: -4px 0 12px;
+  color: var(--lj-ink-muted);
+  font-size: 0.875rem;
+}
+
+/* ── Journey stages ───────────────────────────────────────────────────── */
+
+.lj-stages {
+  display: grid;
+  grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lj-stages__item {
+  display: flex;
+}
+
+.lj-stage {
+  --lj-stage-bg: var(--lj-stage-1-bg);
+  --lj-stage-fg: var(--lj-stage-1-fg);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  min-height: 150px;
+  padding: 12px 22px 14px 30px;
+  border: 0;
+  background: transparent;
+  color: var(--lj-stage-fg);
+  text-align: center;
+  transition: opacity var(--lj-transition);
+}
+
+.lj--interactive .lj-stage {
+  cursor: pointer;
+}
+
+/* Chevron shape is drawn on a background layer so focus outlines are not clipped. */
+.lj-stage__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--lj-stage-bg);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 18px 50%);
+  transition: background-color var(--lj-transition), filter var(--lj-transition);
+}
+
+.lj-stages__item:first-child .lj-stage__bg {
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%);
+  border-radius: var(--lj-radius-sm) 0 0 var(--lj-radius-sm);
+}
+
+.lj-stages__item:first-child .lj-stage {
+  padding-left: 16px;
+}
+
+.lj-stages__item:nth-child(2) .lj-stage { --lj-stage-bg: var(--lj-stage-2-bg); --lj-stage-fg: var(--lj-stage-2-fg); }
+.lj-stages__item:nth-child(3) .lj-stage { --lj-stage-bg: var(--lj-stage-3-bg); --lj-stage-fg: var(--lj-stage-3-fg); }
+.lj-stages__item:nth-child(4) .lj-stage { --lj-stage-bg: var(--lj-stage-4-bg); --lj-stage-fg: var(--lj-stage-4-fg); }
+.lj-stages__item:nth-child(n+5) .lj-stage { --lj-stage-bg: var(--lj-stage-5-bg); --lj-stage-fg: var(--lj-stage-5-fg); }
+
+.lj-stage:hover .lj-stage__bg {
+  filter: brightness(0.95);
+}
+
+.lj-stage[aria-pressed="true"] {
+  --lj-stage-bg: var(--lj-stage-selected-bg);
+  --lj-stage-fg: var(--lj-stage-selected-fg);
+}
+
+.lj-stage.is-related .lj-stage__bg {
+  box-shadow: inset 0 -6px 0 var(--lj-navy);
+}
+
+.lj-stage.is-dimmed {
+  opacity: 0.55;
+}
+
+.lj-stage__art {
+  display: block;
+  width: 100%;
+  max-width: 120px;
+  margin-bottom: auto;
+  opacity: 0.9;
+}
+
+.lj-stage__art svg,
+.lj-stage__art img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.lj-stage__step {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.lj-stage__label {
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.lj-stage__flag {
+  display: none;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.lj-stage__flag--related {
+  background: var(--lj-navy);
+  color: #fff;
+}
+
+.lj-stage__flag--selected {
+  background: #fff;
+  color: var(--lj-navy);
+}
+
+.lj-stage.is-related .lj-stage__flag--related,
+.lj-stage[aria-pressed="true"] .lj-stage__flag--selected {
+  display: inline-flex;
+}
+
+/* ── Product bars ─────────────────────────────────────────────────────── */
+
+.lj-lanes {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 0;
+  list-style: none;
+  border-radius: var(--lj-radius);
+  background-color: var(--lj-surface-alt);
+  background-image: linear-gradient(to right, var(--lj-line) 1px, transparent 1px);
+  background-size: calc(100% / var(--lj-cols)) 100%;
+}
+
+.lj-lane {
+  display: grid;
+  grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
+  padding: 0 6px;
+  column-gap: 12px;
+}
+
+.lj-product {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  min-height: 48px;
+  width: 100%;
+  padding: 8px 12px 8px 16px;
+  border: 1px solid color-mix(in srgb, var(--lj-accent) 45%, #ffffff);
+  border-left: 6px solid var(--lj-accent);
+  border-radius: var(--lj-radius-sm);
+  background: color-mix(in srgb, var(--lj-accent) 14%, #ffffff);
+  color: var(--lj-ink);
+  text-align: left;
+  transition: background-color var(--lj-transition), opacity var(--lj-transition), box-shadow var(--lj-transition);
+}
+
+.lj--interactive .lj-product {
+  cursor: pointer;
+}
+
+.lj--interactive .lj-product:hover {
+  background: color-mix(in srgb, var(--lj-accent) 24%, #ffffff);
+}
+
+.lj-product.is-related {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--lj-accent) 70%, var(--lj-navy));
+}
+
+.lj-product[aria-pressed="true"],
+.lj-product.is-selected {
+  background: color-mix(in srgb, var(--lj-accent) 30%, #ffffff);
+  box-shadow: 0 0 0 3px var(--lj-navy);
+}
+
+/* Dimmed, not removed. Text stays above 4.5:1 against the dimmed background. */
+.lj-product.is-dimmed {
+  border-color: var(--lj-line);
+  border-left-color: color-mix(in srgb, var(--lj-accent) 35%, #ffffff);
+  background: var(--lj-surface);
+  color: var(--lj-ink-muted);
+  box-shadow: none;
+}
+
+.lj-product__name {
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.lj-product__brand {
+  font-weight: 400;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+}
+
+.lj-product__type,
+.lj-product__size {
+  font-size: 0.8125rem;
+}
+
+.lj-product__size {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* On desktop, a bar's position under the stages shows its coverage; the
+   stage names stay available to screen readers. They become visible text
+   wherever the bar is not aligned with the journey (mobile, cards, chips). */
+.lj-product--bar .lj-product__stages {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.lj-product__stages {
+  font-size: 0.75rem;
+  color: var(--lj-ink-muted);
+}
+
+/* Inside an activity card the activity is already the card's heading. */
+.lj-activity .lj-product__stages {
+  display: none;
+}
+
+.lj-product--segment {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* ── Connected activities ─────────────────────────────────────────────── */
+
+.lj-activities {
+  margin-top: 8px;
+}
+
+.lj-activities__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lj-activity {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px dashed #9aa8bd;
+  border-radius: var(--lj-radius);
+  background: var(--lj-surface);
+}
+
+.lj-stage--activity {
+  --lj-stage-bg: var(--lj-surface-alt);
+  --lj-stage-fg: var(--lj-ink);
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  grid-template-areas: "art step" "art label" "art flag";
+  justify-items: start;
+  align-content: center;
+  column-gap: 12px;
+  min-height: 0;
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.lj-stage--activity .lj-stage__bg {
+  clip-path: none;
+  border-radius: var(--lj-radius-sm);
+}
+
+.lj-stage--activity .lj-stage__art {
+  grid-area: art;
+  width: 72px;
+  margin: 0;
+}
+
+.lj-stage--activity .lj-stage__step { grid-area: step; }
+.lj-stage--activity .lj-stage__label { grid-area: label; }
+.lj-stage--activity .lj-stage__flag { grid-area: flag; margin-top: 2px; }
+
+.lj-activity__products,
+.lj-unmapped,
+.lj-chips {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ── Particle size chart ──────────────────────────────────────────────── */
+
+.lj-chart {
+  margin: 8px 0 0;
+  padding: 16px;
+  border: 1px solid var(--lj-line);
+  border-radius: var(--lj-radius);
+  background: var(--lj-surface);
+}
+
+.lj-chart .lj-section-title {
+  margin-top: 0;
+}
+
+.lj-chart__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lj-chart__row {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  grid-template-areas: "label track" "value track";
+  align-items: center;
+  column-gap: 16px;
+  row-gap: 0;
+  padding: 6px 0;
+  font-size: 0.875rem;
+  transition: opacity var(--lj-transition);
+}
+
+.lj-chart__row.is-dimmed {
+  opacity: 0.45;
+}
+
+.lj-chart__row.is-selected .lj-chart__label,
+.lj-chart__row.is-related .lj-chart__label {
+  font-weight: 700;
+}
+
+.lj-chart__label { grid-area: label; }
+.lj-chart__track { grid-area: track; }
+
+.lj-chart__value {
+  grid-area: value;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--lj-ink-muted);
+}
+
+.lj-chart__track,
+.lj-chart__axis {
+  position: relative;
+  height: 14px;
+}
+
+.lj-chart__track {
+  border-radius: 999px;
+  background: var(--lj-surface-alt);
+}
+
+.lj-chart__range {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: var(--lj-accent);
+}
+
+.lj-chart__dot {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--lj-accent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--lj-accent) 60%, #000);
+}
+
+.lj-chart__row.is-selected .lj-chart__track {
+  box-shadow: 0 0 0 2px var(--lj-navy);
+}
+
+.lj-chart__axis {
+  margin: 6px 0 0 calc(200px + 16px);
+  height: 18px;
+  font-size: 0.75rem;
+  color: var(--lj-ink-muted);
+  border-top: 1px solid var(--lj-line);
+}
+
+.lj-chart__axis span {
+  position: absolute;
+  top: 2px;
+  transform: translateX(-50%);
+  font-variant-numeric: tabular-nums;
+}
+
+.lj-chart__axis .lj-chart__unit {
+  right: 0;
+  left: auto !important;
+  top: 16px;
+  transform: none;
+}
+
+.lj-chart .lj-note {
+  margin: 18px 0 0;
+}
+
+/* ── Detail panel ─────────────────────────────────────────────────────── */
+
+.lj-panel {
+  padding: 20px;
+  border: 1px solid var(--lj-line);
+  border-radius: var(--lj-radius);
+  background: var(--lj-surface);
+  box-shadow: 0 2px 10px rgba(23, 42, 87, 0.06);
+  scroll-margin-top: 16px;
+}
+
+@media (min-width: 1024px) {
+  .lj-panel {
+    position: sticky;
+    top: 16px;
+  }
+}
+
+.lj-detail {
+  border-top: 6px solid var(--lj-accent);
+  margin: -20px -20px 0;
+  padding: 16px 20px 0;
+  border-radius: var(--lj-radius) var(--lj-radius) 0 0;
+}
+
+.lj-backlink + .lj-detail {
+  margin-top: 8px;
+}
+
+.lj-eyebrow {
+  margin: 0 0 2px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--lj-ink-muted);
+}
+
+.lj-panel__title {
+  margin: 0 0 8px;
+  color: var(--lj-navy);
+  font-size: 1.3rem;
+  line-height: 1.25;
+}
+
+.lj-panel__title:focus {
+  outline: none;
+}
+
+.lj-panel__title:focus-visible {
+  outline: 3px solid var(--lj-focus);
+}
+
+.lj-panel__subtitle {
+  margin: 16px 0 8px;
+  font-size: 0.875rem;
+}
+
+.lj-panel__text {
+  margin: 0 0 12px;
+}
+
+.lj-specs {
+  margin: 12px 0 0;
+  border-top: 1px solid var(--lj-line);
+}
+
+.lj-specs__row {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--lj-line);
+}
+
+.lj-specs dt {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lj-ink-muted);
+}
+
+.lj-specs dd {
+  margin: 2px 0 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.lj-specs__sub {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--lj-ink-muted);
+}
+
+.lj-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lj-tags li {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--lj-surface-alt);
+  border: 1px solid var(--lj-line);
+  font-size: 0.875rem;
+}
+
+.lj-list {
+  margin: 4px 0 0;
+  padding-left: 1.1em;
+}
+
+.lj-badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid #b7791f;
+  background: #fff7e6;
+  color: #7a4a00;
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: 1px;
+}
+
+.lj-minibar {
+  position: relative;
+  display: block;
+  height: 8px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: var(--lj-surface-alt);
+}
+
+.lj-minibar span {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 999px;
+  background: var(--lj-accent);
+}
+
+.lj-minibar__scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6875rem;
+  color: var(--lj-ink-muted);
+}
+
+.lj-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--lj-navy);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lj-cta::after {
+  content: "→";
+}
+
+.lj-cta:hover {
+  background: var(--lj-navy-dark);
+}
+
+.lj-backlink,
+.lj-clear {
+  padding: 4px 0;
+  border: 0;
+  background: none;
+  color: var(--lj-navy);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.lj-backlink::before {
+  content: "← ";
+}
+
+.lj-clear {
+  display: block;
+  margin-top: 14px;
+}
+
+.lj-disclaimer {
+  margin: 16px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--lj-line);
+  font-size: 0.8125rem;
+  color: var(--lj-ink-muted);
+}
+
+/* ── Static (no-JS / crawler) product index ───────────────────────────── */
+
+.lj-index {
+  display: grid;
+  gap: 16px;
+}
+
+.lj-index__item {
+  padding: 20px;
+  border: 1px solid var(--lj-line);
+  border-radius: var(--lj-radius);
+}
+
+.lj--static .lj-portfolio + .lj-portfolio {
+  margin-top: 40px;
+}
+
+/* ── Tablet ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 1023px) {
+  .lj-chart__row {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+
+  .lj-chart__axis {
+    margin-left: calc(150px + 16px);
+  }
+}
+
+/* ── Mobile ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 759px) {
+  /* Stages become a horizontally scrollable strip of cards; the page itself
+     never scrolls sideways. */
+  .lj-stages {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    margin: 0 -16px;
+    padding: 4px 16px 10px;
+    scroll-snap-type: x mandatory;
+    scroll-padding: 0 16px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .lj-stages__item {
+    flex: 0 0 auto;
+    width: 46%;
+    min-width: 140px;
+    max-width: 180px;
+    scroll-snap-align: start;
+  }
+
+  .lj-stages .lj-stage {
+    min-height: 132px;
+    padding: 10px 12px 12px;
+  }
+
+  .lj-stage__bg,
+  .lj-stages__item:first-child .lj-stage__bg {
+    clip-path: none;
+    border-radius: var(--lj-radius);
+  }
+
+  /* Product bars become a list of full-width cards with stage names shown. */
+  .lj-lanes {
+    gap: 8px;
+    padding: 0;
+    background: none;
+  }
+
+  .lj-lane {
+    display: block;
+    padding: 0;
+  }
+
+  .lj-product--segment {
+    display: none;
+  }
+
+  .lj-product--bar .lj-product__stages {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+
+  .lj-product {
+    min-height: 56px;
+  }
+
+  .lj-activities__list {
+    grid-template-columns: 1fr;
+  }
+
+  .lj-chart {
+    padding: 12px;
+  }
+
+  .lj-chart__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "label value" "track track";
+    row-gap: 4px;
+  }
+
+  .lj-chart__axis {
+    margin-left: 0;
+  }
+
+  .lj-panel {
+    padding: 16px;
+  }
+
+  .lj-detail {
+    margin: -16px -16px 0;
+    padding: 14px 16px 0;
+  }
+
+  .lj-switch {
+    display: flex;
+  }
+
+  .lj-switch__tab {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .lj *,
+  .lj *::before,
+  .lj *::after {
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Forced colours (Windows high contrast) ───────────────────────────── */
+
+@media (forced-colors: active) {
+  .lj-stage__bg {
+    border: 1px solid CanvasText;
+  }
+
+  .lj-stage[aria-pressed="true"] .lj-stage__bg,
+  .lj-product[aria-pressed="true"] {
+    outline: 3px solid Highlight;
+  }
+}
