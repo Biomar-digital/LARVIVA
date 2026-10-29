@@ -19,7 +19,7 @@ The module follows BioMar's own LARVIVA range slide and is built to sit inside t
 > - **Particle sizes:** fish grades (100–1100 µm, 8 mm broodstock, powder) and shrimp average sizes and ranges (zoea 40 µm / 10–70, mysis 90 µm / 70–150, PL 200/300/400).
 > - **Use ranges:** Z1–M2, M1–PL2, PL2–PL6, PL6–PL11, PL10–PL15.
 > - **Label colour codes per grade.**
-> - **Packaging, and the Bactocell® / B-WYSE™ health additions.**
+> - **The Bactocell® / B-WYSE™ health additions.** (Packaging is left out on request.)
 > - **INICIO Focus as the shrimp nursery feed.**
 >
 > Each particle-size block in the data names its `source`. INICIO Focus sizes differ between slides, so they stay flagged `verified: false`. Stage descriptions are still draft copy. Shrimp products link to their biomar.com pages. Fish product pages on biomar.com are per species, so no single link is set for them.
