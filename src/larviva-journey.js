@@ -281,26 +281,11 @@
     return false;
   }
 
-  // Short line under a product name: "Microencapsulated | 10–70 µm", or the
-  // grade names for a product with several grades.
+  // Short line under a product name: `tileSubtitle`, or the feed type
+  // ("Microencapsulated", "Enrichment formulation"). Never sizes.
   function cardMeta(product) {
-    var spec = product.particleSize;
-    var type = hasText(product.productType) ? String(product.productType).replace(/\s+feed$/i, "") : "";
-    var size = "";
-    if (spec && spec.type === "set") {
-      var numeric = spec.items.every(function (it) { return /^[\d.]+$/.test(it.label); });
-      if (spec.items.length === 1) {
-        var it = spec.items[0];
-        size = it.min != null ? it.min + "–" + it.max + " " + spec.unit : itemSize(it, spec.unit);
-      } else if (numeric) {
-        size = spec.items.map(function (it) { return it.label; }).join(" / ") + " " + spec.unit;
-      } else {
-        return spec.items.map(function (it) { return it.label; }).join(" / ");
-      }
-    } else if (spec && spec.type === "range") {
-      size = formatSize(spec);
-    }
-    return [type, size, product.marketAvailability].filter(hasText).join("  |  ");
+    if (hasText(product.tileSubtitle)) return product.tileSubtitle;
+    return hasText(product.productType) ? String(product.productType).replace(/\s+feed$/i, "") : "";
   }
 
   function pct(value, scale) {
@@ -501,24 +486,11 @@
       '<span class="lj-pill__text">' +
       (hasText(kicker) ? '<span class="lj-pill__kicker">' + esc(kicker) + "</span>" : "") +
       productLabel(model, product) +
-      (hasText(meta) ? '<span class="lj-pill__meta">' + gradeMeta(product, meta) + "</span>" : "") +
+      (hasText(meta) ? '<span class="lj-pill__meta">' + esc(meta) + "</span>" : "") +
       '<span class="lj-pill__stages"><span class="lj-vh">' + esc(model.ui.stagesPrefix) + " </span>" +
       esc(stageNames(p, product).join(" · ")) + "</span></span>" +
       CHEVRON
     );
-  }
-
-  // Products with named grades (LARVIVA PL) show each grade in its can /
-  // label colour, e.g. PL 200 blue, PL 300 green, PL 400 coral.
-  function gradeMeta(product, meta) {
-    var spec = product.particleSize;
-    if (!spec || spec.type !== "set" || spec.items.length < 2 ||
-        spec.items.every(function (it) { return /^[\d.]+$/.test(it.label); })) {
-      return esc(meta);
-    }
-    return spec.items.map(function (it) {
-      return '<span class="lj-pill__grade" data-grade="' + esc(it.color || "default") + '">' + esc(it.label) + "</span>";
-    }).join('<span aria-hidden="true"> / </span>');
   }
 
   var CHEVRON = '<svg class="lj-chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +

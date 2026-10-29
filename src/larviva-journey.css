@@ -88,11 +88,13 @@
   --lj-on-family-inicio: #0471ad;
   /* INICIO tiles follow the range slides and the INICIO logo colours
      (Product brand guidelines 2025). */
-  --lj-family-inicio-plus: #ffffff;
+  --lj-family-inicio-plus: #eaf5fa;
   --lj-on-family-inicio-plus: #1f3e77;
   --lj-family-inicio-maxio: #f7efd6;
   --lj-on-family-inicio-maxio: #1f3e77;
   --lj-family-inicio-prime: #eeeff0;
+  --lj-family-balance: #ffffff;
+  --lj-on-family-balance: #1f3e77;
   --lj-on-family-inicio-prime: #1f3e77;
   --lj-regional-line: #6a6c71;
   --lj-regional-inicio-maxio: #eab318;

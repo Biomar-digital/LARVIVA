@@ -90,7 +90,7 @@ async function run() {
   await toggle.click();
   assert.ok(!(await shrimp.locator(".lj-chart").isVisible()), "chart hidden again");
   await shrimp.locator('.lj-lanes [data-product-id="larviva-zoea"]').click();
-  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 6);
+  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 8);
 
   // Keyboard activation of a product.
   await shrimp.locator('.lj-lanes [data-product-id="larviva-pl"]').focus();
