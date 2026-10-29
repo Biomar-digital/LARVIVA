@@ -420,9 +420,16 @@
     var ui = model.ui;
     var n = p.stages.length;
     var html = '<ol class="lj-steps">';
+    // Each product is listed once, under the first stage it covers; a line on
+    // the tile names the stages it runs through (keeps the phone view short).
+    var listed = {};
     p.columns.forEach(function (s) {
       var tone = s.kind === "activity" ? "a" + (p.activities.indexOf(s) + 1) : String(s.index + 1);
-      var products = p.products.filter(function (pr) { return pr.stageIds.indexOf(s.id) !== -1; });
+      var products = p.products.filter(function (pr) {
+        if (pr.stageIds.indexOf(s.id) === -1 || listed[pr.id]) return false;
+        listed[pr.id] = true;
+        return true;
+      });
       html += '<li class="lj-steps__item' + (s.kind === "activity" ? " lj-steps__item--activity" : "") +
         '" style="--lj-chev: var(--lj-tone-' + tone + ');">' + control(o.interactive, {
         "class": "lj-stage lj-step",
@@ -439,7 +446,9 @@
       );
       if (products.length) {
         html += '<ul class="lj-steps__products">' + products.map(function (pr) {
-          return "<li>" + productPill(model, p, pr, o, "step") + "</li>";
+          var names = stageNames(p, pr);
+          var span = names.length > 1 ? names[0] + " – " + names[names.length - 1] : "";
+          return "<li>" + productPill(model, p, pr, o, "step", "", "", span) + "</li>";
         }).join("") + "</ul>";
       }
       html += "</li>";
@@ -471,7 +480,7 @@
     return product.stageIds.map(function (id) { return p.lookup[id].label; });
   }
 
-  function productPill(model, p, product, o, variant, style, kicker) {
+  function productPill(model, p, product, o, variant, style, kicker, span) {
     var meta = cardMeta(product);
     return control(o.interactive, {
       "class": "lj-pill" + (variant ? " lj-pill--" + variant : "") +
@@ -487,6 +496,7 @@
       (hasText(kicker) ? '<span class="lj-pill__kicker">' + esc(kicker) + "</span>" : "") +
       productLabel(model, product) +
       (hasText(meta) ? '<span class="lj-pill__meta">' + esc(meta) + "</span>" : "") +
+      (hasText(span) ? '<span class="lj-pill__span" aria-hidden="true">' + esc(span) + "</span>" : "") +
       '<span class="lj-pill__stages"><span class="lj-vh">' + esc(model.ui.stagesPrefix) + " </span>" +
       esc(stageNames(p, product).join(" · ")) + "</span></span>" +
       CHEVRON
