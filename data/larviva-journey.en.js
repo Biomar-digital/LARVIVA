@@ -84,7 +84,6 @@
       "activitiesNote": "Run alongside the larval journey – not developmental stages.",
       "otherProductsHeading": "Other products",
       "relatedStage": "Relevant",
-      "selectedState": "Selected",
       "stagesPrefix": "Stages:",
       "panelEmptyTitle": "Start strong at every stage",
       "panelEyebrow": "LARVIVA hatchery range",

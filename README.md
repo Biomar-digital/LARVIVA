@@ -80,7 +80,7 @@ The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (
 ### Accessibility
 - **Controls:** the Fish/Shrimp switch follows the WAI-ARIA tabs pattern, with arrow keys, Home and End. Stages and products are `<button aria-pressed>`.
 - **Screen readers:** a live region announces changes. Product pills include their stage names as text.
-- **Non-colour cues:** the "Selected" and "Relevant" labels, the check mark and the outline-vs-filled pill styles all carry meaning without colour.
+- **Non-colour cues:** the "Relevant" label and the outline-vs-filled pill styles carry meaning without colour. The selected stage is announced through `aria-pressed`.
 - **Focus and motion:** focus states are visible (Ocean Blue). Motion is limited to entrance, hover and selection, and reduced motion turns all of it off. Forced-colours mode is supported.
 - **Headings:** the module starts at `h2`.
 

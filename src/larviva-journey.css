@@ -147,8 +147,7 @@
 }
 
 .lj-arrow,
-.lj-chevron,
-.lj-check {
+.lj-chevron {
   flex: none;
 }
 
@@ -367,13 +366,7 @@
   color: var(--lj-biomar-blue);
 }
 
-.lj-flag--selected {
-  background: var(--lj-biomar-blue);
-  color: var(--lj-white);
-}
-
-.lj-stage.is-related .lj-flag--related,
-.lj-stage[aria-pressed="true"] .lj-flag--selected {
+.lj-stage.is-related .lj-flag--related {
   display: inline-flex;
 }
 

@@ -99,11 +99,6 @@
       "</span>";
   }
 
-  function checkIcon() {
-    return '<svg class="lj-check" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false">' +
-      '<path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  }
-
   // Splits "LARVIVA ProStart" into brand + name for the product label.
   function splitName(name, prefix) {
     if (prefix && name.indexOf(prefix + " ") === 0) {
@@ -141,8 +136,7 @@
 
   var DEFAULT_UI = {
     stageNumber: "Stage {n} of {total}",
-    relatedStage: "Relevant",
-    selectedState: "Selected"
+    relatedStage: "Relevant"
   };
 
   function isInMarket(product, market) {
@@ -388,8 +382,7 @@
   }
 
   function stageFlags(ui) {
-    return '<span class="lj-flag lj-flag--related">' + esc(ui.relatedStage) + "</span>" +
-      '<span class="lj-flag lj-flag--selected">' + checkIcon() + esc(ui.selectedState) + "</span>";
+    return '<span class="lj-flag lj-flag--related">' + esc(ui.relatedStage) + "</span>";
   }
 
   // The band follows the LARVIVA range slide: joined chevrons running from
