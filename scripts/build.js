@@ -20,12 +20,36 @@ var iconDir = path.join(rootDir, "assets/icons");
 var dataDir = path.join(rootDir, "data");
 
 // ── 1. Icons ──────────────────────────────────────────────────────────────
+// Two-tone icons (navy body + white details) keep their details: white
+// shapes become `lj-icon-detail` cut-outs that the CSS fills with the
+// surface behind the icon; everything else follows currentColor.
 function cleanSvg(source) {
-  var svg = source
+  var classes = {};
+  var style = (source.match(/<style[^>]*>([\s\S]*?)<\/style>/) || [])[1] || "";
+  style.replace(/([^{}]+)\{([^}]*)\}/g, function (m, selectors, decls) {
+    selectors.split(",").forEach(function (sel) {
+      var name = sel.trim().replace(/^\./, "");
+      classes[name] = classes[name] || {};
+      decls.split(";").forEach(function (d) {
+        var kv = d.split(":");
+        if (kv.length === 2) classes[name][kv[0].trim()] = kv[1].trim().toLowerCase();
+      });
+    });
+    return m;
+  });
+  var svg = source.replace(/\sclass="([^"]*)"/g, function (m, cls) {
+    var props = {};
+    cls.split(/\s+/).forEach(function (c) { Object.assign(props, classes[c] || {}); });
+    var out = "";
+    if (props["fill-rule"]) out += ' fill-rule="' + props["fill-rule"] + '"';
+    if (/^(#fff|#ffffff|white)$/.test(props.fill || "")) out += ' class="lj-icon-detail"';
+    return out;
+  });
+  svg = svg
     .replace(/<\?xml[\s\S]*?\?>/g, "")
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/<defs>[\s\S]*?<\/defs>/g, "")
-    .replace(/\s(id|data-name|class)="[^"]*"/g, "")
+    .replace(/\s(id|data-name)="[^"]*"/g, "")
     .replace(/\sfill="(?!none)[^"]*"/g, "")
     .replace(/\s+/g, " ")
     .replace(/>\s+</g, "><")
@@ -44,9 +68,8 @@ var registry =
   " *\n" +
   " * ILLUSTRATION ASSETS: to change an icon, replace or add an SVG in\n" +
   " * assets/icons/ and run `npm run build`. Stages reference icons by file name\n" +
-  " * (without .svg) in their `illustration` field. Files named placeholder-*\n" +
-  " * are stand-ins drawn for the prototype and should be replaced with\n" +
-  " * approved LARVIVA artwork.\n" +
+  " * (without .svg) in their `illustration` field. White details in two-tone\n" +
+  " * icons become `lj-icon-detail` cut-outs (see the CSS).\n" +
   " */\n" +
   "(function (root) {\n" +
   "  var ICONS = " + JSON.stringify(icons, null, 2).replace(/\n/g, "\n  ") + ";\n\n" +

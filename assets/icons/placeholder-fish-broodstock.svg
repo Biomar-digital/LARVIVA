@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- PLACEHOLDER: replace with approved LARVIVA broodstock icon. -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 100">
-  <path fill="#1f3e77" fill-rule="evenodd" d="M56 52 C72 24 130 14 178 30 C190 34 200 40 208 46 L244 20 C236 40 236 64 244 84 L208 58 C200 64 190 70 178 74 C130 90 72 80 56 52 Z M80 44 a6 6 0 1 0 0.1 0 Z M96 34 C104 46 104 60 96 70 L99 71 C108 60 108 45 99 33 Z"/>
-  <path fill="#1f3e77" d="M118 24 C134 2 166 4 182 30 Z M142 76 C152 92 170 92 178 74 Z"/>
-  <path fill="#1f3e77" fill-rule="evenodd" d="M18 62 a9 9 0 1 0 0.1 0 Z M22 65 a3 3 0 1 0 0.1 0 Z M36 80 a8 8 0 1 0 0.1 0 Z M39 83 a2.6 2.6 0 1 0 0.1 0 Z M12 84 a7 7 0 1 0 0.1 0 Z M15 86 a2.4 2.4 0 1 0 0.1 0 Z M38 56 a6 6 0 1 0 0.1 0 Z"/>
-</svg>

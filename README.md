@@ -54,7 +54,7 @@ The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (
 | --- | --- | --- |
 | `data/larviva-journey.en.js` | **Product dataset**: stages, activities, products (including `url` and `image`) and UI strings. Pure JSON, with the field reference at the top of the file. | Marketing / content |
 | `data/larviva-journey.en.json` | Generated JSON copy for CMS import or a `data-src` endpoint. | Generated |
-| `assets/icons/*.svg` | **Icons.** `Icon-*.svg` are the supplied LARVIVA icons. `placeholder-*.svg` (fry, juvenile, broodstock) are stand-ins for stages with no supplied icon and must be replaced with approved artwork. | Design |
+| `assets/icons/*.svg` | **Icons.** `Icon-*.svg` are the supplied LARVIVA icons. Two-tone icons keep their white details (eyes, yolk sac, bars, spots) as cut-outs in the surface colour behind them. | Design |
 | `src/larviva-illustrations.js` | Icon registry, generated from `assets/icons/` by the build. | Generated |
 | `src/larviva-journey.css` | Styles. **Design tokens** are in the first block. | Design / frontend |
 | `src/larviva-journey.js` | Renderer and controller. Contains no content. | Frontend |
@@ -113,7 +113,6 @@ The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (
 5. **Before go-live:**
    - verify the particle sizes and set `showUnverifiedSpecs: false`
    - add the product URLs
-   - replace the `placeholder-*` icons with approved artwork
    - get the copy approved
    - remove the prototype banner
 

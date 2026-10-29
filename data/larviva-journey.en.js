@@ -126,7 +126,7 @@
         "titleLabel": "fish",
         "image": "https://www.biomar.com/media/ifnlox4f/larviva-fish-hatchery-beaker.jpg?width=720&format=webp&quality=80",
         "imageAlt": "Fish larvae in a laboratory beaker",
-        "icon": ["Icon-LARVIVA-fish-larvae-02"],
+        "icon": ["Icon-Fish-LARVIVA-juvenile"],
         "title": "Marine fish hatchery",
         "activitiesInBand": true,
         "intro": "From first feeding to nursery, with broodstock nutrition and live-feed enrichment supporting the hatchery.",
@@ -134,25 +134,25 @@
           {
             "id": "first-feeding",
             "label": "First feeding",
-            "illustration": ["Icon-LARVIVA-fish-larvae-02"],
+            "illustration": ["Icon-Fish-LARVIVA-larva-yolk"],
             "description": "Larvae begin feeding externally as their yolk reserves are used up. Live feed is typically used at this stage, and microdiets can be introduced alongside it."
           },
           {
             "id": "co-feeding-weaning",
             "label": "Co-feeding / Weaning",
-            "illustration": ["Icon-LARVIVA-fish-larvae-02", "Icon-Fish-LARVIVA-rotifer"],
+            "illustration": ["Icon-Fish-LARVIVA-larva", "Icon-Fish-LARVIVA-rotifer"],
             "description": "Live feed and formulated feed are offered together while larvae are gradually weaned onto a formulated diet."
           },
           {
             "id": "post-weaning",
             "label": "Post-weaning",
-            "illustration": ["placeholder-fish-fry"],
+            "illustration": ["Icon-Fish-LARVIVA-fry"],
             "description": "Larvae and early fry are fully weaned onto formulated feed, with feed particle size increasing as they grow."
           },
           {
             "id": "nursery",
             "label": "Nursery",
-            "illustration": ["placeholder-fish-juvenile"],
+            "illustration": ["Icon-Fish-LARVIVA-juvenile"],
             "description": "Juveniles are grown on in nursery systems, including recirculating aquaculture systems (RAS), before transfer to on-growing."
           }
         ],
@@ -160,7 +160,7 @@
           {
             "id": "broodstock-nutrition",
             "label": "Broodstock nutrition",
-            "illustration": ["placeholder-fish-broodstock"],
+            "illustration": ["Icon-Fish-LARVIVA-adult"],
             "description": "Nutrition for the broodstock that produce the hatchery's eggs, with diets for maintenance and maturation."
           },
           {

@@ -1172,3 +1172,33 @@
   grid-template-columns: 1fr 1fr;
   column-gap: 16px;
 }
+
+/* Two-tone icon details (eyes, yolk sac, bars, spots) are cut-outs that show
+   the surface behind the icon. */
+.lj-icon-detail {
+  fill: var(--lj-icon-detail, var(--lj-white));
+  transition: fill 250ms var(--lj-ease);
+}
+
+.lj-stage__chev,
+.lj-step__chev {
+  --lj-icon-detail: var(--lj-chev);
+}
+
+.lj-stage[aria-pressed="true"] .lj-stage__chev,
+.lj-stage[aria-pressed="true"] .lj-step__chev {
+  --lj-icon-detail: var(--lj-chev-selected);
+}
+
+.lj-stage.is-dimmed .lj-stage__chev,
+.lj-stage.is-dimmed .lj-step__chev {
+  --lj-icon-detail: var(--lj-dim-chev);
+}
+
+.lj-switch__tab {
+  --lj-icon-detail: var(--lj-soft);
+}
+
+.lj-switch__tab[aria-selected="true"] {
+  --lj-icon-detail: var(--lj-biomar-blue);
+}
