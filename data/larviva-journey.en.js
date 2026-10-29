@@ -119,7 +119,7 @@
       "announceProduct": "{product} selected. Product details updated.",
       "announcePortfolio": "{portfolio} portfolio shown.",
       "announceCleared": "Selection cleared.",
-      "disclaimer": "Product selection depends on species, rearing system and local conditions – not on stage alone. Contact your BioMar representative for feeding recommendations."
+      "disclaimer": "Product selection depends on species, rearing system and local conditions. Contact your BioMar representative for feeding recommendations."
     },
 
     "portfolios": [
@@ -441,7 +441,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-orbit",
-        "tileSubtitle": "Recirculating aquaculture systems (RAS)",
+        "tileSubtitle": "RAS systems",
         "name": "LARVIVA ORBIT",
         "logo": "assets/logos/larviva-orbit.png",
         "portfolio": "fish",
