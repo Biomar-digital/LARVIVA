@@ -1063,6 +1063,7 @@
   .lj-switch__tab {
     flex: 1;
     justify-content: center;
+    min-width: 0;
   }
 
   .lj-steps {
@@ -1078,6 +1079,7 @@
 
   .lj-steps {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 14px;
     padding: 0;
     list-style: none;
@@ -1085,7 +1087,9 @@
 
   .lj-steps__item {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px;
+    min-width: 0;
   }
 
   .lj-step {
@@ -1130,6 +1134,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    min-width: 0;
+    overflow-wrap: break-word;
   }
 
   .lj-step .lj-stage__label {
@@ -1138,9 +1144,11 @@
     font-size: 1rem;
   }
 
+  /* Two tiles per row on phones, one when the module is very narrow
+     (e.g. an iframe in a side column). */
   .lj-steps__products {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 136px), 1fr));
     gap: 8px;
     padding: 0;
     list-style: none;
@@ -1169,6 +1177,35 @@
   .lj-chart__plot,
   .lj-chart__axis {
     min-width: 640px;
+  }
+}
+
+/* Very narrow (iframe in a narrow column): smaller chevrons and switch. */
+@media (max-width: 320px) {
+  .lj-switch__tab {
+    gap: 6px;
+    padding: 7px 8px;
+    font-size: 0.875rem;
+  }
+
+  .lj-switch__icon {
+    display: none;
+  }
+
+  .lj-step__chev {
+    width: 72px;
+    height: 46px;
+    padding: 0 18px 0 14px;
+  }
+
+  .lj-step .lj-stage__icon {
+    height: 26px;
+  }
+
+  .lj-step .lj-stage__label {
+    font-size: 0.9375rem;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
 }
 
