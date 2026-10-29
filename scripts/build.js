@@ -99,14 +99,18 @@ var html = journey.renderModule(journey.prepare(data), {
   uid: "lj-static"
 });
 
-var indexPath = path.join(rootDir, "index.html");
-var page = fs.readFileSync(indexPath, "utf8");
-var pattern = /(<!-- LARVIVA:START -->)[\s\S]*?(<!-- LARVIVA:END -->)/;
-if (!pattern.test(page)) {
-  console.error("index.html is missing the LARVIVA:START / LARVIVA:END markers");
-  process.exit(1);
-}
-fs.writeFileSync(indexPath, page.replace(pattern, function (m, start, end) {
-  return start + "\n" + html + "\n" + end;
-}));
-console.log("pre-rendered module into index.html");
+// index.html (demo page) and embed.html (iframe page) both carry the markers.
+["index.html", "embed.html"].forEach(function (file) {
+  var pagePath = path.join(rootDir, file);
+  if (!fs.existsSync(pagePath)) return;
+  var page = fs.readFileSync(pagePath, "utf8");
+  var pattern = /(<!-- LARVIVA:START -->)[\s\S]*?(<!-- LARVIVA:END -->)/;
+  if (!pattern.test(page)) {
+    console.error(file + " is missing the LARVIVA:START / LARVIVA:END markers");
+    process.exit(1);
+  }
+  fs.writeFileSync(pagePath, page.replace(pattern, function (m, start, end) {
+    return start + "\n" + html + "\n" + end;
+  }));
+  console.log("pre-rendered module into " + file);
+});

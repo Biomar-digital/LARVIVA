@@ -113,6 +113,28 @@ The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (
 - **Assets:** serve `assets/logos/*` and the icons from the Umbraco media library, and point the dataset's `logo` / `wordmark` / `image` fields at those media URLs.
 - **Demo page:** `index.html` reproduces the page context (grey background, container gutters, intro text and section heading) so the module can be reviewed in place.
 
+## Embedding with an iframe
+
+`embed.html` is the module on its own: transparent background, no page chrome, and `noindex`. It sends its height to the parent page so the iframe resizes without scrollbars. Add this to the host page (for example as an Umbraco rich-text/HTML block):
+
+```html
+<iframe id="larviva-journey" src="EMBED_URL" title="LARVIVA hatchery production cycle"
+        style="width:100%;border:0;display:block" height="600" loading="lazy"></iframe>
+<script>
+  window.addEventListener("message", function (e) {
+    if (e.data && e.data.type === "larviva-journey:height") {
+      document.getElementById("larviva-journey").style.height = e.data.height + "px";
+    }
+  });
+</script>
+```
+
+Two limits of the iframe route:
+- **Search engines:** content inside an iframe isn't counted as part of the LARVIVA page.
+- **Fonts and styles:** the iframe loads its own copy of Montserrat.
+
+For the final site, embedding the module directly (see the Umbraco section above) is better. The iframe is a quick way to preview it on the page.
+
 ## CMS integration notes
 
 1. **Model three content types:**
