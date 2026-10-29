@@ -557,8 +557,7 @@
       "colorToken": "zoea",
       "productType": "Microencapsulated feed",
       "stages": [
-        "zoea",
-        "mysis"
+        "zoea"
       ],
       "application": "Early feeding and co-feeding.",
       "description": "Microencapsulated larval feed for early feeding and co-feeding.",
@@ -601,8 +600,7 @@
       "colorToken": "mysis",
       "productType": "Microencapsulated feed",
       "stages": [
-        "mysis",
-        "post-larvae"
+        "mysis"
       ],
       "application": "Early feeding and co-feeding.",
       "description": "Microencapsulated larval feed for early feeding and co-feeding.",

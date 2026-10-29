@@ -582,10 +582,7 @@
         "family": "LARVIVA",
         "colorToken": "zoea",
         "productType": "Microencapsulated feed",
-        "stages": [
-          "zoea",
-          "mysis"
-        ],
+        "stages": ["zoea"],
         "application": "Early feeding and co-feeding.",
         "description": "Microencapsulated larval feed for early feeding and co-feeding.",
         "particleSize": {
@@ -626,10 +623,7 @@
         "family": "LARVIVA",
         "colorToken": "mysis",
         "productType": "Microencapsulated feed",
-        "stages": [
-          "mysis",
-          "post-larvae"
-        ],
+        "stages": ["mysis"],
         "application": "Early feeding and co-feeding.",
         "description": "Microencapsulated larval feed for early feeding and co-feeding.",
         "particleSize": {
