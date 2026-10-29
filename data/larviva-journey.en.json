@@ -67,21 +67,12 @@
       "intro": "From first feeding to nursery, with broodstock nutrition and live-feed enrichment supporting the hatchery.",
       "stages": [
         {
-          "id": "first-feeding",
-          "label": "First feeding",
+          "id": "larval",
+          "label": "Larval",
           "illustration": [
             "Icon-Fish-LARVIVA-larva-yolk"
           ],
-          "description": "Larvae begin feeding externally as their yolk reserves are used up. Live feed is typically used at this stage, and microdiets can be introduced alongside it."
-        },
-        {
-          "id": "co-feeding-weaning",
-          "label": "Co-feeding / Weaning",
-          "illustration": [
-            "Icon-Fish-LARVIVA-larva",
-            "Icon-Fish-LARVIVA-rotifer"
-          ],
-          "description": "Live feed and formulated feed are offered together while larvae are gradually weaned onto a formulated diet."
+          "description": "Larvae begin feeding externally as their yolk reserves are used up – first on live feed, then on formulated feed offered alongside it while they are weaned."
         },
         {
           "id": "post-weaning",
@@ -103,7 +94,7 @@
       "activities": [
         {
           "id": "broodstock-nutrition",
-          "label": "Broodstock nutrition",
+          "label": "Broodstock",
           "illustration": [
             "Icon-Fish-LARVIVA-adult"
           ],
@@ -111,7 +102,7 @@
         },
         {
           "id": "live-feed-enrichment",
-          "label": "Live-feed enrichment",
+          "label": "Live feed",
           "illustration": [
             "Icon-Fish-LARVIVA-rotifer",
             "Icon-Fish-LARVIVA-artemia"
@@ -281,9 +272,10 @@
       "colorToken": "prostart",
       "productType": "Microencapsulated feed",
       "stages": [
-        "first-feeding",
-        "co-feeding-weaning"
+        "larval",
+        "post-weaning"
       ],
+      "endsMidStage": true,
       "application": "Co-feeding with live feed and early weaning.",
       "description": "Microencapsulated, high-protein larval feed for co-feeding with live feed and for early weaning.",
       "particleSize": {
@@ -336,10 +328,11 @@
       "colorToken": "prowean",
       "productType": "Extruded granules",
       "stages": [
-        "co-feeding-weaning",
+        "larval",
         "post-weaning",
         "nursery"
       ],
+      "startsMidStage": true,
       "application": "Early feeding of larvae and marine fry.",
       "description": "Extruded granulates for early feeding of larvae and marine fry.",
       "particleSize": {
@@ -382,6 +375,35 @@
         ]
       },
       "order": 20
+    },
+    {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": null,
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": null,
+      "published": true,
+      "id": "inicio-plus-m",
+      "name": "INICIO Plus M",
+      "logo": "assets/logos/inicio-plus-m.svg",
+      "brand": "INICIO",
+      "portfolio": "fish",
+      "family": "INICIO",
+      "colorToken": "inicio-plus",
+      "productType": null,
+      "stages": [
+        "post-weaning",
+        "nursery"
+      ],
+      "startsMidStage": true,
+      "application": null,
+      "description": null,
+      "particleSize": null,
+      "order": 25
     },
     {
       "variants": [],
@@ -740,6 +762,33 @@
         ]
       },
       "order": 40
+    },
+    {
+      "variants": [],
+      "technicalNotes": [],
+      "url": null,
+      "image": null,
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": "Vietnam – EXIA crumbles",
+      "published": true,
+      "id": "inicio-maxio",
+      "name": "INICIO Maxio",
+      "logo": "assets/logos/inicio-maxio.svg",
+      "brand": "INICIO",
+      "portfolio": "shrimp",
+      "family": "INICIO",
+      "colorToken": "inicio-maxio",
+      "productType": null,
+      "stages": [
+        "shrimp-nursery"
+      ],
+      "application": null,
+      "description": null,
+      "particleSize": null,
+      "order": 50
     },
     {
       "variants": [],

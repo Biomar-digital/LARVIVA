@@ -24,6 +24,8 @@
  *   productType        Feed type, e.g. "Microencapsulated feed". null = hidden.
  *   stages             Ids of stages and/or activities this product is relevant to.
  *                      Empty = product is listed under "Other products" without a mapping.
+ *   startsMidStage,    true = the tile starts / ends halfway through its first /
+ *   endsMidStage       last stage, as on the LARVIVA range slides.
  *   application        Primary application (one sentence). null = hidden.
  *   description        Short description (one or two sentences). null = hidden.
  *   variants           Named diets/variants, e.g. ["Maintenance", "Maturation"].
@@ -49,6 +51,7 @@
  *                      above the family name in text (used on the navy shrimp tiles).
  *   markets            null = all markets, or e.g. ["NO", "VN"] to restrict.
  *   marketAvailability Free text shown to visitors, e.g. "Available in Vietnam". null = hidden.
+ *                      Tiles with a value get a dashed outline (regional product).
  *   published          false = never shown (use for products not yet mapped).
  *   order              Sort order within the portfolio.
  *
@@ -131,16 +134,10 @@
         "intro": "From first feeding to nursery, with broodstock nutrition and live-feed enrichment supporting the hatchery.",
         "stages": [
           {
-            "id": "first-feeding",
-            "label": "First feeding",
+            "id": "larval",
+            "label": "Larval",
             "illustration": ["Icon-Fish-LARVIVA-larva-yolk"],
-            "description": "Larvae begin feeding externally as their yolk reserves are used up. Live feed is typically used at this stage, and microdiets can be introduced alongside it."
-          },
-          {
-            "id": "co-feeding-weaning",
-            "label": "Co-feeding / Weaning",
-            "illustration": ["Icon-Fish-LARVIVA-larva", "Icon-Fish-LARVIVA-rotifer"],
-            "description": "Live feed and formulated feed are offered together while larvae are gradually weaned onto a formulated diet."
+            "description": "Larvae begin feeding externally as their yolk reserves are used up – first on live feed, then on formulated feed offered alongside it while they are weaned."
           },
           {
             "id": "post-weaning",
@@ -158,13 +155,13 @@
         "activities": [
           {
             "id": "broodstock-nutrition",
-            "label": "Broodstock nutrition",
+            "label": "Broodstock",
             "illustration": ["Icon-Fish-LARVIVA-adult"],
             "description": "Nutrition for the broodstock that produce the hatchery's eggs, with diets for maintenance and maturation."
           },
           {
             "id": "live-feed-enrichment",
-            "label": "Live-feed enrichment",
+            "label": "Live feed",
             "illustration": ["Icon-Fish-LARVIVA-rotifer", "Icon-Fish-LARVIVA-artemia"],
             "description": "Enrichment of rotifers and Artemia before they are fed to larvae."
           }
@@ -307,9 +304,10 @@
         "colorToken": "prostart",
         "productType": "Microencapsulated feed",
         "stages": [
-          "first-feeding",
-          "co-feeding-weaning"
+          "larval",
+          "post-weaning"
         ],
+        "endsMidStage": true,
         "application": "Co-feeding with live feed and early weaning.",
         "description": "Microencapsulated, high-protein larval feed for co-feeding with live feed and for early weaning.",
         "particleSize": {
@@ -362,10 +360,11 @@
         "colorToken": "prowean",
         "productType": "Extruded granules",
         "stages": [
-          "co-feeding-weaning",
+          "larval",
           "post-weaning",
           "nursery"
         ],
+        "startsMidStage": true,
         "application": "Early feeding of larvae and marine fry.",
         "description": "Extruded granulates for early feeding of larvae and marine fry.",
         "particleSize": {
@@ -408,6 +407,35 @@
           ]
         },
         "order": 20
+      },
+      {
+        "variants": [],
+        "technicalNotes": [],
+        "url": null,
+        "image": null,
+        "use": null,
+        "packaging": null,
+        "health": null,
+        "markets": null,
+        "marketAvailability": null,
+        "published": true,
+        "id": "inicio-plus-m",
+        "name": "INICIO Plus M",
+        "logo": "assets/logos/inicio-plus-m.svg",
+        "brand": "INICIO",
+        "portfolio": "fish",
+        "family": "INICIO",
+        "colorToken": "inicio-plus",
+        "productType": null,
+        "stages": [
+          "post-weaning",
+          "nursery"
+        ],
+        "startsMidStage": true,
+        "application": null,
+        "description": null,
+        "particleSize": null,
+        "order": 25
       },
       {
         "variants": [],
@@ -762,6 +790,33 @@
           ]
         },
         "order": 40
+      },
+      {
+        "variants": [],
+        "technicalNotes": [],
+        "url": null,
+        "image": null,
+        "use": null,
+        "packaging": null,
+        "health": null,
+        "markets": null,
+        "marketAvailability": "Vietnam – EXIA crumbles",
+        "published": true,
+        "id": "inicio-maxio",
+        "name": "INICIO Maxio",
+        "logo": "assets/logos/inicio-maxio.svg",
+        "brand": "INICIO",
+        "portfolio": "shrimp",
+        "family": "INICIO",
+        "colorToken": "inicio-maxio",
+        "productType": null,
+        "stages": [
+          "shrimp-nursery"
+        ],
+        "application": null,
+        "description": null,
+        "particleSize": null,
+        "order": 50
       },
       {
         "variants": [],

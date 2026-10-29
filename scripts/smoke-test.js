@@ -33,7 +33,7 @@ async function run() {
   assert.strictEqual(await page.getAttribute('[role="tab"][data-portfolio="fish"]', "aria-selected"), "true");
   assert.ok(await fish.isVisible(), "fish visible by default");
   assert.ok(!(await shrimp.isVisible()), "shrimp hidden by default");
-  assert.strictEqual(await fish.locator(".lj-stages .lj-stage").count(), 6, "4 stages + 2 connected activities");
+  assert.strictEqual(await fish.locator(".lj-stages .lj-stage").count(), 5, "3 stages + 2 connected activities");
   assert.strictEqual(await fish.locator(".lj-stages__item--activity").count(), 2);
   assert.strictEqual(await page.locator("h1").count(), 1, "module adds no h1");
   assert.strictEqual(await page.locator(".lj-cta").count(), 0, "no invented product links");
@@ -54,7 +54,7 @@ async function run() {
   var related = await fish.locator('.lj-stages .lj-stage.is-related, .lj-stages .lj-stage[aria-pressed="true"]').evaluateAll(function (els) {
     return els.map(function (e) { return e.getAttribute("data-stage-id"); });
   });
-  assert.deepStrictEqual(related, ["co-feeding-weaning", "post-weaning", "nursery"]);
+  assert.deepStrictEqual(related, ["larval", "post-weaning", "nursery"]);
   assert.ok(await page.evaluate(function () {
     return document.activeElement && document.activeElement.classList.contains("lj-panel__title");
   }), "focus moves to panel heading");
@@ -90,7 +90,7 @@ async function run() {
   await toggle.click();
   assert.ok(!(await shrimp.locator(".lj-chart").isVisible()), "chart hidden again");
   await shrimp.locator('.lj-lanes [data-product-id="larviva-zoea"]').click();
-  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 4);
+  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 5);
 
   // Keyboard activation of a product.
   await shrimp.locator('.lj-lanes [data-product-id="larviva-pl"]').focus();
@@ -120,7 +120,7 @@ async function run() {
   var fishM = mobile.locator('[data-portfolio-panel="fish"]');
   assert.ok(await fishM.locator(".lj-steps").isVisible(), "stacked phone layout shown");
   assert.ok(!(await fishM.locator(".lj-stages").isVisible()), "band hidden on phones");
-  assert.strictEqual(await fishM.locator(".lj-steps__item").count(), 6);
+  assert.strictEqual(await fishM.locator(".lj-steps__item").count(), 5);
   await fishM.locator('.lj-steps [data-stage-id="nursery"]').click();
   assert.strictEqual(await fishM.locator('.lj-stages [data-stage-id="nursery"]').getAttribute("aria-pressed"), "true", "both layouts stay in sync");
   await fishM.locator('.lj-steps [data-product-id="larviva-prostart"]').first().click();
@@ -138,7 +138,7 @@ async function run() {
   var nojs = await ctx.newPage();
   await nojs.goto(url);
   var text = (await nojs.locator("body").textContent()).replace(/\s+/g, " ");
-  ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL", "Co-feeding / Weaning", "Post-larvae"].forEach(function (s) {
+  ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL", "Larval", "Post-larvae", "INICIO Plus M", "INICIO Maxio"].forEach(function (s) {
     assert.ok(text.indexOf(s) !== -1, "static HTML contains " + s);
   });
   assert.ok(text.indexOf("LARVIVA ZM") === -1, "unpublished products are not rendered");

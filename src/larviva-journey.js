@@ -118,15 +118,26 @@
     return runs;
   }
 
+  // Bars are laid out on half-stage columns, so a product can start or end
+  // partway through a stage (startsMidStage / endsMidStage), as on the
+  // LARVIVA range slides.
+  function toHalves(pr) {
+    var halves = [];
+    pr.stageIndices.forEach(function (c) { halves.push(2 * c, 2 * c + 1); });
+    if (halves.length > 2 && pr.startsMidStage) halves.shift();
+    if (halves.length > 2 && pr.endsMidStage) halves.pop();
+    return halves;
+  }
+
   // Places product bars in as few rows as possible without overlaps, so the
   // module stays compact however many products a portfolio has.
   function packRows(products) {
     var rows = [];
     products.forEach(function (pr) {
       var r = 0;
-      while (rows[r] && pr.stageIndices.some(function (c) { return rows[r][c]; })) r++;
+      while (rows[r] && pr.halfIndices.some(function (c) { return rows[r][c]; })) r++;
       rows[r] = rows[r] || {};
-      pr.stageIndices.forEach(function (c) { rows[r][c] = true; });
+      pr.halfIndices.forEach(function (c) { rows[r][c] = true; });
       pr.row = r;
     });
     return rows.length;
@@ -193,6 +204,7 @@
       var byId = {};
       products.forEach(function (pr) { byId[pr.id] = pr; });
       var laneProducts = products.filter(function (pr) { return pr.stageIndices.length; });
+      laneProducts.forEach(function (pr) { pr.halfIndices = toHalves(pr); });
       var rowCount = packRows(laneProducts);
 
       return Object.assign({}, p, {
@@ -287,7 +299,7 @@
     } else if (spec && spec.type === "range") {
       size = formatSize(spec);
     }
-    return [type, size].filter(hasText).join("  |  ");
+    return [type, size, product.marketAvailability].filter(hasText).join("  |  ");
   }
 
   function pct(value, scale) {
@@ -476,7 +488,8 @@
   function productPill(model, p, product, o, variant, style, kicker) {
     var meta = cardMeta(product);
     return control(o.interactive, {
-      "class": "lj-pill" + (variant ? " lj-pill--" + variant : ""),
+      "class": "lj-pill" + (variant ? " lj-pill--" + variant : "") +
+        (hasText(product.marketAvailability) ? " lj-pill--regional" : ""),
       style: accentStyle(product) + (style || ""),
       "data-product-id": product.id,
       "aria-pressed": "false",
@@ -515,9 +528,10 @@
   function renderLanes(model, p, o) {
     if (!p.laneProducts.length) return "";
     var html = '<h4 class="lj-vh">' + esc(model.ui.productsHeading) + "</h4>";
-    html += '<ul class="lj-lanes" style="--lj-cols: ' + p.columns.length + "; --lj-rows: " + p.rowCount + '">';
+    html += '<ul class="lj-lanes" style="--lj-cols: ' + p.columns.length + "; --lj-halves: " + 2 * p.columns.length +
+      "; --lj-rows: " + p.rowCount + '">';
     p.laneProducts.forEach(function (product, i) {
-      toRuns(product.stageIndices).forEach(function (run, r) {
+      toRuns(product.halfIndices).forEach(function (run, r) {
         var place = "grid-column: " + (run[0] + 1) + " / " + (run[1] + 2) + "; grid-row: " + (product.row + 1) + "; --i: " + i + ";";
         if (r === 0) {
           html += '<li class="lj-lanes__item" style="' + place + '">' + productPill(model, p, product, o, "bar") + "</li>";

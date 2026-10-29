@@ -86,6 +86,13 @@
   --lj-can-coral: #e8705f;
   --lj-family-inicio: #c3e4ef;
   --lj-on-family-inicio: #0471ad;
+  /* INICIO tiles follow the range slides and the INICIO logo colours
+     (Product brand guidelines 2025). */
+  --lj-family-inicio-plus: #ffffff;
+  --lj-on-family-inicio-plus: #1f3e77;
+  --lj-family-inicio-maxio: #f7efd6;
+  --lj-on-family-inicio-maxio: #1f3e77;
+  --lj-regional-line: #eab318;
   --lj-family-zm: #1f3e77;
   --lj-on-family-zm: #ffffff;
 
@@ -374,7 +381,7 @@
 
 .lj-lanes {
   display: grid;
-  grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--lj-halves), minmax(0, 1fr));
   gap: 10px 0;
   margin: 14px 0 0;
   padding: 12px 0;
@@ -510,6 +517,13 @@
   .lj .lj-pill__meta {
     display: none;
   }
+}
+
+/* Products sold in one market only (INICIO Maxio, Vietnam) have a dashed
+   outline, as on the shrimp range slide. */
+.lj-pill--regional {
+  outline: 2px dashed var(--lj-regional-line);
+  outline-offset: -2px;
 }
 
 .lj-pill.is-selected,
