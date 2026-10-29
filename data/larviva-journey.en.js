@@ -72,7 +72,7 @@
     },
 
     "ui": {
-      "moduleTitle": "Explore the {portfolio} hatchery journey",
+      "moduleTitle": "",
       "portfolioSwitchLabel": "Choose a hatchery portfolio",
       "instruction": "Select a development stage or product to explore the LARVIVA range.",
       "stagesHeading": "Development stages",

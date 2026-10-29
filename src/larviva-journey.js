@@ -318,11 +318,13 @@
     var active = model.defaultPortfolio;
 
     var html = '<div class="lj' + (interactive ? " lj--interactive" : " lj--static") + '">';
-    html += '<div class="lj-header"><div class="lj-header__text">';
-    if (hasText(ui.eyebrow)) html += '<p class="lj-eyebrow">' + esc(ui.eyebrow) + "</p>";
-    var activePortfolio = model.portfolios.filter(function (p) { return p.id === active; })[0] || {};
-    html += '<h2 class="lj-title" data-lj-title>' + esc(moduleTitle(ui, activePortfolio)) + "</h2>";
-    html += "</div>";
+    // The section title normally comes from the host page (CMS); the module
+    // only renders one when `ui.moduleTitle` is set.
+    html += '<div class="lj-header">';
+    if (hasText(ui.moduleTitle)) {
+      var activePortfolio = model.portfolios.filter(function (p) { return p.id === active; })[0] || {};
+      html += '<div class="lj-header__text"><h2 class="lj-title" data-lj-title>' + esc(moduleTitle(ui, activePortfolio)) + "</h2></div>";
+    }
 
     if (interactive && model.portfolios.length > 1) {
       html += '<div class="lj-switch" role="tablist" aria-label="' + esc(ui.portfolioSwitchLabel) +

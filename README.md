@@ -2,7 +2,7 @@
 
 A compact, interactive module for the LARVIVA landing page on biomar.com. Visitors switch between the **Fish** and **Shrimp** portfolios and select stages or products. A detail panel updates as they go.
 
-The module follows BioMar's own LARVIVA range slide, on a white (`#ffffff`) background:
+The module follows BioMar's own LARVIVA range slide and is built to sit inside the LARVIVA page on biomar.com. It has no title of its own (the page provides it, for example "Explore the hatchery production cycle"). Its background is transparent, so it takes the page's light grey. The Fish/Shrimp switch uses the page's outlined filter buttons, and the tile band and detail card are flat white surfaces like the site's cards.
 - **Chevron band:** stages run from light to dark blue, with white icons and labels underneath in sentence case. For fish, Broodstock nutrition and Live-feed enrichment lead the band as on the slide. They are marked "Supporting the hatchery" and announced as connected activities, not stages.
 - **LARVIVA family tiles:** they use the official family logos (Broodstock, MultiGain, ProStart, ProWean, ProNurse, ORBIT, INICIO Focus) on the slide's tints, under the stages each product covers. The shrimp LARVIVA tiles are navy with the white LARVIVA wordmark, as on the shrimp range slide. Product names stay in the HTML as text for screen readers and search. Shrimp tiles overlap the way the use ranges do: Zoea spans zoea and mysis, and Mysis spans mysis and post-larvae.
 - **Dimming stays readable:** unrelated tiles and stages lose their colour (grey logo, white tile, grey chevron) instead of fading with opacity, so all text stays at AA contrast.
@@ -98,6 +98,20 @@ The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (
 - **Markets:** `markets: ["VN"]` together with `data-market="VN"` on the module. `null` means all markets.
 - **Icons:** drop an SVG into `assets/icons/`, reference its file name in a stage's `illustration` (an array, so several icons can be combined), then run `npm run build`.
 - **Translations:** copy the dataset per locale and translate the values, keeping every `id`. All interface strings are in `ui`.
+
+## Embedding on biomar.com (Umbraco)
+
+- **Placement:** put the module in a block or partial on the LARVIVA page, inside the page's normal content container (the same width as the species picker). The section heading is ordinary page content above it. Point the module at it with `aria-labelledby`:
+
+  ```html
+  <h2 id="journey-heading">Explore the hatchery production cycle</h2>
+  <section data-larviva-journey data-src="/api/larviva-journey?culture=en" aria-labelledby="journey-heading"></section>
+  ```
+
+- **No title or background of its own:** set `ui.moduleTitle` only if the module is ever used where the page gives no heading.
+- **Fonts and colours:** Montserrat and the page colours are already on biomar.com. The demo page loads Montserrat itself only to stand in for the site.
+- **Assets:** serve `assets/logos/*` and the icons from the Umbraco media library, and point the dataset's `logo` / `wordmark` / `image` fields at those media URLs.
+- **Demo page:** `index.html` reproduces the page context (grey background, container gutters, intro text and section heading) so the module can be reviewed in place.
 
 ## CMS integration notes
 

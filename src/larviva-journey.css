@@ -8,7 +8,11 @@
  *   - LARVIVA family tiles: the LARVIVA wordmark over the family name in the
  *     family colour, on a light tint of that colour.
  *   - Details open beneath the band only when something is selected.
- * Type: Montserrat (biomar.com), Arial fallback. Background: white (#ffffff).
+ * HOST PAGE: the module is designed for the LARVIVA page on biomar.com. It
+ * has no title of its own (the page supplies it) and a transparent
+ * background, so it takes the page's light grey (#f5f5f5). Type, text colour,
+ * buttons and cards follow that page: Montserrat, navy #152b4c, outlined
+ * filter buttons and flat white cards with 6px corners.
  *
  * Family colours come from the LARVIVA label colour codes; text colours are
  * darkened where needed to keep AA contrast on the tint.
@@ -27,8 +31,10 @@
   --lj-leafy-green: #97d130;
   --lj-white: #ffffff;
 
-  --lj-heading: var(--lj-biomar-blue);
+  --lj-heading: #152b4c;                /* biomar.com text navy */
   --lj-text: #152b4c;
+  --lj-body: #374151;                   /* biomar.com body copy grey */
+  --lj-surface: #ffffff;                /* white band / cards on the grey page */
   --lj-muted: #5c6b80;
   --lj-line: #e1edf3;
   --lj-soft: #f4f9fb;
@@ -89,13 +95,13 @@
   --lj-grade-navy: #1d3c8f;
   --lj-grade-red: #e4002b;
 
-  --lj-radius: 8px;
+  --lj-radius: 6px;
   --lj-chev-height: 84px;
   --lj-point: 22px;
   --lj-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
 
   position: relative;
-  background: var(--lj-white);
+  background: transparent;
   color: var(--lj-text);
   font-family: var(--lj-font);
   font-size: 1rem;
@@ -148,45 +154,48 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px 24px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
+}
+
+.lj-header:empty {
+  display: none;
 }
 
 .lj-title {
   color: var(--lj-heading);
-  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.75rem);
-  font-weight: 700;
+  font-size: 1.875rem;
+  font-weight: 400;
   line-height: 1.2;
 }
 
+/* Fish / Shrimp: the page's outlined filter buttons. */
 .lj-switch {
   display: inline-flex;
-  padding: 3px;
-  border-radius: var(--lj-radius);
-  background: var(--lj-soft);
-  box-shadow: inset 0 0 0 1px var(--lj-line);
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .lj-switch__tab {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 7px 16px;
-  border: 0;
-  border-radius: 6px;
+  gap: 12px;
+  padding: 11px 24px;
+  border: 1px solid var(--lj-heading);
+  border-radius: var(--lj-radius);
   background: transparent;
   color: var(--lj-heading);
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 200ms var(--lj-ease), color 200ms var(--lj-ease);
+  transition: background-color 200ms var(--lj-ease), color 200ms var(--lj-ease), border-color 200ms var(--lj-ease);
 }
 
 .lj-switch__tab:hover {
-  background: var(--lj-crisp-blue);
+  border-color: var(--lj-ocean-blue);
 }
 
 .lj-switch__tab[aria-selected="true"] {
-  background: var(--lj-biomar-blue);
+  background: var(--lj-heading);
   color: var(--lj-white);
 }
 
@@ -366,11 +375,11 @@
   display: grid;
   grid-template-columns: repeat(var(--lj-cols), minmax(0, 1fr));
   gap: 10px 0;
-  margin: 14px -5px 0;
+  margin: 14px 0 0;
   padding: 12px 0;
   list-style: none;
   border-radius: var(--lj-radius);
-  background: var(--lj-soft);
+  background: var(--lj-surface);
 }
 
 .lj-lanes__item {
@@ -567,10 +576,9 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 18px 28px;
-  padding: 20px 22px;
-  border: 1px solid var(--lj-line);
+  padding: 24px;
   border-radius: var(--lj-radius);
-  background: var(--lj-white);
+  background: var(--lj-surface);
   animation: lj-up 300ms var(--lj-ease) both;
 }
 
@@ -628,15 +636,10 @@
 
 .lj-detail__name {
   display: block;
-  color: var(--lj-on-accent);
+  color: var(--lj-heading);
   font-size: 1.625rem;
   font-weight: 600;
   line-height: 1.1;
-}
-
-.lj-detail[style*="on-family-pl"] .lj-detail__name,
-.lj-detail[style*="on-family-zm"] .lj-detail__name {
-  color: var(--lj-biomar-blue);
 }
 
 .lj-panel__title:focus {
@@ -648,7 +651,7 @@
 }
 
 .lj-panel__text {
-  color: var(--lj-text);
+  color: var(--lj-body);
   font-size: 0.9375rem;
 }
 
@@ -818,6 +821,9 @@
 
 .lj-chart {
   margin-top: 12px;
+  padding: 20px 24px 16px;
+  border-radius: var(--lj-radius);
+  background: var(--lj-surface);
 }
 
 .lj-chart[hidden] {
@@ -1196,7 +1202,7 @@
 }
 
 .lj-switch__tab {
-  --lj-icon-detail: var(--lj-soft);
+  --lj-icon-detail: #f5f5f5;
 }
 
 .lj-switch__tab[aria-selected="true"] {
