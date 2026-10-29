@@ -115,10 +115,10 @@ The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (
 
 ## Embedding with an iframe
 
-`embed.html` is the module on its own: transparent background, no page chrome, and `noindex`. It sends its height to the parent page so the iframe resizes without scrollbars. Add this to the host page (for example as an Umbraco rich-text/HTML block):
+`embed.html` is published with GitHub Pages at https://biomar-digital.github.io/LARVIVA/embed.html and updates automatically on every push to the branch Pages serves. It is the module on its own: transparent background, no page chrome, and `noindex`. It sends its height to the parent page so the iframe resizes without scrollbars. Add this to the host page (for example as an Umbraco rich-text/HTML block):
 
 ```html
-<iframe id="larviva-journey" src="EMBED_URL" title="LARVIVA hatchery production cycle"
+<iframe id="larviva-journey" src="https://biomar-digital.github.io/LARVIVA/embed.html" title="LARVIVA hatchery production cycle"
         style="width:100%;border:0;display:block" height="600" loading="lazy"></iframe>
 <script>
   window.addEventListener("message", function (e) {
