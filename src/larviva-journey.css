@@ -73,12 +73,17 @@
   --lj-on-family-pronurse: #2a7330;
   --lj-family-orbit: #bdd2db;
   --lj-on-family-orbit: #1f3e77;
+  /* Shrimp LARVIVA tiles follow the cans: navy, white wordmark, product
+     name in the can colour (sampled from the pack shots). */
   --lj-family-zoea: #1f3e77;
-  --lj-on-family-zoea: #ffffff;
+  --lj-on-family-zoea: #41b2e6;
   --lj-family-mysis: #1f3e77;
-  --lj-on-family-mysis: #ffffff;
+  --lj-on-family-mysis: #8dc63f;
   --lj-family-pl: #1f3e77;
-  --lj-on-family-pl: #ffffff;
+  --lj-on-family-pl: #e8705f;
+  --lj-can-blue: #41b2e6;
+  --lj-can-green: #8dc63f;
+  --lj-can-coral: #e8705f;
   --lj-family-inicio: #c3e4ef;
   --lj-on-family-inicio: #0471ad;
   --lj-family-zm: #1f3e77;
@@ -1218,4 +1223,31 @@
 
 .lj-switch__tab[aria-selected="true"] {
   --lj-icon-detail: var(--lj-biomar-blue);
+}
+
+/* Shrimp tiles set like the can labels: the product name in capitals and in
+   the can colour, under the white LARVIVA wordmark. */
+.lj-pill:has(.lj-wordmark) .lj-pill__family {
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lj-pill:has(.lj-wordmark) .lj-pill__meta {
+  color: var(--lj-white);
+  opacity: 1;
+}
+
+.lj-pill__grade {
+  font-weight: 600;
+}
+
+.lj-pill__grade[data-grade="cyan"] { color: var(--lj-can-blue); }
+.lj-pill__grade[data-grade="lightgreen"] { color: var(--lj-can-green); }
+.lj-pill__grade[data-grade="orange"] { color: var(--lj-can-coral); }
+
+.lj-pill.is-dimmed .lj-pill__family,
+.lj-pill.is-dimmed .lj-pill__grade,
+.lj-pill.is-dimmed:has(.lj-wordmark) .lj-pill__meta {
+  color: var(--lj-muted);
 }

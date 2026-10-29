@@ -494,11 +494,24 @@
       '<span class="lj-pill__text">' +
       (hasText(kicker) ? '<span class="lj-pill__kicker">' + esc(kicker) + "</span>" : "") +
       productLabel(model, product) +
-      (hasText(meta) ? '<span class="lj-pill__meta">' + esc(meta) + "</span>" : "") +
+      (hasText(meta) ? '<span class="lj-pill__meta">' + gradeMeta(product, meta) + "</span>" : "") +
       '<span class="lj-pill__stages"><span class="lj-vh">' + esc(model.ui.stagesPrefix) + " </span>" +
       esc(stageNames(p, product).join(" · ")) + "</span></span>" +
       CHEVRON
     );
+  }
+
+  // Products with named grades (LARVIVA PL) show each grade in its can /
+  // label colour, e.g. PL 200 blue, PL 300 green, PL 400 coral.
+  function gradeMeta(product, meta) {
+    var spec = product.particleSize;
+    if (!spec || spec.type !== "set" || spec.items.length < 2 ||
+        spec.items.every(function (it) { return /^[\d.]+$/.test(it.label); })) {
+      return esc(meta);
+    }
+    return spec.items.map(function (it) {
+      return '<span class="lj-pill__grade" data-grade="' + esc(it.color || "default") + '">' + esc(it.label) + "</span>";
+    }).join('<span aria-hidden="true"> / </span>');
   }
 
   var CHEVRON = '<svg class="lj-chevron" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">' +
