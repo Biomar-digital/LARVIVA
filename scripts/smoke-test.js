@@ -90,7 +90,7 @@ async function run() {
   await toggle.click();
   assert.ok(!(await shrimp.locator(".lj-chart").isVisible()), "chart hidden again");
   await shrimp.locator('.lj-lanes [data-product-id="larviva-zoea"]').click();
-  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 5);
+  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 6);
 
   // Keyboard activation of a product.
   await shrimp.locator('.lj-lanes [data-product-id="larviva-pl"]').focus();
@@ -138,7 +138,7 @@ async function run() {
   var nojs = await ctx.newPage();
   await nojs.goto(url);
   var text = (await nojs.locator("body").textContent()).replace(/\s+/g, " ");
-  ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL", "Larval", "Post-larvae", "INICIO Plus M", "INICIO Maxio"].forEach(function (s) {
+  ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL", "Larval", "Post-larvae", "INICIO Plus M", "INICIO Maxio", "INICIO Prime"].forEach(function (s) {
     assert.ok(text.indexOf(s) !== -1, "static HTML contains " + s);
   });
   assert.ok(text.indexOf("LARVIVA ZM") === -1, "unpublished products are not rendered");

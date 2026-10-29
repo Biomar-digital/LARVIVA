@@ -379,11 +379,11 @@
     {
       "variants": [],
       "technicalNotes": [],
-      "url": null,
-      "image": null,
+      "url": "https://www.biomar.com/feed-services/all-feed/inicio-plus-m-yellowtail-kingfish",
+      "image": "https://www.biomar.com/media/rikercay/hatchery-hatchery-top-performance-inicio-plus-m.png?width=480&format=webp&quality=80",
       "use": null,
       "packaging": null,
-      "health": null,
+      "health": "With Bactocell® & B-WYSE™",
       "markets": null,
       "marketAvailability": null,
       "published": true,
@@ -394,14 +394,14 @@
       "portfolio": "fish",
       "family": "INICIO",
       "colorToken": "inicio-plus",
-      "productType": null,
+      "productType": "Extruded mini-pellets",
       "stages": [
         "post-weaning",
         "nursery"
       ],
       "startsMidStage": true,
-      "application": null,
-      "description": null,
+      "application": "Fry, during the early life stages.",
+      "description": "Premium extruded mini-pellets formulated for fry, based on highly digestible, palatable marine raw materials, for maximum growth, conversion and survival.",
       "particleSize": null,
       "order": 25
     },
@@ -709,8 +709,8 @@
     {
       "variants": [],
       "technicalNotes": [],
-      "url": null,
-      "image": null,
+      "url": "https://www.biomar.com/feed-services/all-feed/inicio-focus-shrimp",
+      "image": "https://www.biomar.com/media/s0rlrsub/shrimp-starter-health-inicio-focus.png?width=480&format=webp&quality=80",
       "use": "PL13 onwards",
       "packaging": "Bag 10 kg / 25 kg · minimum order 1 bag",
       "health": "With Bactocell® & B-WYSE™",
@@ -730,7 +730,7 @@
         "shrimp-nursery"
       ],
       "application": "Hatchery and nursery systems, from around PL13.",
-      "description": "Extruded mini-pellets for hatchery and nursery systems, with reinforced health.",
+      "description": "Extruded mini-pellets from the SmartCare® programme that promote healthy, resilient juveniles. Ideal for intensive pre-breeding and raceway crops.",
       "particleSize": {
         "type": "set",
         "unit": "mm",
@@ -766,8 +766,8 @@
     {
       "variants": [],
       "technicalNotes": [],
-      "url": null,
-      "image": null,
+      "url": "https://www.biomar.com/feed-services/all-feed/inicio-maxio-shrimp",
+      "image": "https://www.biomar.com/media/lfdeidph/shrimp-starter-top-performance-inicio-maxio.png?width=480&format=webp&quality=80",
       "use": null,
       "packaging": null,
       "health": null,
@@ -781,14 +781,41 @@
       "portfolio": "shrimp",
       "family": "INICIO",
       "colorToken": "inicio-maxio",
+      "productType": "Extruded mini-pellets",
+      "stages": [
+        "shrimp-nursery"
+      ],
+      "application": "All types of pre-rearing, in semi-intensive and intensive systems.",
+      "description": "Part of EXIA’s smart nutrition range. Formulated to maximise growth from the start of the rearing cycle, for strong, uniform juveniles.",
+      "particleSize": null,
+      "order": 50
+    },
+    {
+      "variants": [],
+      "technicalNotes": [],
+      "url": "https://www.biomar.com/feed-services/all-feed/inicio-prime-shrimp",
+      "image": "https://www.biomar.com/media/u1pon4xs/shrimp-starter-high-performance-inicio-prime.png?width=480&format=webp&quality=80",
+      "use": null,
+      "packaging": null,
+      "health": null,
+      "markets": null,
+      "marketAvailability": "Vietnam – EXIA crumbles",
+      "published": true,
+      "id": "inicio-prime",
+      "name": "INICIO Prime",
+      "logo": "assets/logos/inicio-prime.svg",
+      "brand": "INICIO",
+      "portfolio": "shrimp",
+      "family": "INICIO",
+      "colorToken": "inicio-prime",
       "productType": null,
       "stages": [
         "shrimp-nursery"
       ],
-      "application": null,
-      "description": null,
+      "application": "Pre-rearing.",
+      "description": "Pre-rearing feed range developed for consistently high profitability and productivity, with a high growth rate and optimal feed conversion.",
       "particleSize": null,
-      "order": 50
+      "order": 55
     },
     {
       "variants": [],

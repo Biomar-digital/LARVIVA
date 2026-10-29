@@ -92,7 +92,11 @@
   --lj-on-family-inicio-plus: #1f3e77;
   --lj-family-inicio-maxio: #f7efd6;
   --lj-on-family-inicio-maxio: #1f3e77;
-  --lj-regional-line: #eab318;
+  --lj-family-inicio-prime: #eeeff0;
+  --lj-on-family-inicio-prime: #1f3e77;
+  --lj-regional-line: #6a6c71;
+  --lj-regional-inicio-maxio: #eab318;
+  --lj-regional-inicio-prime: #6a6c71;
   --lj-family-zm: #1f3e77;
   --lj-on-family-zm: #ffffff;
 
@@ -522,7 +526,7 @@
 /* Products sold in one market only (INICIO Maxio, Vietnam) have a dashed
    outline, as on the shrimp range slide. */
 .lj-pill--regional {
-  outline: 2px dashed var(--lj-regional-line);
+  outline: 2px dashed var(--lj-regional, var(--lj-regional-line));
   outline-offset: -2px;
 }
 

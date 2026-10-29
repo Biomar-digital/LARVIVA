@@ -88,7 +88,8 @@
 
   function accentStyle(product) {
     return "--lj-accent: " + accentToken(product) + ";" +
-      " --lj-on-accent: var(--lj-on-family-" + colorToken(product) + ", var(--lj-on-family-default));";
+      " --lj-on-accent: var(--lj-on-family-" + colorToken(product) + ", var(--lj-on-family-default));" +
+      " --lj-regional: var(--lj-regional-" + colorToken(product) + ", var(--lj-regional-line));";
   }
 
   function iconHtml(illustrations, keys, extraClass) {
