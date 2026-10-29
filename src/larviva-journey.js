@@ -969,6 +969,15 @@
     // On narrow screens the panel sits below the products: bring it into view.
     if ((opts.reveal || opts.focusPanel) && root.matchMedia && root.matchMedia(NARROW_QUERY).matches) {
       var rect = detail.getBoundingClientRect();
+      // Inside an auto-height iframe the module never scrolls itself: tell
+      // the embedding page where the panel is (embed.html relays it).
+      if (root.parent && root.parent !== root && typeof root.CustomEvent === "function") {
+        detail.dispatchEvent(new root.CustomEvent("larviva-journey:reveal", {
+          bubbles: true,
+          detail: { top: Math.round(rect.top + (root.pageYOffset || 0)) }
+        }));
+        return;
+      }
       if (rect.top > root.innerHeight * 0.7 || rect.top < 0) {
         var reduce = root.matchMedia("(prefers-reduced-motion: reduce)").matches;
         detail.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });

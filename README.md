@@ -4,11 +4,10 @@ A compact, interactive module for the LARVIVA landing page on biomar.com. Visito
 
 The module follows BioMar's own LARVIVA range slide and is built to sit inside the LARVIVA page on biomar.com. It has no title of its own (the page provides it, for example "Explore the hatchery production cycle"). Its background is transparent, so it takes the page's light grey. The Fish/Shrimp switch uses the page's outlined filter buttons, and the tile band and detail card are flat white surfaces like the site's cards.
 - **Chevron band:** stages run from light to dark blue, with white icons and labels underneath in sentence case. Fish follows the fish range slide: Broodstock › Live feed › Larval › Post-weaning › Nursery. Broodstock and Live feed lead the band as on the slide. They are marked "Supporting the hatchery" and announced as connected activities, not stages.
-- **LARVIVA family tiles:** they use the official family logos (Broodstock, MultiGain, ProStart, ProWean, ProNurse, ORBIT, and INICIO Plus M, Focus, Maxio and Prime) on the slide's tints, under the stages each product covers. The shrimp LARVIVA tiles are navy with the white LARVIVA wordmark, as on the shrimp range slide. Product names stay in the HTML as text for screen readers and search. Tiles can start or end halfway through a stage (`startsMidStage` / `endsMidStage`), as ProStart, ProWean and INICIO Plus M do on the fish slide. The line under each logo is the feed type (or `tileSubtitle`), never the particle size; sizes appear in the detail card. Fish products have no links; shrimp products link to their biomar.com pages. Each shrimp product sits under its own stage only: Zoea under zoea, Mysis under mysis, PL under post-larvae, and INICIO Focus, Maxio and Prime under nursery. Bioremediation (SmartCare Balance H and P) leads the shrimp band as a connected activity, like Broodstock and Live feed for fish. The exact feeding windows (Z1–M2, M1–PL2 …) are shown in the particle-size chart and the product card.
+- **LARVIVA family tiles:** they use the official family logos (Broodstock, MultiGain, ProStart, ProWean, ProNurse, ORBIT, and INICIO Plus M, Focus, Maxio and Prime) on the slide's tints, under the stages each product covers. The shrimp LARVIVA tiles are navy with the white LARVIVA wordmark, as on the shrimp range slide. Product names stay in the HTML as text for screen readers and search. Tiles can start or end halfway through a stage (`startsMidStage` / `endsMidStage`), as ProStart, ProWean and INICIO Plus M do on the fish slide. The line under each logo is the feed type (or `tileSubtitle`), never the particle size; sizes appear in the detail card. Fish products have no links; shrimp products link to their biomar.com pages. Each shrimp product sits under its own stage only: Zoea under zoea, Mysis under mysis, PL under post-larvae, and INICIO Focus, Maxio and Prime under nursery. Bioremediation (SmartCare Balance H and P) leads the shrimp band as a connected activity, like Broodstock and Live feed for fish. The exact feeding windows (Z1–M2, M1–PL2 …) are shown in the product card.
 - **Dimming stays readable:** unrelated tiles and stages lose their colour (grey logo, white tile, grey chevron) instead of fading with opacity, so all text stays at AA contrast.
 - **Phones (< 760 px):** a stacked layout with one row per stage, each with the products used there directly beneath. Nothing scrolls sideways.
 - **Details below, only when selected:** a compact card with the pack shot, description, attributes, colour-coded grades and the "View product details" button. When nothing is selected there is a single hint line, which keeps the module short (about 520 px for fish and 470 px for shrimp on desktop).
-- **Particle size by larval stage (shrimp):** opens on demand with "Show particle size by larval stage".
 - **No capitals** anywhere in the interface.
 
 > **Content status.** Product data now comes from the supplied BioMar documents:
@@ -43,7 +42,6 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 | --- | --- |
 | Chevron band, white icons, labels beneath, family tiles with the LARVIVA wordmark | LARVIVA Marine Hatchery range slide |
 | Family and grade colours | LARVIVA particle sizes and colour code labels (text colours darkened where needed for AA contrast) |
-| Particle size by larval stage chart | LARVIVA Hatchery presentation 2025-03, slide 13 |
 | Montserrat, navy text, product links | biomar.com |
 
 The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (Hatchery Segment; particle sizes and colour code labels). They are 230–330 px raster images, sharp at their displayed size but slightly soft on high-density screens. Replace them with the vector logo files from the brand team for production; the dataset's `logo` / `wordmark` fields point to them.
@@ -122,8 +120,13 @@ The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (
         style="width:100%;border:0;display:block" height="600" loading="lazy"></iframe>
 <script>
   window.addEventListener("message", function (e) {
-    if (e.data && e.data.type === "larviva-journey:height") {
-      document.getElementById("larviva-journey").style.height = e.data.height + "px";
+    var frame = document.getElementById("larviva-journey");
+    if (!e.data || e.source !== frame.contentWindow) return;
+    if (e.data.type === "larviva-journey:height") frame.style.height = e.data.height + "px";
+    // Phones: scroll to the product card the visitor just opened.
+    if (e.data.type === "larviva-journey:scroll") {
+      var y = frame.getBoundingClientRect().top + e.data.top;
+      if (y < 0 || y > window.innerHeight * 0.7) window.scrollTo({ top: window.pageYOffset + y - 16, behavior: "smooth" });
     }
   });
 </script>

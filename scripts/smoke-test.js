@@ -78,17 +78,8 @@ async function run() {
   });
   assert.strictEqual(dimmed, "1", "dimmed tiles are not faded with opacity");
 
-  // Particle-size chart (shrimp): opens on demand; boxes select products.
-  var toggle = shrimp.locator('[data-action="chart"]');
-  assert.strictEqual(await toggle.getAttribute("aria-expanded"), "false");
-  await toggle.click();
-  assert.strictEqual(await toggle.getAttribute("aria-expanded"), "true");
-  assert.ok(await shrimp.locator(".lj-chart").isVisible(), "chart shown");
-  assert.strictEqual(await shrimp.locator(".lj-chart__box").count(), 8);
-  await shrimp.locator('.lj-chart__box[data-product-id="larviva-zoea"]').click();
-  assert.match(await shrimp.locator("[data-lj-panel]").innerText(), /Z1 – M2/);
-  await toggle.click();
-  assert.ok(!(await shrimp.locator(".lj-chart").isVisible()), "chart hidden again");
+  // The particle-size chart was removed on request.
+  assert.strictEqual(await shrimp.locator('[data-action="chart"]').count(), 0, "no particle-size chart");
   await shrimp.locator('.lj-lanes [data-product-id="larviva-zoea"]').click();
   assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 8);
 
