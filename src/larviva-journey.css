@@ -45,25 +45,31 @@
   --lj-tone-5: #24597a;
   --lj-chev-selected: var(--lj-biomar-blue);
 
-  /* LARVIVA family tiles: tint (background) + text colour. */
+  /* LARVIVA family tiles: tint behind the official logo (as on the range
+     slide) + text colour for tiles without a logo. Shrimp LARVIVA tiles are
+     navy with the white wordmark, as on the shrimp range slide. */
+  --lj-dim-bg: #ffffff;
+  --lj-dim-line: #d5dee4;
+  --lj-dim-chev: #e3ebf0;
+  --lj-dim-icon: #a9bccb;
   --lj-family-default: #dceef6;
   --lj-on-family-default: var(--lj-biomar-blue);
-  --lj-family-broodstock: #f9d8c3;
+  --lj-family-broodstock: #f3cbb0;
   --lj-on-family-broodstock: #a4460d;
-  --lj-family-multigain: #fbd2d6;
+  --lj-family-multigain: #f8bcc1;
   --lj-on-family-multigain: #b20d29;
-  --lj-family-prostart: #dcefc2;
+  --lj-family-prostart: #d9ecb3;
   --lj-on-family-prostart: #3f7a12;
-  --lj-family-prowean: #c9eaf7;
+  --lj-family-prowean: #c7e4ef;
   --lj-on-family-prowean: #00678c;
-  --lj-family-pronurse: #d3ecc4;
+  --lj-family-pronurse: #dcefc6;
   --lj-on-family-pronurse: #2a7330;
-  --lj-family-orbit: #d5e3ea;
+  --lj-family-orbit: #bdd2db;
   --lj-on-family-orbit: #1f3e77;
-  --lj-family-zoea: #c9eaf7;
-  --lj-on-family-zoea: #00678c;
-  --lj-family-mysis: #dcefc2;
-  --lj-on-family-mysis: #3f7a12;
+  --lj-family-zoea: #1f3e77;
+  --lj-on-family-zoea: #ffffff;
+  --lj-family-mysis: #1f3e77;
+  --lj-on-family-mysis: #ffffff;
   --lj-family-pl: #1f3e77;
   --lj-on-family-pl: #ffffff;
   --lj-family-inicio: #c3e4ef;
@@ -314,8 +320,18 @@
   font-weight: 700;
 }
 
-.lj-stage.is-dimmed {
-  opacity: 0.4;
+.lj-stage.is-dimmed .lj-stage__chev::before,
+.lj-stage.is-dimmed .lj-step__chev::before {
+  background: var(--lj-dim-chev);
+}
+
+.lj-stage.is-dimmed .lj-stage__chev,
+.lj-stage.is-dimmed .lj-step__chev {
+  color: var(--lj-dim-icon);
+}
+
+.lj-stage.is-dimmed .lj-stage__label {
+  color: var(--lj-muted);
 }
 
 .lj-flag {
@@ -405,7 +421,33 @@
   line-height: 1.05;
 }
 
-/* Stand-in for the LARVIVA wordmark: thin, widely spaced. */
+/* Official family logos (assets/logos). Names stay in the HTML as text. */
+.lj-logo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 44px;
+  transition: filter 250ms var(--lj-ease), opacity 250ms var(--lj-ease);
+}
+
+.lj-wordmark {
+  display: block;
+  width: auto;
+  height: 12px;
+  margin-bottom: 4px;
+  transition: filter 250ms var(--lj-ease), opacity 250ms var(--lj-ease);
+}
+
+.lj-detail__logo {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: 56px;
+  margin: 2px 0 4px;
+}
+
+/* Text stand-in where no logo file is set: thin, widely spaced. */
 .lj-pill__brand {
   color: var(--lj-biomar-blue);
   font-size: 0.6875rem;
@@ -465,8 +507,22 @@
   box-shadow: 0 0 0 3px var(--lj-white), 0 0 0 5px var(--lj-biomar-blue);
 }
 
+/* Dimmed, not removed: the tile loses its colour but every word stays at
+   AA contrast; logos turn grey. */
 .lj-pill.is-dimmed {
-  opacity: 0.35;
+  background: var(--lj-dim-bg);
+  box-shadow: inset 0 0 0 1px var(--lj-dim-line);
+  color: var(--lj-muted);
+}
+
+.lj-pill.is-dimmed .lj-logo {
+  filter: grayscale(1);
+  opacity: 0.6;
+}
+
+.lj-pill.is-dimmed .lj-wordmark {
+  filter: brightness(0);
+  opacity: 0.45;
 }
 
 /* ── Motion ───────────────────────────────────────────────────────────── */
@@ -857,7 +913,12 @@
 }
 
 .lj-chart__box.is-dimmed {
-  opacity: 0.3;
+  border-color: var(--lj-dim-line);
+  background: #f3f6f8;
+}
+
+.lj-chart__box.is-dimmed .lj-chart__box-label {
+  color: var(--lj-muted);
 }
 
 .lj-chart__axis {
@@ -959,12 +1020,12 @@
 
 /* ── Mobile ───────────────────────────────────────────────────────────── */
 
-@media (max-width: 759px) {
-  .lj {
-    --lj-chev-height: 70px;
-    --lj-point: 16px;
-  }
+/* Phone layout (rendered alongside the band; one is hidden per breakpoint). */
+.lj-steps {
+  display: none;
+}
 
+@media (max-width: 759px) {
   .lj-switch {
     display: flex;
     width: 100%;
@@ -975,33 +1036,95 @@
     justify-content: center;
   }
 
-  /* Band and tiles scroll sideways together inside the module; the page
-     never does. */
-  .lj-portfolio {
-    overflow-x: auto;
-    scrollbar-width: thin;
-  }
-
   .lj-stages,
   .lj-lanes {
-    min-width: calc(var(--lj-cols) * 112px);
+    display: none;
   }
 
-  .lj-stage__label {
-    font-size: 0.8125rem;
+  .lj-steps {
+    display: grid;
+    gap: 14px;
+    padding: 0;
+    list-style: none;
   }
 
-  .lj-pill__family {
+  .lj-steps__item {
+    display: grid;
+    gap: 8px;
+  }
+
+  .lj-step {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 0;
+    text-align: left;
+  }
+
+  .lj-step__chev {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 96px;
+    height: 54px;
+    padding: 0 22px 0 18px;
+    color: var(--lj-white);
+  }
+
+  .lj-step__chev::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--lj-chev);
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 50%, calc(100% - 16px) 100%, 0 100%, 12px 50%);
+    transition: background-color 250ms var(--lj-ease);
+  }
+
+  .lj-step[aria-pressed="true"] .lj-step__chev::before {
+    background: var(--lj-chev-selected);
+  }
+
+  .lj-step .lj-stage__icon {
+    height: 34px;
+  }
+
+  .lj-step__text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lj-step .lj-stage__label {
+    margin: 0;
+    padding: 0;
     font-size: 1rem;
   }
 
-  .lj-panel,
-  .lj-chart,
-  .lj-chart-toggle,
-  .lj-index {
-    position: sticky;
-    left: 0;
-    max-width: calc(100vw - 32px);
+  .lj-steps__products {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lj-pill--step {
+    min-height: 56px;
+  }
+
+  .lj-pill--step .lj-logo {
+    max-height: 34px;
+  }
+
+  .lj-pill--step .lj-pill__family {
+    font-size: 1rem;
+  }
+
+  .lj-pill--step .lj-pill__meta {
+    display: none;
   }
 
   .lj-chart__frame {

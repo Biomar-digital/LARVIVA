@@ -365,6 +365,7 @@
     html += '<h3 class="' + (o.interactive ? "lj-vh" : "lj-portfolio__title") + '" id="' + esc(o.uid + "-heading-" + p.id) + '">' +
       esc(p.title || p.label) + "</h3>";
     html += renderStages(model, p, o);
+    html += renderSteps(model, p, o);
     html += renderLanes(model, p, o);
     if (!p.activitiesInBand) html += renderActivities(model, p, o);
     html += renderUnmapped(model, p, o);
@@ -398,7 +399,7 @@
     var html = '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
     html += '<ol class="lj-stages" style="--lj-cols: ' + p.columns.length + '">';
     p.columns.forEach(function (s, i) {
-      var tone = s.kind === "activity" ? "a" + (p.activities.indexOf(p.activities.filter(function (a) { return a.id === s.id; })[0]) + 1)
+      var tone = s.kind === "activity" ? "a" + (p.activities.indexOf(s) + 1)
         : String(s.index + 1);
       html += '<li class="lj-stages__item' + (s.kind === "activity" ? " lj-stages__item--activity" : "") + '" style="--i: ' + i +
         "; --lj-chev: var(--lj-tone-" + tone + ');">' + control(o.interactive, {
@@ -417,14 +418,60 @@
     return html + "</ol>";
   }
 
+  // Phone layout: one row per stage (or connected activity) with the products
+  // used there directly beneath. Shown instead of the band + tiles below
+  // 760px, so nothing scrolls sideways. A product used in several stages
+  // appears in each of them.
+  function renderSteps(model, p, o) {
+    if (!p.columns.length) return "";
+    var ui = model.ui;
+    var n = p.stages.length;
+    var html = '<ol class="lj-steps">';
+    p.columns.forEach(function (s) {
+      var tone = s.kind === "activity" ? "a" + (p.activities.indexOf(s) + 1) : String(s.index + 1);
+      var products = p.products.filter(function (pr) { return pr.stageIds.indexOf(s.id) !== -1; });
+      html += '<li class="lj-steps__item' + (s.kind === "activity" ? " lj-steps__item--activity" : "") +
+        '" style="--lj-chev: var(--lj-tone-' + tone + ');">' + control(o.interactive, {
+        "class": "lj-stage lj-step",
+        "data-stage-id": s.id,
+        "aria-pressed": "false",
+        "aria-controls": o.uid + "-detail-" + p.id
+      },
+        '<span class="lj-step__chev" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
+        '<span class="lj-step__text"><span class="lj-vh">' +
+        esc(s.kind === "activity" ? ui.activityLabel : fmt(ui.stageNumber, { n: s.index + 1, total: n })) + ": </span>" +
+        '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
+        (s.kind === "activity" ? '<span class="lj-stage__kind" aria-hidden="true">' + esc(ui.activityShort) + "</span>" : "") +
+        stageFlags(ui) + "</span>"
+      );
+      if (products.length) {
+        html += '<ul class="lj-steps__products">' + products.map(function (pr) {
+          return "<li>" + productPill(model, p, pr, o, "step") + "</li>";
+        }).join("") + "</ul>";
+      }
+      html += "</li>";
+    });
+    return html + "</ol>";
+  }
+
   var ARROW = '<svg class="lj-arrow" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">' +
     '<path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
+  // Tile label: the official family logo when there is one (the name stays
+  // as hidden text), else a wordmark image over the family name, else text.
   function productLabel(model, product) {
     var parts = splitName(product.name, product.brand || model.settings.brandPrefix);
-    return '<span class="lj-pill__name">' +
-      (parts.brand ? '<span class="lj-pill__brand">' + esc(parts.brand) + "</span> " : "") +
-      '<span class="lj-pill__family">' + esc(parts.rest) + "</span></span>";
+    if (hasText(product.logo)) {
+      return '<span class="lj-pill__name lj-pill__name--logo"><img class="lj-logo" src="' + esc(product.logo) +
+        '" alt="" decoding="async"><span class="lj-vh">' + esc(product.name) + "</span></span>";
+    }
+    var brand = "";
+    if (parts.brand && hasText(product.wordmark)) {
+      brand = '<img class="lj-wordmark" src="' + esc(product.wordmark) + '" alt="' + esc(parts.brand) + '" decoding="async">';
+    } else if (parts.brand) {
+      brand = '<span class="lj-pill__brand">' + esc(parts.brand) + "</span> ";
+    }
+    return '<span class="lj-pill__name">' + brand + '<span class="lj-pill__family">' + esc(parts.rest) + "</span></span>";
   }
 
   function stageNames(p, product) {
@@ -672,9 +719,10 @@
       html += '<button type="button" class="lj-textbtn lj-back" data-action="back-to-stage">' +
         esc(fmt(ui.backToStage, { stage: stage.label })) + "</button>";
     }
-    html += '<h4 class="lj-panel__title lj-detail__title" tabindex="-1">' +
-      (parts.brand ? '<span class="lj-detail__brand">' + esc(parts.brand) + "</span> " : "") +
-      '<span class="lj-detail__name">' + esc(parts.rest) + "</span></h4>";
+    html += '<h4 class="lj-panel__title lj-detail__title" tabindex="-1">' + (hasText(product.logo)
+      ? '<img class="lj-detail__logo" src="' + esc(product.logo) + '" alt="" decoding="async"><span class="lj-vh">' + esc(product.name) + "</span>"
+      : (parts.brand ? '<span class="lj-detail__brand">' + esc(parts.brand) + "</span> " : "") +
+        '<span class="lj-detail__name">' + esc(parts.rest) + "</span>") + "</h4>";
     if (hasText(product.description)) html += '<p class="lj-panel__text">' + esc(product.description) + "</p>";
 
     var rows = "";

@@ -42,6 +42,11 @@
  *   technicalNotes     Array of short strings. Empty = hidden.
  *   url                Product detail page. null = the "View product details" link is omitted.
  *   image              Pack shot shown in the detail panel. null = no image.
+ *   logo               Family logo (LARVIVA wordmark + family name) used on the
+ *                      tile and in the detail card. The product name stays in
+ *                      the HTML as text for screen readers and search.
+ *   wordmark           Alternative to `logo`: a LARVIVA wordmark image shown
+ *                      above the family name in text (used on the navy shrimp tiles).
  *   markets            null = all markets, or e.g. ["NO", "VN"] to restrict.
  *   marketAvailability Free text shown to visitors, e.g. "Available in Vietnam". null = hidden.
  *   published          false = never shown (use for products not yet mapped).
@@ -297,6 +302,7 @@
         "published": true,
         "id": "larviva-prostart",
         "name": "LARVIVA ProStart",
+        "logo": "assets/logos/larviva-prostart.png",
         "portfolio": "fish",
         "family": "ProStart",
         "colorToken": "prostart",
@@ -351,6 +357,7 @@
         "published": true,
         "id": "larviva-prowean",
         "name": "LARVIVA ProWean",
+        "logo": "assets/logos/larviva-prowean.png",
         "portfolio": "fish",
         "family": "ProWean",
         "colorToken": "prowean",
@@ -416,6 +423,7 @@
         "published": true,
         "id": "larviva-pronurse",
         "name": "LARVIVA ProNurse",
+        "logo": "assets/logos/larviva-pronurse.png",
         "portfolio": "fish",
         "family": "ProNurse",
         "colorToken": "pronurse",
@@ -464,6 +472,7 @@
         "published": true,
         "id": "larviva-orbit",
         "name": "LARVIVA ORBIT",
+        "logo": "assets/logos/larviva-orbit.png",
         "portfolio": "fish",
         "family": "ORBIT",
         "colorToken": "orbit",
@@ -492,6 +501,7 @@
         "published": true,
         "id": "larviva-broodstock",
         "name": "LARVIVA Broodstock",
+        "logo": "assets/logos/larviva-broodstock.png",
         "portfolio": "fish",
         "family": "Broodstock",
         "colorToken": "broodstock",
@@ -535,6 +545,7 @@
         "published": true,
         "id": "larviva-multigain",
         "name": "LARVIVA MultiGain",
+        "logo": "assets/logos/larviva-multigain.png",
         "portfolio": "fish",
         "family": "MultiGain",
         "colorToken": "multigain",
@@ -566,6 +577,7 @@
         "published": true,
         "id": "larviva-zoea",
         "name": "LARVIVA Zoea",
+        "wordmark": "assets/logos/larviva-wordmark-white.png",
         "portfolio": "shrimp",
         "family": "LARVIVA",
         "colorToken": "zoea",
@@ -609,6 +621,7 @@
         "published": true,
         "id": "larviva-mysis",
         "name": "LARVIVA Mysis",
+        "wordmark": "assets/logos/larviva-wordmark-white.png",
         "portfolio": "shrimp",
         "family": "LARVIVA",
         "colorToken": "mysis",
@@ -652,6 +665,7 @@
         "published": true,
         "id": "larviva-pl",
         "name": "LARVIVA PL",
+        "wordmark": "assets/logos/larviva-wordmark-white.png",
         "portfolio": "shrimp",
         "family": "LARVIVA PL",
         "colorToken": "pl",
@@ -712,6 +726,7 @@
         "published": true,
         "id": "inicio-focus",
         "name": "INICIO Focus",
+        "logo": "assets/logos/inicio-focus.png",
         "brand": "INICIO",
         "portfolio": "shrimp",
         "family": "INICIO",

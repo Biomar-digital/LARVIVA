@@ -40,7 +40,7 @@ async function run() {
   if (shotDir) await page.screenshot({ path: path.join(shotDir, "desktop-initial.png"), fullPage: true });
 
   // Select a stage: related products highlighted, others dimmed.
-  await fish.locator('[data-stage-id="nursery"]').click();
+  await fish.locator('.lj-stages [data-stage-id="nursery"]').click();
   assert.strictEqual(await fish.locator('.lj-stages [data-stage-id="nursery"]').getAttribute("aria-pressed"), "true");
   assert.ok(await fish.locator('.lj-lanes [data-product-id="larviva-pronurse"]').evaluate(function (e) { return !e.classList.contains("is-dimmed"); }));
   assert.ok(await fish.locator('.lj-lanes [data-product-id="larviva-prostart"]').evaluate(function (e) { return e.classList.contains("is-dimmed"); }));
@@ -71,6 +71,12 @@ async function run() {
   assert.ok(await shrimp.isVisible(), "shrimp visible after switch");
   assert.ok(!(await fish.isVisible()), "fish hidden after switch");
   assert.strictEqual(await shrimp.locator('[data-stage-id][aria-pressed="true"], [data-product-id][aria-pressed="true"]').count(), 0, "selection reset");
+
+  // Dimmed items keep readable text (no opacity fade below AA).
+  var dimmed = await fish.locator('.lj-lanes [data-product-id="larviva-prostart"]').evaluate(function (e) {
+    return getComputedStyle(e).opacity;
+  });
+  assert.strictEqual(dimmed, "1", "dimmed tiles are not faded with opacity");
 
   // Particle-size chart (shrimp): opens on demand; boxes select products.
   var toggle = shrimp.locator('[data-action="chart"]');
@@ -110,7 +116,15 @@ async function run() {
   });
   assert.ok(overflow <= 0, "no horizontal page scroll on mobile (overflow " + overflow + "px)");
   if (shotDir) await mobile.screenshot({ path: path.join(shotDir, "mobile-initial.png"), fullPage: true });
-  await mobile.locator('[data-portfolio-panel="fish"] .lj-lanes [data-product-id="larviva-prostart"]').click();
+  // Phone layout: stages stacked with their products beneath; band hidden.
+  var fishM = mobile.locator('[data-portfolio-panel="fish"]');
+  assert.ok(await fishM.locator(".lj-steps").isVisible(), "stacked phone layout shown");
+  assert.ok(!(await fishM.locator(".lj-stages").isVisible()), "band hidden on phones");
+  assert.strictEqual(await fishM.locator(".lj-steps__item").count(), 6);
+  await fishM.locator('.lj-steps [data-stage-id="nursery"]').click();
+  assert.strictEqual(await fishM.locator('.lj-stages [data-stage-id="nursery"]').getAttribute("aria-pressed"), "true", "both layouts stay in sync");
+  await fishM.locator('.lj-steps [data-product-id="larviva-prostart"]').first().click();
+  assert.match(await fishM.locator("[data-lj-panel]").innerText(), /ProStart/);
   if (shotDir) await mobile.screenshot({ path: path.join(shotDir, "mobile-product.png"), fullPage: true });
   await mobile.click('[role="tab"][data-portfolio="shrimp"]');
   overflow = await mobile.evaluate(function () {

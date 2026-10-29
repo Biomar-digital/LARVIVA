@@ -4,7 +4,9 @@ A compact, interactive module for the LARVIVA landing page on biomar.com. Visito
 
 The module follows BioMar's own LARVIVA range slide, on a white (`#ffffff`) background:
 - **Chevron band:** stages run from light to dark blue, with white icons and labels underneath in sentence case. For fish, Broodstock nutrition and Live-feed enrichment lead the band as on the slide. They are marked "Supporting the hatchery" and announced as connected activities, not stages.
-- **LARVIVA family tiles:** the LARVIVA wordmark sits above the family name in its family colour, on a light tint, under the stages each product covers. Shrimp tiles overlap the way the use ranges do: Zoea spans zoea and mysis, and Mysis spans mysis and post-larvae.
+- **LARVIVA family tiles:** they use the official family logos (Broodstock, MultiGain, ProStart, ProWean, ProNurse, ORBIT, INICIO Focus) on the slide's tints, under the stages each product covers. The shrimp LARVIVA tiles are navy with the white LARVIVA wordmark, as on the shrimp range slide. Product names stay in the HTML as text for screen readers and search. Shrimp tiles overlap the way the use ranges do: Zoea spans zoea and mysis, and Mysis spans mysis and post-larvae.
+- **Dimming stays readable:** unrelated tiles and stages lose their colour (grey logo, white tile, grey chevron) instead of fading with opacity, so all text stays at AA contrast.
+- **Phones (< 760 px):** a stacked layout with one row per stage, each with the products used there directly beneath. Nothing scrolls sideways.
 - **Details below, only when selected:** a compact card with the pack shot, description, attributes, colour-coded grades and the "View product details" button. When nothing is selected there is a single hint line, which keeps the module short (about 520 px for fish and 470 px for shrimp on desktop).
 - **Particle size by larval stage (shrimp):** opens on demand with "Show particle size by larval stage".
 - **No capitals** anywhere in the interface.
@@ -44,7 +46,7 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 | Particle size by larval stage chart | LARVIVA Hatchery presentation 2025-03, slide 13 |
 | Montserrat, navy text, product links | biomar.com |
 
-The tile wordmark is set in text, not the real logo. For production, swap in the approved LARVIVA family logo files if the brand team prefers.
+The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (Hatchery Segment; particle sizes and colour code labels). They are 230–330 px raster images, sharp at their displayed size but slightly soft on high-density screens. Replace them with the vector logo files from the brand team for production; the dataset's `logo` / `wordmark` fields point to them.
 
 ## Files
 
