@@ -514,11 +514,15 @@
     var listed = {};
     p.columns.forEach(function (s) {
       var tone = s.kind === "activity" ? "a" + (p.activities.indexOf(s) + 1) : String(s.index + 1);
-      var products = p.products.filter(function (pr) {
-        if (pr.stageIds.indexOf(s.id) === -1 || listed[pr.id]) return false;
+      var here = p.products.filter(function (pr) { return pr.stageIds.indexOf(s.id) !== -1; });
+      var products = here.filter(function (pr) {
+        if (listed[pr.id]) return false;
         listed[pr.id] = true;
         return true;
       });
+      // A stage where nothing new starts shows the products that carry on
+      // through it, so no stage looks empty.
+      if (!products.length) products = here;
       html += '<li class="lj-steps__item' + (s.kind === "activity" ? " lj-steps__item--activity" : "") +
         '" style="--lj-chev: var(--lj-tone-' + tone + ');">' + control(o.interactive, {
         "class": "lj-stage lj-step",

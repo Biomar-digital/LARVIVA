@@ -141,7 +141,7 @@
         "titleLabel": "fish",
         "image": "https://www.biomar.com/media/ifnlox4f/larviva-fish-hatchery-beaker.jpg?width=720&format=webp&quality=80",
         "imageAlt": "Fish larvae in a laboratory beaker",
-        "icon": ["Icon-Fish-marine"],
+        "icon": ["Icon-Fish-post-weaning"],
         "title": "Marine fish hatchery",
         "activitiesInBand": true,
         "intro": "From first feeding to nursery, with broodstock nutrition and live-feed enrichment supporting the hatchery.",
@@ -149,20 +149,19 @@
           {
             "id": "larval",
             "label": "Larval",
-            "illustration": ["Icon-Fish-marine-larva"],
+            "illustration": ["Icon-Fish-larval"],
             "description": "Larvae begin feeding externally as their yolk reserves are used up – first on live feed, then on formulated feed offered alongside it while they are weaned."
           },
           {
             "id": "post-weaning",
             "label": "Post-weaning",
-            "illustration": ["Icon-Fish-marine"],
-            "iconScale": 0.8,
+            "illustration": ["Icon-Fish-post-weaning"],
             "description": "Larvae and early fry are fully weaned onto formulated feed, with feed particle size increasing as they grow."
           },
           {
             "id": "nursery",
             "label": "Nursery",
-            "illustration": ["Icon-Fish-marine"],
+            "illustration": ["Icon-Fish-nursery"],
             "description": "Juveniles are grown on in nursery systems, including recirculating aquaculture systems (RAS), before transfer to on-growing."
           }
         ],
@@ -170,7 +169,7 @@
           {
             "id": "broodstock-nutrition",
             "label": "Broodstock",
-            "illustration": ["Icon-Fish-marine-broodstock"],
+            "illustration": ["Icon-Fish-broodstock"],
             "description": "Nutrition for the broodstock that produce the hatchery's eggs, with diets for maintenance and maturation."
           },
           {
