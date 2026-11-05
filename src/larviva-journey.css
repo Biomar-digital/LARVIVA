@@ -81,6 +81,13 @@
   --lj-on-family-mysis: #8dc63f;
   --lj-family-pl: #1f3e77;
   --lj-on-family-pl: #e8705f;
+  /* LARVIVA page: one tile per PL size, in its can colour. */
+  --lj-family-pl-200: #1f3e77;
+  --lj-on-family-pl-200: #41b2e6;
+  --lj-family-pl-300: #1f3e77;
+  --lj-on-family-pl-300: #8dc63f;
+  --lj-family-pl-400: #1f3e77;
+  --lj-on-family-pl-400: #e8705f;
   --lj-can-blue: #41b2e6;
   --lj-can-green: #8dc63f;
   --lj-can-coral: #e8705f;
@@ -387,13 +394,45 @@
 
 .lj-lanes {
   display: grid;
-  grid-template-columns: repeat(var(--lj-halves), minmax(0, 1fr));
+  /* Columns (stage units) are set inline by the renderer. */
+  grid-template-columns: repeat(calc(var(--lj-cols) * 2), minmax(0, 1fr));
   gap: 10px 0;
   margin: 14px 0 0;
   padding: 12px 0;
   list-style: none;
   border-radius: var(--lj-radius);
   background: var(--lj-band);
+}
+
+/* Sub-timeline ruler (LARVIVA page: PL2 … PL15 under Post-larvae). */
+.lj-lanes__ruler {
+  display: grid;
+  grid-template-columns: repeat(var(--lj-ruler-n), minmax(0, 1fr));
+  margin: 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--lj-ruler-line, #b9d3e2);
+  color: var(--lj-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  list-style: none;
+}
+
+.lj-ruler__cell {
+  position: relative;
+  min-width: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.lj-ruler__cell.is-tick::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  width: 2px;
+  height: 6px;
+  margin-left: -1px;
+  background: var(--lj-ruler-line, #b9d3e2);
 }
 
 .lj-lanes__item {

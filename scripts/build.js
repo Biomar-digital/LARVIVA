@@ -93,14 +93,19 @@ fs.readdirSync(dataDir).filter(function (f) { return /^larviva-journey\.[\w-]+\.
 // ── 3. Pre-render ─────────────────────────────────────────────────────────
 var journey = require(path.join(rootDir, "src/larviva-journey.js"));
 var data = require(path.join(dataDir, "larviva-journey.en.js"));
-var html = journey.renderModule(journey.prepare(data), {
-  interactive: false,
-  illustrations: icons,
-  uid: "lj-static"
-});
+function staticHtml(page) {
+  return journey.renderModule(journey.prepare(data, { page: page }), {
+    interactive: false,
+    illustrations: icons,
+    uid: "lj-static"
+  });
+}
 
-// index.html (demo page) and embed.html (iframe page) both carry the markers.
-["index.html", "embed.html"].forEach(function (file) {
+// index.html (demo page) and embed.html (iframe page) carry the hatchery
+// version; embed-larviva.html the LARVIVA page version (data-page="larviva").
+[["index.html", null], ["embed.html", null], ["embed-larviva.html", "larviva"]].forEach(function (entry) {
+  var file = entry[0];
+  var html = staticHtml(entry[1]);
   var pagePath = path.join(rootDir, file);
   if (!fs.existsSync(pagePath)) return;
   var page = fs.readFileSync(pagePath, "utf8");

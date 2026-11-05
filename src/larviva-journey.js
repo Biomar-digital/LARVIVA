@@ -119,15 +119,31 @@
     return runs;
   }
 
-  // Bars are laid out on half-stage columns, so a product can start or end
-  // partway through a stage (startsMidStage / endsMidStage), as on the
-  // LARVIVA range slides.
-  function toHalves(pr) {
-    var halves = [];
-    pr.stageIndices.forEach(function (c) { halves.push(2 * c, 2 * c + 1); });
-    if (halves.length > 2 && pr.startsMidStage) halves.shift();
-    if (halves.length > 2 && pr.endsMidStage) halves.pop();
-    return halves;
+  // Each band column is split into units: two halves by default, so a bar
+  // can start or end partway through a stage (startsMidStage /
+  // endsMidStage, as on the LARVIVA range slides), or one unit per point of
+  // the stage's sub-timeline (e.g. PL2 … PL15) when products in that stage
+  // give a `timelineSpan`.
+  function toUnits(pr, columns) {
+    var span = pr.timelineSpan;
+    if (span && pr.stageIndices.length === 1) {
+      var col = columns[pr.stageIndices[0]];
+      var axis = col.timeline ? col.timeline.axis : [];
+      var from = axis.indexOf(span[0]), to = axis.indexOf(span[1]);
+      if (from !== -1 && to >= from) {
+        var units = [];
+        for (var u = from; u <= to; u++) units.push(col.unitStart + u);
+        return units;
+      }
+    }
+    var all = [];
+    pr.stageIndices.forEach(function (c) {
+      for (var u = 0; u < columns[c].units; u++) all.push(columns[c].unitStart + u);
+    });
+    var first = columns[pr.stageIndices[0]], last = columns[pr.stageIndices[pr.stageIndices.length - 1]];
+    if (pr.stageIndices.length > 1 && pr.startsMidStage) all.splice(0, Math.floor(first.units / 2));
+    if (pr.stageIndices.length > 1 && pr.endsMidStage) all.splice(all.length - Math.floor(last.units / 2));
+    return all;
   }
 
   // Places product bars in as few rows as possible without overlaps, so the
@@ -136,9 +152,9 @@
     var rows = [];
     products.forEach(function (pr) {
       var r = 0;
-      while (rows[r] && pr.halfIndices.some(function (c) { return rows[r][c]; })) r++;
+      while (rows[r] && pr.unitIndices.some(function (c) { return rows[r][c]; })) r++;
       rows[r] = rows[r] || {};
-      pr.halfIndices.forEach(function (c) { rows[r][c] = true; });
+      pr.unitIndices.forEach(function (c) { rows[r][c] = true; });
       pr.row = r;
     });
     return rows.length;
@@ -151,6 +167,13 @@
     relatedStage: "Relevant",
     recommendedUse: "Recommended use: {range}"
   };
+
+  // Products can be limited to some pages (`pages: ["larviva"]`), e.g. the
+  // LARVIVA page shows only LARVIVA feeds. No `pages` = every page.
+  function isOnPage(product, page) {
+    if (!page || !product.pages || !product.pages.length) return true;
+    return product.pages.indexOf(page) !== -1;
+  }
 
   function isInMarket(product, market) {
     if (!market || !product.markets || !product.markets.length) return true;
@@ -170,14 +193,24 @@
   function prepare(data, options) {
     options = options || {};
     var market = options.market || null;
+    var page = options.page || data.defaultPage || null;
+    var pageSettings = (page && data.pages && data.pages[page]) || {};
     var settings = Object.assign({ showUnverifiedSpecs: false, brandPrefix: "" }, data.settings);
     var ui = Object.assign({}, DEFAULT_UI, data.ui);
 
     var portfolios = (data.portfolios || []).map(function (p) {
-      var stages = (p.stages || []).map(function (s, i) {
+      var source = (data.products || []).filter(function (pr) {
+        return pr.portfolio === p.id && pr.published !== false && isInMarket(pr, market) && isOnPage(pr, page);
+      });
+      // On pages that ask for it, stages and activities without products
+      // are left out (the LARVIVA page has no shrimp nursery feeds).
+      var used = function (s) {
+        return !pageSettings.hideEmptyStages || source.some(function (pr) { return (pr.stages || []).indexOf(s.id) !== -1; });
+      };
+      var stages = (p.stages || []).filter(used).map(function (s, i) {
         return Object.assign({}, s, { kind: "stage", index: i });
       });
-      var activities = (p.activities || []).map(function (s) {
+      var activities = (p.activities || []).filter(used).map(function (s) {
         return Object.assign({}, s, { kind: "activity" });
       });
       var lookup = {};
@@ -187,9 +220,7 @@
       var columns = (p.activitiesInBand ? activities : []).concat(stages);
       columns.forEach(function (c, i) { c.col = i; });
 
-      var products = (data.products || []).filter(function (pr) {
-        return pr.portfolio === p.id && pr.published !== false && isInMarket(pr, market);
-      }).map(function (pr) {
+      var products = source.map(function (pr) {
         var ids = (pr.stages || []).filter(function (id) { return lookup[id]; });
         return Object.assign({}, pr, {
           stageIds: ids,
@@ -206,7 +237,19 @@
       var byId = {};
       products.forEach(function (pr) { byId[pr.id] = pr; });
       var laneProducts = products.filter(function (pr) { return pr.stageIndices.length; });
-      laneProducts.forEach(function (pr) { pr.halfIndices = toHalves(pr); });
+      // Sub-timelines only where products use them (LARVIVA PL sizes).
+      var unitStart = 0;
+      columns.forEach(function (c) {
+        var hasSpans = c.timeline && laneProducts.some(function (pr) {
+          return pr.timelineSpan && pr.stageIndices.length === 1 && pr.stageIndices[0] === c.col;
+        });
+        if (!hasSpans) c.timeline = null;
+        c.units = c.timeline ? c.timeline.axis.length : 2;
+        c.weight = c.timeline && c.timeline.weight ? c.timeline.weight : 1;
+        c.unitStart = unitStart;
+        unitStart += c.units;
+      });
+      laneProducts.forEach(function (pr) { pr.unitIndices = toUnits(pr, columns); });
       var rowCount = packRows(laneProducts);
 
       return Object.assign({}, p, {
@@ -217,7 +260,8 @@
         products: products,
         productById: byId,
         laneProducts: laneProducts,
-        rowCount: rowCount
+        rowCount: rowCount,
+        hasTimeline: columns.some(function (c) { return c.timeline; })
       });
     }).filter(function (p) { return p.stages.length || p.products.length; });
 
@@ -225,7 +269,7 @@
       ? data.defaultPortfolio
       : (portfolios[0] && portfolios[0].id);
 
-    return { ui: ui, settings: settings, portfolios: portfolios, defaultPortfolio: defaultId, market: market };
+    return { ui: ui, settings: settings, portfolios: portfolios, defaultPortfolio: defaultId, market: market, page: page };
   }
 
   /* ── Particle size ───────────────────────────────────────────────────── */
@@ -388,6 +432,38 @@
     return '<span class="lj-flag lj-flag--related">' + esc(ui.relatedStage) + "</span>";
   }
 
+  // Column widths: equal stages, unless a stage with a sub-timeline is
+  // given more room (`timeline.weight`).
+  function stageTemplate(p) {
+    return "grid-template-columns: " + p.columns.map(function (c) {
+      return "minmax(0, " + c.weight + "fr)";
+    }).join(" ") + ";";
+  }
+
+  function unitTemplate(p) {
+    return "grid-template-columns: " + p.columns.map(function (c) {
+      return "repeat(" + c.units + ", minmax(0, " + (c.weight / c.units).toFixed(4) + "fr))";
+    }).join(" ") + ";";
+  }
+
+  // Sub-timeline ruler above the bars (e.g. PL2 … PL15 under Post-larvae),
+  // labelled at the points where the products' recommended use starts/ends.
+  function renderRuler(p, c) {
+    var ticks = {};
+    p.laneProducts.forEach(function (pr) {
+      if (pr.timelineSpan && pr.stageIndices[0] === c.col) {
+        ticks[pr.timelineSpan[0]] = true;
+        ticks[pr.timelineSpan[1]] = true;
+      }
+    });
+    var cells = c.timeline.axis.map(function (code) {
+      return '<span class="lj-ruler__cell' + (ticks[code] ? " is-tick" : "") + '">' +
+        (ticks[code] ? esc(code) : "") + "</span>";
+    }).join("");
+    return '<li class="lj-lanes__ruler" aria-hidden="true" style="grid-column: ' + (c.unitStart + 1) + " / span " + c.units +
+      "; grid-row: 1; --lj-ruler-n: " + c.units + ';">' + cells + "</li>";
+  }
+
   // The band follows the LARVIVA range slide: joined chevrons running from
   // light to dark with white icons, labels underneath in sentence case.
   function renderStages(model, p, o) {
@@ -395,7 +471,7 @@
     var ui = model.ui;
     var n = p.stages.length;
     var html = '<h4 class="lj-vh">' + esc(ui.stagesHeading) + "</h4>";
-    html += '<ol class="lj-stages" style="--lj-cols: ' + p.columns.length + '">';
+    html += '<ol class="lj-stages" style="--lj-cols: ' + p.columns.length + "; " + stageTemplate(p) + '">';
     p.columns.forEach(function (s, i) {
       var tone = s.kind === "activity" ? "a" + (p.activities.indexOf(s) + 1)
         : String(s.index + 1);
@@ -452,7 +528,8 @@
       if (products.length) {
         html += '<ul class="lj-steps__products">' + products.map(function (pr) {
           var names = stageNames(p, pr);
-          var span = names.length > 1 ? names[0] + " – " + names[names.length - 1] : "";
+          var span = pr.timelineSpan ? pr.timelineSpan.join(" – ")
+            : names.length > 1 ? names[0] + " – " + names[names.length - 1] : "";
           return "<li>" + productPill(model, p, pr, o, "step", "", "", span) + "</li>";
         }).join("") + "</ul>";
       }
@@ -516,11 +593,13 @@
   function renderLanes(model, p, o) {
     if (!p.laneProducts.length) return "";
     var html = '<h4 class="lj-vh">' + esc(model.ui.productsHeading) + "</h4>";
-    html += '<ul class="lj-lanes" style="--lj-cols: ' + p.columns.length + "; --lj-halves: " + 2 * p.columns.length +
-      "; --lj-rows: " + p.rowCount + '">';
+    var top = p.hasTimeline ? 1 : 0;
+    html += '<ul class="lj-lanes" style="--lj-cols: ' + p.columns.length + "; " + unitTemplate(p) +
+      " --lj-rows: " + (p.rowCount + top) + '">';
+    p.columns.forEach(function (c) { if (c.timeline) html += renderRuler(p, c); });
     p.laneProducts.forEach(function (product, i) {
-      toRuns(product.halfIndices).forEach(function (run, r) {
-        var place = "grid-column: " + (run[0] + 1) + " / " + (run[1] + 2) + "; grid-row: " + (product.row + 1) + "; --i: " + i + ";";
+      toRuns(product.unitIndices).forEach(function (run, r) {
+        var place = "grid-column: " + (run[0] + 1) + " / " + (run[1] + 2) + "; grid-row: " + (product.row + 1 + top) + "; --i: " + i + ";";
         if (r === 0) {
           html += '<li class="lj-lanes__item" style="' + place + '">' + productPill(model, p, product, o, "bar") + "</li>";
         } else {
@@ -790,7 +869,7 @@
     this.el = el;
     this.options = options || {};
     this.uid = "lj" + (++instanceCount);
-    this.model = prepare(data, { market: this.options.market });
+    this.model = prepare(data, { market: this.options.market, page: this.options.page });
     this.state = { portfolio: this.model.defaultPortfolio, stage: null, product: null };
 
     el.innerHTML = renderModule(this.model, {
@@ -1017,7 +1096,10 @@
   }
 
   function init(el, options) {
-    options = Object.assign({ market: el.getAttribute("data-market") || null }, options);
+    options = Object.assign({
+      market: el.getAttribute("data-market") || null,
+      page: el.getAttribute("data-page") || null
+    }, options);
     return loadData(el).then(function (data) {
       return new Journey(el, data, options);
     }).catch(function (err) {

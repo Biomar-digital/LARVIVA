@@ -50,6 +50,10 @@
  *                      the HTML as text for screen readers and search.
  *   wordmark           Alternative to `logo`: a LARVIVA wordmark image shown
  *                      above the family name in text (used on the navy shrimp tiles).
+ *   pages              null = every page, or e.g. ["larviva"] to show the product only on
+ *                      that page (data-page="larviva"; the default is `defaultPage`).
+ *   timelineSpan       ["PL2", "PL6"]: places the tile on its stage's sub-timeline
+ *                      (`timeline.axis` on the stage). The ruler shows only where used.
  *   markets            null = all markets, or e.g. ["NO", "VN"] to restrict.
  *   marketAvailability Free text shown to visitors, e.g. "Available in Vietnam". null = hidden.
  *                      Tiles with a value get a dashed outline (regional product).
@@ -69,6 +73,12 @@
     "version": 1,
     "locale": "en",
     "defaultPortfolio": "fish",
+
+    "defaultPage": "hatchery",
+    "pages": {
+      "hatchery": {},
+      "larviva": { "hideEmptyStages": true }
+    },
 
     "settings": {
       "showUnverifiedSpecs": true,
@@ -200,6 +210,10 @@
           {
             "id": "post-larvae",
             "label": "Post-larvae",
+            "timeline": {
+              "axis": ["PL2", "PL3", "PL4", "PL5", "PL6", "PL7", "PL8", "PL9", "PL10", "PL11", "PL12", "PL13", "PL14", "PL15"],
+              "weight": 2.4
+            },
             "illustration": ["Icon-Shrimp-LARVIVA-PL"],
             "description": "Post-larvae resemble small shrimp and move on to progressively larger feed particles as they grow."
           },
@@ -364,6 +378,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "inicio-plus-m",
+        "pages": ["hatchery"],
         "name": "INICIO Plus M",
         "logo": "assets/logos/inicio-plus-m.svg",
         "brand": "INICIO",
@@ -549,6 +564,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "smartcare-balance-h",
+        "pages": ["hatchery"],
         "name": "SmartCare Balance H",
         "logo": "assets/logos/smartcare-balance-h.svg",
         "brand": "SmartCare",
@@ -577,6 +593,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "smartcare-balance-p",
+        "pages": ["hatchery"],
         "name": "SmartCare Balance P",
         "logo": "assets/logos/smartcare-balance-p.svg",
         "brand": "SmartCare",
@@ -687,6 +704,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-pl",
+        "pages": ["hatchery"],
         "name": "LARVIVA PL",
         "wordmark": "assets/logos/larviva-wordmark-white.png",
         "portfolio": "shrimp",
@@ -739,6 +757,144 @@
       {
         "variants": [],
         "technicalNotes": [],
+        "url": "https://www.biomar.com/feed-services/all-feed/larviva-pl-shrimp",
+        "image": "assets/packshots/larviva-pl-200.webp",
+        "use": "PL2 – PL6",
+        "packaging": null,
+        "health": "With Bactocell® & B-WYSE™",
+        "markets": null,
+        "marketAvailability": null,
+        "published": true,
+        "id": "larviva-pl-200",
+        "pages": ["larviva"],
+        "name": "LARVIVA PL 200",
+        "wordmark": "assets/logos/larviva-wordmark-white.png",
+        "portfolio": "shrimp",
+        "family": "LARVIVA PL",
+        "colorToken": "pl-200",
+        "productType": "Extruded granules",
+        "stages": [
+          "post-larvae"
+        ],
+        "timelineSpan": ["PL2", "PL6"],
+        "tileSubtitle": "PL2 – PL6",
+        "application": "Post-larval feeding, PL2 to PL6.",
+        "description": "Extruded and granulated post-larval shrimp feed.",
+        "particleSize": {
+          "type": "set",
+          "unit": "µm",
+          "label": "Particle size",
+          "verified": true,
+          "source": "LARVIVA Hatchery presentation 2025-03, slide 11; particle sizes and colour code labels",
+          "items": [
+            {
+              "label": "PL 200",
+              "average": 200,
+              "min": 150,
+              "max": 250,
+              "useFrom": "PL2",
+              "useTo": "PL6",
+              "color": "cyan"
+            }
+          ]
+        },
+        "order": 31
+      },
+      {
+        "variants": [],
+        "technicalNotes": [],
+        "url": "https://www.biomar.com/feed-services/all-feed/larviva-pl-shrimp",
+        "image": "assets/packshots/larviva-pl-300.webp",
+        "use": "PL6 – PL11",
+        "packaging": null,
+        "health": "With Bactocell® & B-WYSE™",
+        "markets": null,
+        "marketAvailability": null,
+        "published": true,
+        "id": "larviva-pl-300",
+        "pages": ["larviva"],
+        "name": "LARVIVA PL 300",
+        "wordmark": "assets/logos/larviva-wordmark-white.png",
+        "portfolio": "shrimp",
+        "family": "LARVIVA PL",
+        "colorToken": "pl-300",
+        "productType": "Extruded granules",
+        "stages": [
+          "post-larvae"
+        ],
+        "timelineSpan": ["PL6", "PL11"],
+        "tileSubtitle": "PL6 – PL11",
+        "application": "Post-larval feeding, PL6 to PL11.",
+        "description": "Extruded and granulated post-larval shrimp feed.",
+        "particleSize": {
+          "type": "set",
+          "unit": "µm",
+          "label": "Particle size",
+          "verified": true,
+          "source": "LARVIVA Hatchery presentation 2025-03, slide 11; particle sizes and colour code labels",
+          "items": [
+            {
+              "label": "PL 300",
+              "average": 300,
+              "min": 250,
+              "max": 375,
+              "useFrom": "PL6",
+              "useTo": "PL11",
+              "color": "lightgreen"
+            }
+          ]
+        },
+        "order": 32
+      },
+      {
+        "variants": [],
+        "technicalNotes": [],
+        "url": "https://www.biomar.com/feed-services/all-feed/larviva-pl-shrimp",
+        "image": "assets/packshots/larviva-pl-400.webp",
+        "use": "PL10 – PL15",
+        "packaging": null,
+        "health": "With Bactocell® & B-WYSE™",
+        "markets": null,
+        "marketAvailability": null,
+        "published": true,
+        "id": "larviva-pl-400",
+        "pages": ["larviva"],
+        "name": "LARVIVA PL 400",
+        "wordmark": "assets/logos/larviva-wordmark-white.png",
+        "portfolio": "shrimp",
+        "family": "LARVIVA PL",
+        "colorToken": "pl-400",
+        "productType": "Extruded granules",
+        "stages": [
+          "post-larvae"
+        ],
+        "timelineSpan": ["PL10", "PL15"],
+        "tileSubtitle": "PL10 – PL15",
+        "application": "Post-larval feeding, PL10 to PL15.",
+        "description": "Extruded and granulated post-larval shrimp feed.",
+        "particleSize": {
+          "type": "set",
+          "unit": "µm",
+          "label": "Particle size",
+          "verified": true,
+          "source": "LARVIVA Hatchery presentation 2025-03, slide 11; particle sizes and colour code labels",
+          "items": [
+            {
+              "label": "PL 400",
+              "average": 400,
+              "min": 375,
+              "max": 500,
+              "useFrom": "PL10",
+              "useTo": "PL15",
+              "color": "orange"
+            }
+          ]
+        },
+        "order": 33
+      },
+      {
+        "variants": [],
+        "technicalNotes": [],
         "url": "https://www.biomar.com/feed-services/all-feed/inicio-focus-shrimp",
         "image": "https://www.biomar.com/media/s0rlrsub/shrimp-starter-health-inicio-focus.png?cc=0.26,0.1,0.26,0.12&width=320&format=webp&quality=80",
         "use": "PL13 onwards",
@@ -748,6 +904,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "inicio-focus",
+        "pages": ["hatchery"],
         "name": "INICIO Focus",
         "logo": "assets/logos/inicio-focus.png",
         "brand": "INICIO",
@@ -805,6 +962,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "inicio-maxio",
+        "pages": ["hatchery"],
         "name": "INICIO Maxio",
         "logo": "assets/logos/inicio-maxio.svg",
         "brand": "INICIO",
@@ -832,6 +990,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "inicio-prime",
+        "pages": ["hatchery"],
         "tileSubtitle": "Pre-rearing feed",
         "name": "INICIO Prime",
         "logo": "assets/logos/inicio-prime.svg",

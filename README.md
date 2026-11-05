@@ -111,6 +111,14 @@ The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (
 - **Assets:** serve `assets/logos/*` and the icons from the Umbraco media library, and point the dataset's `logo` / `wordmark` / `image` fields at those media URLs.
 - **Demo page:** `index.html` reproduces the page context (grey background, container gutters, intro text and section heading) so the module can be reviewed in place.
 
+## LARVIVA page version
+
+The same module and dataset have a second version for the LARVIVA page, where only LARVIVA feeds are shown. Set `data-page="larviva"` on the module, or use `embed-larviva.html` (https://biomar-digital.github.io/LARVIVA/embed-larviva.html) in the iframe snippet below.
+
+- **Products:** a product with `pages: ["hatchery"]` appears only on the hatchery stage page (the default page, `defaultPage`). INICIO and SmartCare Balance products, and the combined LARVIVA PL tile, are marked this way. A product with `pages: ["larviva"]` appears only on the LARVIVA page. Products without `pages` appear on both.
+- **Stages:** the LARVIVA page hides stages and activities without products (`pages.larviva.hideEmptyStages`), so shrimp shows Zoea › Mysis › Post-larvae.
+- **PL sub-timeline:** LARVIVA PL 200, 300 and 400 have their own tiles and cards, placed by `timelineSpan` on the Post-larvae stage's `timeline` (PL2 … PL15): PL 200 at PL2 – PL6, PL 300 at PL6 – PL11, PL 400 at PL10 – PL15. A ruler above the tiles labels those points. On phones the tiles show the range instead. The PL 200/300/400 can images in `assets/packshots/` come from the 2025-03 LARVIVA Hatchery presentation.
+
 ## Embedding with an iframe
 
 `embed.html` is published with GitHub Pages at https://biomar-digital.github.io/LARVIVA/embed.html and updates automatically on every push to the branch Pages serves. It is the module on its own: transparent background, no page chrome, and `noindex`. It sends its height to the parent page so the iframe resizes without scrollbars. Add this to the host page (for example as an Umbraco rich-text/HTML block):

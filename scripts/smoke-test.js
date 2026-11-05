@@ -135,6 +135,25 @@ async function run() {
   assert.ok(text.indexOf("LARVIVA ZM") === -1, "unpublished products are not rendered");
   if (shotDir) await nojs.screenshot({ path: path.join(shotDir, "nojs.png"), fullPage: true });
 
+  // LARVIVA page variant: LARVIVA feeds only, PL split by size on a sub-timeline.
+  var lv = await browser.newPage({ viewport: { width: 1200, height: 900 } });
+  lv.on("pageerror", function (e) { errors.push(e.message); });
+  await lv.goto("file://" + path.resolve(__dirname, "..", "embed-larviva.html"));
+  var lvFish = lv.locator('[data-portfolio-panel="fish"]');
+  assert.strictEqual(await lvFish.locator('.lj-lanes [data-product-id="inicio-plus-m"]').count(), 0, "no INICIO on the LARVIVA page");
+  assert.strictEqual(await lvFish.locator(".lj-lanes [data-product-id]").count(), 6);
+  await lv.click('[role="tab"][data-portfolio="shrimp"]');
+  var lvShrimp = lv.locator('[data-portfolio-panel="shrimp"]');
+  assert.deepStrictEqual(await lvShrimp.locator(".lj-stages [data-stage-id]").evaluateAll(function (els) {
+    return els.map(function (e) { return e.getAttribute("data-stage-id"); });
+  }), ["zoea", "mysis", "post-larvae"], "empty stages are hidden");
+  assert.deepStrictEqual(await lvShrimp.locator(".lj-lanes [data-product-id]").evaluateAll(function (els) {
+    return els.map(function (e) { return e.getAttribute("data-product-id"); });
+  }), ["larviva-zoea", "larviva-mysis", "larviva-pl-200", "larviva-pl-300", "larviva-pl-400"]);
+  assert.match(await lvShrimp.locator(".lj-lanes__ruler").innerText(), /PL2[\s\S]*PL15/);
+  await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-400"]').click();
+  assert.match(await lvShrimp.locator("[data-lj-panel]").innerText(), /Recommended use: PL10 – PL15/);
+
   assert.deepStrictEqual(errors, [], "no console errors");
   await browser.close();
   console.log("smoke test passed");
