@@ -558,7 +558,7 @@
 }
 
 /* Feed type / size only where the tile is wide enough. */
-@container (max-width: 210px) {
+@container (max-width: 160px) {
   .lj .lj-pill__meta {
     display: none;
   }

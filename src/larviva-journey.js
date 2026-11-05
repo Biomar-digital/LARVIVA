@@ -148,13 +148,17 @@
 
   // Places product bars in as few rows as possible without overlaps, so the
   // module stays compact however many products a portfolio has.
+  // Products on a sub-timeline each get their own row (a staircase: PL 200,
+  // PL 300, PL 400 on separate lines).
   function packRows(products) {
     var rows = [];
     products.forEach(function (pr) {
       var r = 0;
-      while (rows[r] && pr.unitIndices.some(function (c) { return rows[r][c]; })) r++;
+      var key = pr.timelineSpan ? "timeline-" + pr.stageIndices[0] : null;
+      while (rows[r] && (pr.unitIndices.some(function (c) { return rows[r][c]; }) || (key && rows[r][key]))) r++;
       rows[r] = rows[r] || {};
       pr.unitIndices.forEach(function (c) { rows[r][c] = true; });
+      if (key) rows[r][key] = true;
       pr.row = r;
     });
     return rows.length;
