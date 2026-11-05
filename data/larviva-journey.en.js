@@ -52,6 +52,7 @@
  *                      above the family name in text (used on the navy shrimp tiles).
  *   pages              null = every page, or e.g. ["larviva"] to show the product only on
  *                      that page (data-page="larviva"; the default is `defaultPage`).
+ *   (stages)           `iconScale` (e.g. 0.8) draws the stage icon smaller.
  *   timelineSpan       ["PL2", "PL6"]: places the tile on its stage's sub-timeline
  *                      (`timeline.axis` on the stage). The ruler shows only where used.
  *   markets            null = all markets, or e.g. ["NO", "VN"] to restrict.
@@ -140,7 +141,7 @@
         "titleLabel": "fish",
         "image": "https://www.biomar.com/media/ifnlox4f/larviva-fish-hatchery-beaker.jpg?width=720&format=webp&quality=80",
         "imageAlt": "Fish larvae in a laboratory beaker",
-        "icon": ["Icon-Fish-LARVIVA-juvenile"],
+        "icon": ["Icon-Fish-marine"],
         "title": "Marine fish hatchery",
         "activitiesInBand": true,
         "intro": "From first feeding to nursery, with broodstock nutrition and live-feed enrichment supporting the hatchery.",
@@ -148,19 +149,20 @@
           {
             "id": "larval",
             "label": "Larval",
-            "illustration": ["Icon-Fish-LARVIVA-larva-yolk"],
+            "illustration": ["Icon-Fish-marine-larva"],
             "description": "Larvae begin feeding externally as their yolk reserves are used up – first on live feed, then on formulated feed offered alongside it while they are weaned."
           },
           {
             "id": "post-weaning",
             "label": "Post-weaning",
-            "illustration": ["Icon-Fish-LARVIVA-fry"],
+            "illustration": ["Icon-Fish-marine"],
+            "iconScale": 0.8,
             "description": "Larvae and early fry are fully weaned onto formulated feed, with feed particle size increasing as they grow."
           },
           {
             "id": "nursery",
             "label": "Nursery",
-            "illustration": ["Icon-Fish-LARVIVA-juvenile"],
+            "illustration": ["Icon-Fish-marine"],
             "description": "Juveniles are grown on in nursery systems, including recirculating aquaculture systems (RAS), before transfer to on-growing."
           }
         ],
@@ -168,7 +170,7 @@
           {
             "id": "broodstock-nutrition",
             "label": "Broodstock",
-            "illustration": ["Icon-Fish-LARVIVA-adult"],
+            "illustration": ["Icon-Fish-marine-broodstock"],
             "description": "Nutrition for the broodstock that produce the hatchery's eggs, with diets for maintenance and maturation."
           },
           {

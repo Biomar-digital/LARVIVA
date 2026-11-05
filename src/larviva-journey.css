@@ -343,6 +343,12 @@
   filter: brightness(0.94);
 }
 
+/* Smaller icon for a stage that shares one with the next (post-weaning fry
+   vs nursery fish, as on the range slide): `iconScale` in the data. */
+.lj-stage__icon .lj-icon__item {
+  transform: scale(var(--lj-icon-scale, 1));
+}
+
 .lj--interactive .lj-stage:hover .lj-stage__icon {
   transform: scale(1.06);
 }

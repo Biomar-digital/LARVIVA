@@ -92,10 +92,11 @@
       " --lj-regional: var(--lj-regional-" + colorToken(product) + ", var(--lj-regional-line));";
   }
 
-  function iconHtml(illustrations, keys, extraClass) {
+  function iconHtml(illustrations, keys, extraClass, scale) {
     keys = [].concat(keys || []).filter(function (k) { return illustrations[k]; });
     if (!keys.length) return "";
-    return '<span class="lj-icon' + (extraClass ? " " + extraClass : "") + '" aria-hidden="true">' +
+    return '<span class="lj-icon' + (extraClass ? " " + extraClass : "") + '" aria-hidden="true"' +
+      (scale ? ' style="--lj-icon-scale: ' + Number(scale) + '"' : "") + ">" +
       keys.map(function (k) { return '<span class="lj-icon__item">' + illustrations[k] + "</span>"; }).join("") +
       "</span>";
   }
@@ -489,7 +490,7 @@
         "aria-pressed": "false",
         "aria-controls": o.uid + "-detail-" + p.id
       },
-        '<span class="lj-stage__chev" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
+        '<span class="lj-stage__chev" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon", s.iconScale) + "</span>" +
         '<span class="lj-vh">' + esc(s.kind === "activity" ? ui.activityLabel : fmt(ui.stageNumber, { n: s.index + 1, total: n })) + ": </span>" +
         '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
         (s.kind === "activity" ? '<span class="lj-stage__kind" aria-hidden="true">' + esc(ui.activityShort) + "</span>" : "") +
@@ -525,7 +526,7 @@
         "aria-pressed": "false",
         "aria-controls": o.uid + "-detail-" + p.id
       },
-        '<span class="lj-step__chev" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon") + "</span>" +
+        '<span class="lj-step__chev" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon", s.iconScale) + "</span>" +
         '<span class="lj-step__text"><span class="lj-vh">' +
         esc(s.kind === "activity" ? ui.activityLabel : fmt(ui.stageNumber, { n: s.index + 1, total: n })) + ": </span>" +
         '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
