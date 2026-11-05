@@ -135,6 +135,8 @@ async function run() {
   assert.ok(text.indexOf("LARVIVA ZM") === -1, "unpublished products are not rendered");
   if (shotDir) await nojs.screenshot({ path: path.join(shotDir, "nojs.png"), fullPage: true });
 
+  assert.strictEqual(await page.locator(".lj-lanes__ruler").count(), 0, "no sub-timelines on the hatchery page");
+
   // LARVIVA page variant: LARVIVA feeds only, PL split by size on a sub-timeline.
   var lv = await browser.newPage({ viewport: { width: 1200, height: 900 } });
   lv.on("pageerror", function (e) { errors.push(e.message); });
@@ -150,7 +152,11 @@ async function run() {
   assert.deepStrictEqual(await lvShrimp.locator(".lj-lanes [data-product-id]").evaluateAll(function (els) {
     return els.map(function (e) { return e.getAttribute("data-product-id"); });
   }), ["larviva-zoea", "larviva-mysis", "larviva-pl-200", "larviva-pl-300", "larviva-pl-400"]);
-  assert.match(await lvShrimp.locator(".lj-lanes__ruler").innerText(), /PL2[\s\S]*PL15/);
+  var rulers = await lvShrimp.locator(".lj-lanes__ruler").allInnerTexts();
+  assert.strictEqual(rulers.length, 3, "sub-timelines for zoea, mysis and post-larvae");
+  assert.match(rulers[0], /Z1[\s\S]*Z3/);
+  assert.match(rulers[2], /PL2[\s\S]*PL15/);
+  assert.match(await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-200"]').innerText(), /Extruded granules/);
   await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-400"]').click();
   assert.match(await lvShrimp.locator("[data-lj-panel]").innerText(), /Recommended use: PL10 – PL15/);
 

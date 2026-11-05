@@ -247,7 +247,7 @@
         var hasSpans = c.timeline && laneProducts.some(function (pr) {
           return pr.timelineSpan && pr.stageIndices.length === 1 && pr.stageIndices[0] === c.col;
         });
-        if (!hasSpans) c.timeline = null;
+        if (!hasSpans || pageSettings.timelines === false) c.timeline = null;
         c.units = c.timeline ? c.timeline.axis.length : 2;
         c.weight = c.timeline && c.timeline.weight ? c.timeline.weight : 1;
         c.unitStart = unitStart;
@@ -460,7 +460,10 @@
         ticks[pr.timelineSpan[1]] = true;
       }
     });
+    // Short axes (Z1–Z3, M1–M3) are labelled at every point.
+    var all = c.timeline.axis.length <= 6;
     var cells = c.timeline.axis.map(function (code) {
+      if (all) ticks[code] = true;
       return '<span class="lj-ruler__cell' + (ticks[code] ? " is-tick" : "") + '">' +
         (ticks[code] ? esc(code) : "") + "</span>";
     }).join("");
@@ -532,7 +535,9 @@
       if (products.length) {
         html += '<ul class="lj-steps__products">' + products.map(function (pr) {
           var names = stageNames(p, pr);
-          var span = pr.timelineSpan ? pr.timelineSpan.join(" – ")
+          // Phones have no ruler: tiles on a sub-timeline name their range.
+          var onTimeline = pr.timelineSpan && pr.stageIndices.length === 1 && p.columns[pr.stageIndices[0]].timeline;
+          var span = onTimeline ? pr.timelineSpan.join(" – ")
             : names.length > 1 ? names[0] + " – " + names[names.length - 1] : "";
           return "<li>" + productPill(model, p, pr, o, "step", "", "", span) + "</li>";
         }).join("") + "</ul>";

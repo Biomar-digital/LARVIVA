@@ -76,7 +76,7 @@
 
     "defaultPage": "hatchery",
     "pages": {
-      "hatchery": {},
+      "hatchery": { "timelines": false },
       "larviva": { "hideEmptyStages": true }
     },
 
@@ -198,12 +198,14 @@
           {
             "id": "zoea",
             "label": "Zoea",
+            "timeline": { "axis": ["Z1", "Z2", "Z3"] },
             "illustration": ["Icon-Shrimp-LARVIVA-zoea"],
             "description": "The first feeding larval stage after the nauplius. Zoea take very fine feed particles."
           },
           {
             "id": "mysis",
             "label": "Mysis",
+            "timeline": { "axis": ["M1", "M2", "M3"] },
             "illustration": ["Icon-Shrimp-LARVIVA-mysis"],
             "description": "Larvae develop a more shrimp-like form and take larger feed particles than at the zoea stage."
           },
@@ -629,6 +631,7 @@
         "colorToken": "zoea",
         "productType": "Microencapsulated feed",
         "stages": ["zoea"],
+        "timelineSpan": ["Z1", "Z3"],
         "application": "Early feeding and co-feeding.",
         "description": "Microencapsulated larval feed for early feeding and co-feeding.",
         "particleSize": {
@@ -670,6 +673,7 @@
         "colorToken": "mysis",
         "productType": "Microencapsulated feed",
         "stages": ["mysis"],
+        "timelineSpan": ["M1", "M3"],
         "application": "Early feeding and co-feeding.",
         "description": "Microencapsulated larval feed for early feeding and co-feeding.",
         "particleSize": {
@@ -777,7 +781,6 @@
           "post-larvae"
         ],
         "timelineSpan": ["PL2", "PL6"],
-        "tileSubtitle": "PL2 – PL6",
         "application": "Post-larval feeding, PL2 to PL6.",
         "description": "Extruded and granulated post-larval shrimp feed.",
         "particleSize": {
@@ -823,7 +826,6 @@
           "post-larvae"
         ],
         "timelineSpan": ["PL6", "PL11"],
-        "tileSubtitle": "PL6 – PL11",
         "application": "Post-larval feeding, PL6 to PL11.",
         "description": "Extruded and granulated post-larval shrimp feed.",
         "particleSize": {
@@ -869,7 +871,6 @@
           "post-larvae"
         ],
         "timelineSpan": ["PL10", "PL15"],
-        "tileSubtitle": "PL10 – PL15",
         "application": "Post-larval feeding, PL10 to PL15.",
         "description": "Extruded and granulated post-larval shrimp feed.",
         "particleSize": {
