@@ -105,6 +105,7 @@
       "fieldParticleSize": "Particle size",
       "fieldTechnicalNotes": "Technical notes",
       "fieldUse": "Use",
+      "recommendedUse": "Recommended use: {range}",
       "fieldPackaging": "Packaging",
       "fieldHealth": "Health",
       "viewProducts": "Products",

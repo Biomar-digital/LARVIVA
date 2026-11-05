@@ -148,7 +148,8 @@
 
   var DEFAULT_UI = {
     stageNumber: "Stage {n} of {total}",
-    relatedStage: "Relevant"
+    relatedStage: "Relevant",
+    recommendedUse: "Recommended use: {range}"
   };
 
   function isInMarket(product, market) {
@@ -249,12 +250,14 @@
 
   // One grade in the product panel: "PL 200  200 µm (150–250)  PL2 – PL6".
   // A numeric label that equals the size ("100") is shown as "100 µm" once.
-  function gradeLine(it, unit) {
+  function gradeLine(it, unit, ui) {
     var sameAsSize = String(it.label) === String(it.average) && it.min == null;
     var size = it.min != null && it.max != null
       ? (it.average != null ? it.average + " " + unit + " (" + it.min + "–" + it.max + ")" : it.min + "–" + it.max + " " + unit)
       : (it.average != null ? it.average + " " + unit : "");
-    var detail = it.useFrom ? it.useFrom + " – " + it.useTo : (it.stageText || "");
+    var detail = it.useFrom
+      ? fmt(ui.recommendedUse, { range: it.useFrom + " – " + it.useTo })
+      : (it.stageText || "");
     return '<span class="lj-grade__label">' + esc(sameAsSize ? it.label + " " + unit : it.label) + "</span>" +
       (sameAsSize ? "" : '<span class="lj-grade__size">' + esc(size) + "</span>") +
       (detail ? '<span class="lj-grade__use">' + esc(detail) + "</span>" : "");
@@ -753,7 +756,7 @@
       if (spec.type === "set") {
         html += '<ul class="lj-grades">' + spec.items.map(function (it) {
           return '<li class="lj-grade" style="--lj-grade: var(--lj-grade-' + esc(it.color || "default") + ');">' +
-            gradeLine(it, spec.unit) + "</li>";
+            gradeLine(it, spec.unit, ui) + "</li>";
         }).join("") + "</ul>";
       } else {
         html += '<p class="lj-panel__text">' + esc(formatSize(spec)) + "</p>";
