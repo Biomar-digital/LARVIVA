@@ -255,12 +255,14 @@
     var size = it.min != null && it.max != null
       ? (it.average != null ? it.average + " " + unit + " (" + it.min + "–" + it.max + ")" : it.min + "–" + it.max + " " + unit)
       : (it.average != null ? it.average + " " + unit : "");
-    var detail = it.useFrom
-      ? fmt(ui.recommendedUse, { range: it.useFrom + " – " + it.useTo })
-      : (it.stageText || "");
+    // "Recommended use: PL10 – PL15", with the label in bold.
+    var use = it.useFrom
+      ? esc(ui.recommendedUse).replace("{range}", "").replace(/(\S.*?:)\s*$/, "<strong>$1</strong> ") +
+        esc(it.useFrom + " – " + it.useTo)
+      : esc(it.stageText || "");
     return '<span class="lj-grade__label">' + esc(sameAsSize ? it.label + " " + unit : it.label) + "</span>" +
       (sameAsSize ? "" : '<span class="lj-grade__size">' + esc(size) + "</span>") +
-      (detail ? '<span class="lj-grade__use">' + esc(detail) + "</span>" : "");
+      (use ? '<span class="lj-grade__use">' + use + "</span>" : "");
   }
 
   function toMicrons(value, unit) {
