@@ -169,8 +169,7 @@
 
   var DEFAULT_UI = {
     stageNumber: "Stage {n} of {total}",
-    relatedStage: "Relevant",
-    recommendedUse: "Recommended use: {range}"
+    relatedStage: "Relevant"
   };
 
   // Products can be limited to some pages (`pages: ["larviva"]`), e.g. the
@@ -303,20 +302,20 @@
 
   // One grade in the product panel: "PL 200  200 µm (150–250)  PL2 – PL6".
   // A numeric label that equals the size ("100") is shown as "100 µm" once.
-  function gradeLine(it, unit, ui) {
+  // One grade in the product panel: "PL 400  375–500 µm" (a measured range
+  // is shown on its own), or "ProWean 300  300 µm  Larval / post-weaning".
+  // A numeric label that equals the size ("100") is shown as "100 µm" once.
+  function gradeLine(it, unit) {
     var sameAsSize = String(it.label) === String(it.average) && it.min == null;
     var size = it.min != null && it.max != null
-      ? (it.average != null ? it.average + " " + unit + " (" + it.min + "–" + it.max + ")" : it.min + "–" + it.max + " " + unit)
+      ? it.min + "–" + it.max + " " + unit
       : (it.average != null ? it.average + " " + unit : "");
-    // "Recommended use: PL10 – PL15", with the label in bold.
-    var use = it.useFrom
-      ? esc(ui.recommendedUse).replace("{range}", "").replace(/(\S.*?:)\s*$/, "<strong>$1</strong> ") +
-        esc(it.useFrom + " – " + it.useTo)
-      : esc(it.stageText || "");
+    var note = it.stageText || "";
     return '<span class="lj-grade__label">' + esc(sameAsSize ? it.label + " " + unit : it.label) + "</span>" +
       (sameAsSize ? "" : '<span class="lj-grade__size">' + esc(size) + "</span>") +
-      (use ? '<span class="lj-grade__use">' + use + "</span>" : "");
+      (note ? '<span class="lj-grade__use">' + esc(note) + "</span>" : "");
   }
+
 
   function toMicrons(value, unit) {
     return unit === "mm" ? value * 1000 : value;
@@ -855,7 +854,7 @@
       if (spec.type === "set") {
         html += '<ul class="lj-grades">' + spec.items.map(function (it) {
           return '<li class="lj-grade" style="--lj-grade: var(--lj-grade-' + esc(it.color || "default") + ');">' +
-            gradeLine(it, spec.unit, ui) + "</li>";
+            gradeLine(it, spec.unit) + "</li>";
         }).join("") + "</ul>";
       } else {
         html += '<p class="lj-panel__text">' + esc(formatSize(spec)) + "</p>";

@@ -88,7 +88,7 @@ async function run() {
   await page.keyboard.press("Enter");
   var panelText = await shrimp.locator("[data-lj-panel]").innerText();
   assert.match(panelText, /250–375/);
-  assert.match(panelText, /PL6 – PL11/);
+  assert.match(panelText, /250–375 µm/);
   assert.match(panelText, /Post-larvae/);
   if (shotDir) await page.screenshot({ path: path.join(shotDir, "desktop-shrimp.png"), fullPage: true });
 
@@ -158,7 +158,7 @@ async function run() {
   assert.match(rulers[2], /PL2[\s\S]*PL15/);
   assert.match(await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-200"]').innerText(), /Extruded granules/);
   await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-400"]').click();
-  assert.match(await lvShrimp.locator("[data-lj-panel]").innerText(), /Recommended use: PL10 – PL15/);
+  assert.match(await lvShrimp.locator("[data-lj-panel]").innerText(), /375–500 µm/);
 
   assert.deepStrictEqual(errors, [], "no console errors");
   await browser.close();
