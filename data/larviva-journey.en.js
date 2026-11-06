@@ -53,6 +53,7 @@
  *   pages              null = every page, or e.g. ["larviva"] to show the product only on
  *                      that page (data-page="larviva"; the default is `defaultPage`).
  *   (stages)           `iconScale` (e.g. 0.8) draws the stage icon smaller.
+ *   pageOverrides      { "larviva": { ...fields } }: replaces fields on that page only.
  *   timelineSpan       ["PL2", "PL6"]: places the tile on its stage's sub-timeline
  *                      (`timeline.axis` on the stage). The ruler shows only where used.
  *   markets            null = all markets, or e.g. ["NO", "VN"] to restrict.
@@ -93,7 +94,7 @@
       "stagesHeading": "Development stages",
       "stageNumber": "Stage {n} of {total}",
       "activityLabel": "Connected activity",
-      "activityShort": "Supporting the hatchery",
+      "activityShort": "",
       "productsHeading": "LARVIVA products",
       "activitiesHeading": "Connected hatchery activities",
       "activitiesNote": "Run alongside the larval journey – not developmental stages.",
@@ -258,6 +259,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-prostart",
+        "tileSubtitle": "Co-feeding and early weaning",
         "name": "LARVIVA ProStart",
         "logo": "assets/logos/larviva-prostart.png",
         "portfolio": "fish",
@@ -314,6 +316,7 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-prowean",
+        "tileSubtitle": "Early feeding of larvae and fry",
         "name": "LARVIVA ProWean",
         "logo": "assets/logos/larviva-prowean.png",
         "portfolio": "fish",
@@ -411,6 +414,10 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-pronurse",
+        "tileSubtitle": "Specialized nutrition for fry",
+        "pageOverrides": {
+          "larviva": { "stages": ["post-weaning", "nursery"], "startsMidStage": true }
+        },
         "name": "LARVIVA ProNurse",
         "logo": "assets/logos/larviva-pronurse.png",
         "portfolio": "fish",

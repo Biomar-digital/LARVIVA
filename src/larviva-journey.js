@@ -206,6 +206,10 @@
     var portfolios = (data.portfolios || []).map(function (p) {
       var source = (data.products || []).filter(function (pr) {
         return pr.portfolio === p.id && pr.published !== false && isInMarket(pr, market) && isOnPage(pr, page);
+      }).map(function (pr) {
+        // `pageOverrides.<page>` replaces fields on one page only (e.g. a
+        // longer ProNurse bar on the LARVIVA page).
+        return page && pr.pageOverrides && pr.pageOverrides[page] ? Object.assign({}, pr, pr.pageOverrides[page]) : pr;
       });
       // On pages that ask for it, stages and activities without products
       // are left out (the LARVIVA page has no shrimp nursery feeds).
@@ -493,7 +497,7 @@
         '<span class="lj-stage__chev" aria-hidden="true">' + iconHtml(o.illustrations, s.illustration, "lj-stage__icon", s.iconScale) + "</span>" +
         '<span class="lj-vh">' + esc(s.kind === "activity" ? ui.activityLabel : fmt(ui.stageNumber, { n: s.index + 1, total: n })) + ": </span>" +
         '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
-        (s.kind === "activity" ? '<span class="lj-stage__kind" aria-hidden="true">' + esc(ui.activityShort) + "</span>" : "") +
+        (s.kind === "activity" && hasText(ui.activityShort) ? '<span class="lj-stage__kind" aria-hidden="true">' + esc(ui.activityShort) + "</span>" : "") +
         stageFlags(ui)
       ) + "</li>";
     });
@@ -534,7 +538,7 @@
         '<span class="lj-step__text"><span class="lj-vh">' +
         esc(s.kind === "activity" ? ui.activityLabel : fmt(ui.stageNumber, { n: s.index + 1, total: n })) + ": </span>" +
         '<span class="lj-stage__label">' + esc(s.label) + "</span>" +
-        (s.kind === "activity" ? '<span class="lj-stage__kind" aria-hidden="true">' + esc(ui.activityShort) + "</span>" : "") +
+        (s.kind === "activity" && hasText(ui.activityShort) ? '<span class="lj-stage__kind" aria-hidden="true">' + esc(ui.activityShort) + "</span>" : "") +
         stageFlags(ui) + "</span>"
       );
       if (products.length) {
