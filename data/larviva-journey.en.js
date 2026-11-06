@@ -156,6 +156,7 @@
             "id": "post-weaning",
             "label": "Post-weaning",
             "illustration": ["Icon-Fish-post-weaning"],
+            "iconScale": 0.75,
             "description": "Larvae and early fry are fully weaned onto formulated feed, with feed particle size increasing as they grow."
           },
           {
