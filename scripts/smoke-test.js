@@ -152,10 +152,7 @@ async function run() {
   assert.deepStrictEqual(await lvShrimp.locator(".lj-lanes [data-product-id]").evaluateAll(function (els) {
     return els.map(function (e) { return e.getAttribute("data-product-id"); });
   }), ["larviva-zoea", "larviva-mysis", "larviva-pl-200", "larviva-pl-300", "larviva-pl-400"]);
-  var rulers = await lvShrimp.locator(".lj-lanes__ruler").allInnerTexts();
-  assert.strictEqual(rulers.length, 3, "sub-timelines for zoea, mysis and post-larvae");
-  assert.match(rulers[0], /Z1[\s\S]*Z3/);
-  assert.match(rulers[2], /PL2[\s\S]*PL15/);
+  assert.strictEqual(await lvShrimp.locator(".lj-lanes__ruler").count(), 0, "rulers removed on request");
   assert.match(await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-200"]').innerText(), /Extruded granules/);
   await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-400"]').click();
   assert.match(await lvShrimp.locator("[data-lj-panel]").innerText(), /375–500 µm/);

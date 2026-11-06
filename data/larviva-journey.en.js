@@ -79,7 +79,7 @@
     "defaultPage": "hatchery",
     "pages": {
       "hatchery": { "timelines": false },
-      "larviva": { "hideEmptyStages": true }
+      "larviva": { "hideEmptyStages": true, "rulers": false }
     },
 
     "settings": {

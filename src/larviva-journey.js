@@ -269,7 +269,10 @@
         productById: byId,
         laneProducts: laneProducts,
         rowCount: rowCount,
-        hasTimeline: columns.some(function (c) { return c.timeline; })
+        hasTimeline: columns.some(function (c) { return c.timeline; }),
+        // Rulers above sub-timelines (Z1…, PL2…); `rulers: false` on a page
+        // keeps the staircase layout without them.
+        showRulers: pageSettings.rulers !== false && columns.some(function (c) { return c.timeline; })
       });
     }).filter(function (p) { return p.stages.length || p.products.length; });
 
@@ -544,7 +547,7 @@
         html += '<ul class="lj-steps__products">' + products.map(function (pr) {
           var names = stageNames(p, pr);
           // Phones have no ruler: tiles on a sub-timeline name their range.
-          var onTimeline = pr.timelineSpan && pr.stageIndices.length === 1 && p.columns[pr.stageIndices[0]].timeline;
+          var onTimeline = p.showRulers && pr.timelineSpan && pr.stageIndices.length === 1 && p.columns[pr.stageIndices[0]].timeline;
           var span = onTimeline ? pr.timelineSpan.join(" – ")
             : names.length > 1 ? names[0] + " – " + names[names.length - 1] : "";
           return "<li>" + productPill(model, p, pr, o, "step", "", "", span) + "</li>";
@@ -610,10 +613,10 @@
   function renderLanes(model, p, o) {
     if (!p.laneProducts.length) return "";
     var html = '<h4 class="lj-vh">' + esc(model.ui.productsHeading) + "</h4>";
-    var top = p.hasTimeline ? 1 : 0;
+    var top = p.showRulers ? 1 : 0;
     html += '<ul class="lj-lanes" style="--lj-cols: ' + p.columns.length + "; " + unitTemplate(p) +
       " --lj-rows: " + (p.rowCount + top) + '">';
-    p.columns.forEach(function (c) { if (c.timeline) html += renderRuler(p, c); });
+    if (p.showRulers) p.columns.forEach(function (c) { if (c.timeline) html += renderRuler(p, c); });
     p.laneProducts.forEach(function (product, i) {
       toRuns(product.unitIndices).forEach(function (run, r) {
         var place = "grid-column: " + (run[0] + 1) + " / " + (run[1] + 2) + "; grid-row: " + (product.row + 1 + top) + "; --i: " + i + ";";
