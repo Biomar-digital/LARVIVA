@@ -119,3 +119,25 @@ function staticHtml(page) {
   }));
   console.log("pre-rendered module into " + file);
 });
+
+// ── 4. Cache busting ──────────────────────────────────────────────────────
+// GitHub Pages lets browsers cache files for 10 minutes. A content hash on
+// the module's CSS, data and scripts makes a changed page load the new
+// versions straight away.
+var crypto = require("crypto");
+var assets = ["src/larviva-journey.css", "data/larviva-journey.en.js", "src/larviva-illustrations.js", "src/larviva-journey.js"];
+var versions = {};
+assets.forEach(function (rel) {
+  versions[rel] = crypto.createHash("sha1").update(fs.readFileSync(path.join(rootDir, rel))).digest("hex").slice(0, 8);
+});
+["index.html", "embed.html", "embed-larviva.html"].forEach(function (file) {
+  var pagePath = path.join(rootDir, file);
+  if (!fs.existsSync(pagePath)) return;
+  var page = fs.readFileSync(pagePath, "utf8");
+  assets.forEach(function (rel) {
+    var re = new RegExp('((?:src|href)=")' + rel.replace(/[.\/]/g, "\\$&") + '(?:\\?v=\\w+)?"', "g");
+    page = page.replace(re, "$1" + rel + "?v=" + versions[rel] + '"');
+  });
+  fs.writeFileSync(pagePath, page);
+});
+console.log("versioned assets: " + JSON.stringify(versions));
