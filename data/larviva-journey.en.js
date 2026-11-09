@@ -48,6 +48,8 @@
  *   logo               Family logo (LARVIVA wordmark + family name) used on the
  *                      tile and in the detail card. The product name stays in
  *                      the HTML as text for screen readers and search.
+ *   tileLogo           Logo version for a dark tile (white LARVIVA wordmark); the
+ *                      card keeps `logo`.
  *   wordmark           Alternative to `logo`: a LARVIVA wordmark image shown
  *                      above the family name in text (used on the navy shrimp tiles).
  *   pages              null = every page, or e.g. ["larviva"] to show the product only on
@@ -633,7 +635,8 @@
         "published": true,
         "id": "larviva-zoea",
         "name": "LARVIVA Zoea",
-        "wordmark": "assets/logos/larviva-wordmark-white.png",
+        "logo": "assets/logos/larviva-zoea.png",
+        "tileLogo": "assets/logos/larviva-zoea-tile.png",
         "portfolio": "shrimp",
         "family": "LARVIVA",
         "colorToken": "zoea",
@@ -675,7 +678,8 @@
         "published": true,
         "id": "larviva-mysis",
         "name": "LARVIVA Mysis",
-        "wordmark": "assets/logos/larviva-wordmark-white.png",
+        "logo": "assets/logos/larviva-mysis.png",
+        "tileLogo": "assets/logos/larviva-mysis-tile.png",
         "portfolio": "shrimp",
         "family": "LARVIVA",
         "colorToken": "mysis",
@@ -780,7 +784,8 @@
         "id": "larviva-pl-200",
         "pages": ["larviva"],
         "name": "LARVIVA PL 200",
-        "wordmark": "assets/logos/larviva-wordmark-white.png",
+        "logo": "assets/logos/larviva-pl-200.png",
+        "tileLogo": "assets/logos/larviva-pl-200-tile.png",
         "portfolio": "shrimp",
         "family": "LARVIVA PL",
         "colorToken": "pl-200",
@@ -825,7 +830,8 @@
         "id": "larviva-pl-300",
         "pages": ["larviva"],
         "name": "LARVIVA PL 300",
-        "wordmark": "assets/logos/larviva-wordmark-white.png",
+        "logo": "assets/logos/larviva-pl-300.png",
+        "tileLogo": "assets/logos/larviva-pl-300-tile.png",
         "portfolio": "shrimp",
         "family": "LARVIVA PL",
         "colorToken": "pl-300",
@@ -870,7 +876,8 @@
         "id": "larviva-pl-400",
         "pages": ["larviva"],
         "name": "LARVIVA PL 400",
-        "wordmark": "assets/logos/larviva-wordmark-white.png",
+        "logo": "assets/logos/larviva-pl-400.png",
+        "tileLogo": "assets/logos/larviva-pl-400-tile.png",
         "portfolio": "shrimp",
         "family": "LARVIVA PL",
         "colorToken": "pl-400",

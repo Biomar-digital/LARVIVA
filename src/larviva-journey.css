@@ -595,6 +595,13 @@
   opacity: 0.6;
 }
 
+/* White-and-colour logos of the navy shrimp tiles go dark grey when dimmed
+   (the dimmed tile is light). */
+.lj-pill.is-dimmed .lj-logo--tile {
+  filter: grayscale(1) brightness(0.45);
+  opacity: 0.6;
+}
+
 .lj-pill.is-dimmed .lj-wordmark {
   filter: brightness(0);
   opacity: 0.45;
@@ -1369,7 +1376,8 @@
   text-transform: uppercase;
 }
 
-.lj-pill:has(.lj-wordmark) .lj-pill__meta {
+.lj-pill:has(.lj-wordmark) .lj-pill__meta,
+.lj-pill:has(.lj-logo--tile) .lj-pill__meta {
   color: var(--lj-white);
   opacity: 1;
 }
@@ -1384,6 +1392,7 @@
 
 .lj-pill.is-dimmed .lj-pill__family,
 .lj-pill.is-dimmed .lj-pill__grade,
-.lj-pill.is-dimmed:has(.lj-wordmark) .lj-pill__meta {
+.lj-pill.is-dimmed:has(.lj-wordmark) .lj-pill__meta,
+.lj-pill.is-dimmed:has(.lj-logo--tile) .lj-pill__meta {
   color: var(--lj-muted);
 }

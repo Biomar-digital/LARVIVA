@@ -563,8 +563,14 @@
 
   // Tile label: the official family logo when there is one (the name stays
   // as hidden text), else a wordmark image over the family name, else text.
+  // A dark tile (the navy shrimp tiles) uses `tileLogo`, a version of the
+  // logo with a white LARVIVA wordmark; cards on white use `logo`.
   function productLabel(model, product) {
     var parts = splitName(product.name, product.brand || model.settings.brandPrefix);
+    if (hasText(product.tileLogo)) {
+      return '<span class="lj-pill__name lj-pill__name--logo"><img class="lj-logo lj-logo--tile" src="' + esc(product.tileLogo) +
+        '" alt="" decoding="async"><span class="lj-vh">' + esc(product.name) + "</span></span>";
+    }
     if (hasText(product.logo)) {
       return '<span class="lj-pill__name lj-pill__name--logo"><img class="lj-logo" src="' + esc(product.logo) +
         '" alt="" decoding="async"><span class="lj-vh">' + esc(product.name) + "</span></span>";

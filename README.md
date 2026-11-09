@@ -44,7 +44,7 @@ npm test        # Playwright smoke test (desktop, keyboard, mobile, no-JS, heigh
 | Family and grade colours | LARVIVA particle sizes and colour code labels (text colours darkened where needed for AA contrast) |
 | Montserrat, navy text, product links | biomar.com |
 
-The logo files in `assets/logos/` were extracted from the supplied BioMar PDFs (Hatchery Segment; particle sizes and colour code labels). They are 230–330 px raster images, sharp at their displayed size but slightly soft on high-density screens. Replace them with the vector logo files from the brand team for production; the dataset's `logo` / `wordmark` fields point to them.
+The LARVIVA logos in `assets/logos/` come from the supplied LARVIVA logo pack (two-colour versions, 200 px high). The navy shrimp tiles use `*-tile.png` versions with the LARVIVA wordmark in white; cards keep the two-colour logo. The combined LARVIVA PL tile (hatchery page) still uses the white wordmark with text, as the pack has no logo for it. INICIO and SmartCare logos come from the Product brand guidelines 2025.
 
 ## Files
 
