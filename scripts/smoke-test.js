@@ -153,7 +153,7 @@ async function run() {
     return els.map(function (e) { return e.getAttribute("data-product-id"); });
   }), ["larviva-zoea", "larviva-mysis", "larviva-pl-200", "larviva-pl-300", "larviva-pl-400"]);
   assert.strictEqual(await lvShrimp.locator(".lj-lanes__ruler").count(), 0, "rulers removed on request");
-  assert.match(await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-200"]').innerText(), /Extruded granules/);
+  assert.match(await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-200"]').innerText(), /Specialized nutrition for PL/);
   await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-400"]').click();
   assert.match(await lvShrimp.locator("[data-lj-panel]").innerText(), /375–500 µm/);
 

@@ -638,6 +638,7 @@
       "marketAvailability": null,
       "published": true,
       "id": "larviva-zoea",
+      "tileSubtitle": "Early feeding of larvae",
       "name": "LARVIVA Zoea",
       "logo": "assets/logos/larviva-zoea.png",
       "tileLogo": "assets/logos/larviva-zoea-tile.png",
@@ -686,6 +687,7 @@
       "marketAvailability": null,
       "published": true,
       "id": "larviva-mysis",
+      "tileSubtitle": "Early feeding of larvae",
       "name": "LARVIVA Mysis",
       "logo": "assets/logos/larviva-mysis.png",
       "tileLogo": "assets/logos/larviva-mysis-tile.png",
@@ -734,6 +736,7 @@
       "marketAvailability": null,
       "published": true,
       "id": "larviva-pl",
+      "tileSubtitle": "Specialized nutrition for PL",
       "pages": [
         "hatchery"
       ],
@@ -798,6 +801,7 @@
       "marketAvailability": null,
       "published": true,
       "id": "larviva-pl-200",
+      "tileSubtitle": "Specialized nutrition for PL",
       "pages": [
         "larviva"
       ],
@@ -849,6 +853,7 @@
       "marketAvailability": null,
       "published": true,
       "id": "larviva-pl-300",
+      "tileSubtitle": "Specialized nutrition for PL",
       "pages": [
         "larviva"
       ],
@@ -900,6 +905,7 @@
       "marketAvailability": null,
       "published": true,
       "id": "larviva-pl-400",
+      "tileSubtitle": "Specialized nutrition for PL",
       "pages": [
         "larviva"
       ],
