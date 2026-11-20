@@ -223,12 +223,6 @@
             },
             "illustration": ["Icon-Shrimp-LARVIVA-PL"],
             "description": "Post-larvae resemble small shrimp and move on to progressively larger feed particles as they grow."
-          },
-          {
-            "id": "shrimp-nursery",
-            "label": "Nursery",
-            "illustration": ["Icon-Shrimp-LARVIVA-juvenile"],
-            "description": "Juvenile shrimp are grown on in nursery systems before transfer to on-growing."
           }
         ],
         "activitiesInBand": true,
@@ -604,7 +598,7 @@
         "health": null,
         "markets": null,
         "marketAvailability": null,
-        "published": true,
+        "published": false,
         "id": "smartcare-balance-p",
         "pages": ["hatchery"],
         "name": "SmartCare Balance P",
@@ -925,7 +919,7 @@
         "health": "With Bactocell® & B-WYSE™",
         "markets": null,
         "marketAvailability": null,
-        "published": true,
+        "published": false,
         "id": "inicio-focus",
         "pages": ["hatchery"],
         "name": "INICIO Focus",
@@ -983,7 +977,7 @@
         "health": null,
         "markets": null,
         "marketAvailability": null,
-        "published": true,
+        "published": false,
         "id": "inicio-maxio",
         "pages": ["hatchery"],
         "name": "INICIO Maxio",
@@ -1011,7 +1005,7 @@
         "health": null,
         "markets": null,
         "marketAvailability": null,
-        "published": true,
+        "published": false,
         "id": "inicio-prime",
         "pages": ["hatchery"],
         "tileSubtitle": "Pre-rearing feed",

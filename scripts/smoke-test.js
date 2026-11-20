@@ -81,7 +81,7 @@ async function run() {
   // The particle-size chart was removed on request.
   assert.strictEqual(await shrimp.locator('[data-action="chart"]').count(), 0, "no particle-size chart");
   await shrimp.locator('.lj-lanes [data-product-id="larviva-zoea"]').click();
-  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 8);
+  assert.strictEqual(await shrimp.locator(".lj-lanes [data-product-id]").count(), 4, "Balance H, Zoea, Mysis, PL");
 
   // Keyboard activation of a product.
   await shrimp.locator('.lj-lanes [data-product-id="larviva-pl"]').focus();
@@ -129,10 +129,13 @@ async function run() {
   var nojs = await ctx.newPage();
   await nojs.goto(url);
   var text = (await nojs.locator("body").textContent()).replace(/\s+/g, " ");
-  ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL", "Larval", "Post-larvae", "INICIO Plus M", "INICIO Maxio", "INICIO Prime"].forEach(function (s) {
+  ["LARVIVA ProStart", "LARVIVA ORBIT", "LARVIVA PL", "Larval", "Post-larvae", "INICIO Plus M"].forEach(function (s) {
     assert.ok(text.indexOf(s) !== -1, "static HTML contains " + s);
   });
   assert.ok(text.indexOf("LARVIVA ZM") === -1, "unpublished products are not rendered");
+  ["SmartCare Balance P", "INICIO Focus", "INICIO Maxio", "INICIO Prime"].forEach(function (s) {
+    assert.ok(text.indexOf(s) === -1, s + " removed from the hatchery page");
+  });
   if (shotDir) await nojs.screenshot({ path: path.join(shotDir, "nojs.png"), fullPage: true });
 
   assert.strictEqual(await page.locator(".lj-lanes__ruler").count(), 0, "no sub-timelines on the hatchery page");
