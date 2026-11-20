@@ -169,7 +169,8 @@
 
   var DEFAULT_UI = {
     stageNumber: "Stage {n} of {total}",
-    relatedStage: "Relevant"
+    relatedStage: "Relevant",
+    opensInNewTab: "opens in a new tab"
   };
 
   // Products can be limited to some pages (`pages: ["larviva"]`), e.g. the
@@ -870,8 +871,9 @@
       }
     }
     if (hasText(product.url)) {
-      html += '<a class="lj-cta" href="' + esc(product.url) + '">' + esc(ui.viewDetails) +
-        '<span class="lj-vh">: ' + esc(product.name) + "</span>" + ARROW + "</a>";
+      // New tab: inside an iframe a plain link would open in the module itself.
+      html += '<a class="lj-cta" href="' + esc(product.url) + '" target="_blank" rel="noopener">' + esc(ui.viewDetails) +
+        '<span class="lj-vh">: ' + esc(product.name) + " (" + esc(ui.opensInNewTab) + ")</span>" + ARROW + "</a>";
     }
     if (o.interactive) {
       html += '<button type="button" class="lj-textbtn lj-clear" data-action="clear">' + esc(ui.clearSelection) + "</button>";

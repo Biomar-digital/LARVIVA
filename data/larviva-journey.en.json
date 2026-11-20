@@ -55,6 +55,7 @@
     "fieldMarkets": "Market availability",
     "sizeScaleLabel": "Particle size across the range",
     "viewDetails": "View product details",
+    "opensInNewTab": "opens in a new tab",
     "provisional": "Provisional",
     "announceStage": "{stage} selected. {count} related products highlighted.",
     "announceProduct": "{product} selected. Product details updated.",
