@@ -168,6 +168,15 @@ async function run() {
   assert.strictEqual((await tr.locator('[role="tab"][data-portfolio="shrimp"]').innerText()).trim(), "Tôm");
   assert.strictEqual(await tr.locator('[data-portfolio-panel="shrimp"] .lj-lanes [data-product-id]').count(), 5, "same products");
 
+  // Market options: ?start=shrimp opens Shrimp first, ?only=shrimp hides Fish.
+  await tr.goto("file://" + path.resolve(__dirname, "..", "embed.html") + "?start=shrimp");
+  assert.deepStrictEqual(await tr.locator('[role="tab"]').evaluateAll(function (els) {
+    return els.map(function (e) { return e.getAttribute("data-portfolio") + ":" + e.getAttribute("aria-selected"); });
+  }), ["shrimp:true", "fish:false"]);
+  await tr.goto("file://" + path.resolve(__dirname, "..", "embed.html") + "?only=shrimp");
+  assert.strictEqual(await tr.locator('[role="tab"]').count(), 0, "no switch with one portfolio");
+  assert.strictEqual(await tr.locator('[data-portfolio-panel="fish"]').count(), 0, "no fish");
+
   assert.deepStrictEqual(errors, [], "no console errors");
   await browser.close();
   console.log("smoke test passed");

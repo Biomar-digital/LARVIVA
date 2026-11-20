@@ -21,6 +21,11 @@ MARKETS = [
     ("United Kingdom", "en", "English"), ("Việt Nam", "vi", "Vietnamese"), ("Ελλάδα", "el", "Greek"),
     ("Chile", "es", "Spanish"), ("中国", "zh", "Chinese (Simplified)"),
 ]
+# Shrimp-led markets: Ecuador sells only shrimp feed (no Fish tab); Costa Rica
+# and Viet Nam open on Shrimp with Fish as the second tab.
+PORTFOLIO = {"Ecuador": "only=shrimp", "Costa Rica": "start=shrimp", "Việt Nam": "start=shrimp"}
+PORTFOLIO_LABEL = {None: "Fish first, Shrimp second", "start=shrimp": "Shrimp first, Fish second", "only=shrimp": "Shrimp only"}
+
 PAGES = [
     ("Hatchery stage page", "embed.html", "larviva-journey-hatchery"),
     ("LARVIVA page", "embed-larviva.html", "larviva-journey-larviva"),
@@ -53,19 +58,21 @@ def snippet(url, frame_id, title):
 wb = Workbook()
 ws = wb.active
 ws.title = "Snippets"
-head = ["Market site", "Language", "Page", "Module link (preview)", "HTML snippet to paste", "Notes"]
+head = ["Market site", "Language", "Page", "Portfolios", "Module link (preview)", "HTML snippet to paste", "Notes"]
 ws.append(head)
 for market, lang, lang_name in MARKETS:
     d = dict_for(lang)
     for page, file, frame_id in PAGES:
-        url = BASE + file + ("" if lang == "en" else "?lang=" + lang)
+        params = ([] if lang == "en" else ["lang=" + lang]) + ([PORTFOLIO[market]] if market in PORTFOLIO else [])
+        url = BASE + file + ("?" + "&".join(params) if params else "")
         title = d.get("LARVIVA hatchery range", "LARVIVA hatchery range")
         note = "" if lang == "en" or d else "Translation file missing – shows English."
         if lang != "en" and d:
             note = "Machine-assisted translation – please have the local team review."
-        ws.append([market, "%s (%s)" % (lang_name, lang), page, url, snippet(url, frame_id, title), note])
+        ws.append([market, "%s (%s)" % (lang_name, lang), page, PORTFOLIO_LABEL[PORTFOLIO.get(market)], url,
+                   snippet(url, frame_id, title), note])
 
-widths = [18, 24, 22, 62, 110, 40]
+widths = [18, 24, 22, 24, 62, 110, 40]
 for i, w in enumerate(widths, 1):
     ws.column_dimensions[get_column_letter(i)].width = w
 for c in ws[1]:
@@ -74,9 +81,9 @@ for c in ws[1]:
 for row in ws.iter_rows(min_row=2):
     for c in row:
         c.alignment = Alignment(wrap_text=True, vertical="top")
-    row[3].hyperlink = row[3].value
-    row[3].font = Font(color="0563C1", underline="single")
-    row[4].font = Font(name="Consolas", size=9)
+    row[4].hyperlink = row[4].value
+    row[4].font = Font(color="0563C1", underline="single")
+    row[5].font = Font(name="Consolas", size=9)
 ws.freeze_panes = "A2"
 ws.auto_filter.ref = ws.dimensions
 
@@ -85,18 +92,37 @@ for line in [
     ["How to add the module to a market page"],
     [""],
     ["1. Find the row for the market site and the page (Hatchery stage page or LARVIVA page)."],
-    ["2. Copy the whole cell in column E (HTML snippet)."],
+    ["2. Copy the whole cell in column F (HTML snippet)."],
     ["3. In Umbraco, open that language variant of the page and paste it into an HTML / embed block that keeps <script> tags."],
     ["4. Save and preview. The module resizes itself; on phones it scrolls to the product card a visitor opens."],
     [""],
-    ["Column D opens the module on its own, to check the translation before pasting."],
+    ["Column E opens the module on its own, to check the translation before pasting."],
+    ["Column D: which portfolios the market shows. ?start=shrimp opens Shrimp first (Fish still available); ?only=shrimp shows Shrimp only."],
     ["English sites use the link without ?lang=. Other languages add ?lang=xx (es, da, de, fr, it, nb, pl, fi, sv, tr, vi, el, zh)."],
     ["Translations live in data/i18n/<lang>.json in the project (English phrase → translation). Edit there and run npm run build."],
-    ["Product links (shrimp) point to the global biomar.com product pages."],
+    ["Product links (shrimp) open the global biomar.com product pages in a new tab (see the Product links sheet)."],
 ]:
     info.append(line)
 info.column_dimensions["A"].width = 120
 info["A1"].font = Font(bold=True, size=13)
+
+links = wb.create_sheet("Product links")
+links.append(["Product", "Shown on", "\"View product details\" opens"])
+data = json.loads(open(os.path.join(ROOT, "data", "larviva-journey.en.json"), encoding="utf-8").read())
+for pr in data["products"]:
+    if pr.get("published") is False or not pr.get("url"):
+        continue
+    pages = pr.get("pages") or ["hatchery", "larviva"]
+    shown = " + ".join({"hatchery": "Hatchery stage page", "larviva": "LARVIVA page"}[p] for p in pages)
+    links.append([pr["name"], shown, pr["url"]])
+for c in links[1]:
+    c.font = Font(bold=True, color="FFFFFF")
+    c.fill = PatternFill("solid", fgColor="1F3E77")
+for i, w in enumerate([26, 36, 70], 1):
+    links.column_dimensions[get_column_letter(i)].width = w
+for row in links.iter_rows(min_row=2):
+    row[2].hyperlink = row[2].value
+    row[2].font = Font(color="0563C1", underline="single")
 
 out = os.path.join(ROOT, "docs", "larviva-embed-snippets.xlsx")
 wb.save(out)

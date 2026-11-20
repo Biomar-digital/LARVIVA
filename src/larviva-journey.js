@@ -14,8 +14,10 @@
  *            data-dataset="LARVIVA_JOURNEY_DATA"   (global set by the data file)
  *            data-src="/api/larviva-journey?lang=en" (alternative: fetch JSON)
  *            data-market="VN"                      (optional market filter)
- *            data-lang="de">                       (optional translation, see
+ *            data-lang="de"                        (optional translation, see
  *                                                   data/i18n/*.json)
+ *            data-start="shrimp"                   (portfolio shown first)
+ *            data-only="shrimp">                   (show only these portfolios)
  *   </section>
  */
 (function (root, factory) {
@@ -239,6 +241,7 @@
     var market = options.market || null;
     var page = options.page || data.defaultPage || null;
     var pageSettings = (page && data.pages && data.pages[page]) || {};
+    var only = options.only && options.only.length ? [].concat(options.only) : null;
     var settings = Object.assign({ showUnverifiedSpecs: false, brandPrefix: "" }, data.settings);
     var ui = Object.assign({}, DEFAULT_UI, data.ui);
 
@@ -314,11 +317,18 @@
         // keeps the staircase layout without them.
         showRulers: pageSettings.rulers !== false && columns.some(function (c) { return c.timeline; })
       });
-    }).filter(function (p) { return p.stages.length || p.products.length; });
+    }).filter(function (p) {
+      // `only: ["shrimp"]` shows just those portfolios (shrimp-only markets).
+      return (p.stages.length || p.products.length) && (!only || only.indexOf(p.id) !== -1);
+    });
 
-    var defaultId = portfolios.some(function (p) { return p.id === data.defaultPortfolio; })
-      ? data.defaultPortfolio
+    // `start: "shrimp"` opens that portfolio and puts its tab first
+    // (markets where shrimp is the main segment).
+    var start = options.start || data.defaultPortfolio;
+    var defaultId = portfolios.some(function (p) { return p.id === start; })
+      ? start
       : (portfolios[0] && portfolios[0].id);
+    portfolios.sort(function (a, b) { return (b.id === defaultId) - (a.id === defaultId); });
 
     return { ui: ui, settings: settings, portfolios: portfolios, defaultPortfolio: defaultId, market: market, page: page };
   }
@@ -942,7 +952,12 @@
       data = translateData(data, dicts[lang]);
       el.setAttribute("lang", lang);
     }
-    this.model = prepare(data, { market: this.options.market, page: this.options.page });
+    this.model = prepare(data, {
+      market: this.options.market,
+      page: this.options.page,
+      start: this.options.start,
+      only: this.options.only
+    });
     this.state = { portfolio: this.model.defaultPortfolio, stage: null, product: null };
 
     el.innerHTML = renderModule(this.model, {
@@ -1172,7 +1187,9 @@
     options = Object.assign({
       market: el.getAttribute("data-market") || null,
       page: el.getAttribute("data-page") || null,
-      lang: el.getAttribute("data-lang") || null
+      lang: el.getAttribute("data-lang") || null,
+      start: el.getAttribute("data-start") || null,
+      only: el.getAttribute("data-only") ? el.getAttribute("data-only").split(/[\s,]+/) : null
     }, options);
     return loadData(el).then(function (data) {
       return new Journey(el, data, options);
