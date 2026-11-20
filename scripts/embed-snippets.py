@@ -21,6 +21,12 @@ MARKETS = [
     ("United Kingdom", "en", "English"), ("Việt Nam", "vi", "Vietnamese"), ("Ελλάδα", "el", "Greek"),
     ("Chile", "es", "Spanish"), ("中国", "zh", "Chinese (Simplified)"),
 ]
+# biomar.com site code per market (products link to that site's own pages).
+SITE = {"Global": None, "Australia": "en-au", "Costa Rica": "es-cr", "Danmark": "da-dk", "Deutschland": "de-de",
+        "Ecuador": "es-ec", "España": "es-es", "France": "fr-fr", "Italia": "it-it", "Norge": "no-no",
+        "Philippines": "en-ph", "Polska": "pl-pl", "Suomi": "fi-fi", "Sverige": "sv-se", "Türkiye": "tr-tr",
+        "United Kingdom": "en-gb", "Việt Nam": "vi-vn", "Ελλάδα": "el-gr", "Chile": "es-cl", "中国": "zh-cn"}
+
 # Shrimp-led markets: Ecuador sells only shrimp feed (no Fish tab); Costa Rica
 # and Viet Nam open on Shrimp with Fish as the second tab.
 PORTFOLIO = {"Ecuador": "only=shrimp", "Costa Rica": "start=shrimp", "Việt Nam": "start=shrimp"}
@@ -63,7 +69,8 @@ ws.append(head)
 for market, lang, lang_name in MARKETS:
     d = dict_for(lang)
     for page, file, frame_id in PAGES:
-        params = ([] if lang == "en" else ["lang=" + lang]) + ([PORTFOLIO[market]] if market in PORTFOLIO else [])
+        params = (([] if lang == "en" else ["lang=" + lang]) + ([PORTFOLIO[market]] if market in PORTFOLIO else []) +
+                  (["site=" + SITE[market]] if SITE[market] else []))
         url = BASE + file + ("?" + "&".join(params) if params else "")
         title = d.get("LARVIVA hatchery range", "LARVIVA hatchery range")
         note = "" if lang == "en" or d else "Translation file missing – shows English."
@@ -100,29 +107,39 @@ for line in [
     ["Column D: which portfolios the market shows. ?start=shrimp opens Shrimp first (Fish still available); ?only=shrimp shows Shrimp only."],
     ["English sites use the link without ?lang=. Other languages add ?lang=xx (es, da, de, fr, it, nb, pl, fi, sv, tr, vi, el, zh)."],
     ["Translations live in data/i18n/<lang>.json in the project (English phrase → translation). Edit there and run npm run build."],
-    ["Product links (shrimp) open the global biomar.com product pages in a new tab (see the Product links sheet)."],
+    ["Product links (shrimp) open the market's own biomar.com product page in a new tab (?site=xx-xx); where a market has no page for a product the button is hidden. See the Product links sheet."],
 ]:
     info.append(line)
 info.column_dimensions["A"].width = 120
 info["A1"].font = Font(bold=True, size=13)
 
 links = wb.create_sheet("Product links")
-links.append(["Product", "Shown on", "\"View product details\" opens"])
+links.append(["Where \"View product details\" goes in each market. No link = the market has no page for that product, so the button is hidden."])
+links.append([])
 data = json.loads(open(os.path.join(ROOT, "data", "larviva-journey.en.json"), encoding="utf-8").read())
-for pr in data["products"]:
-    if pr.get("published") is False or not pr.get("url"):
-        continue
-    pages = pr.get("pages") or ["hatchery", "larviva"]
-    shown = " + ".join({"hatchery": "Hatchery stage page", "larviva": "LARVIVA page"}[p] for p in pages)
-    links.append([pr["name"], shown, pr["url"]])
-for c in links[1]:
+prods = [pr for pr in data["products"] if pr.get("published") is not False and pr.get("url")]
+links.append(["Market site"] + [pr["name"] for pr in prods])
+for market, lang, _ in MARKETS:
+    site = SITE[market]
+    row = [market]
+    for pr in prods:
+        row.append(pr["url"] if not site else (pr.get("siteUrls") or {}).get(site) or "no link")
+    links.append(row)
+for c in links[3]:
     c.font = Font(bold=True, color="FFFFFF")
     c.fill = PatternFill("solid", fgColor="1F3E77")
-for i, w in enumerate([26, 36, 70], 1):
-    links.column_dimensions[get_column_letter(i)].width = w
-for row in links.iter_rows(min_row=2):
-    row[2].hyperlink = row[2].value
-    row[2].font = Font(color="0563C1", underline="single")
+links["A1"].font = Font(bold=True)
+links.column_dimensions["A"].width = 18
+for i in range(2, len(prods) + 2):
+    links.column_dimensions[get_column_letter(i)].width = 48
+for row in links.iter_rows(min_row=4):
+    for c in row[1:]:
+        if c.value and c.value.startswith("http"):
+            c.hyperlink = c.value
+            c.font = Font(color="0563C1", underline="single", size=9)
+        else:
+            c.font = Font(color="888888", italic=True, size=9)
+links.freeze_panes = "B4"
 
 out = os.path.join(ROOT, "docs", "larviva-embed-snippets.xlsx")
 wb.save(out)

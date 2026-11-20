@@ -16,6 +16,7 @@
  *            data-market="VN"                      (optional market filter)
  *            data-lang="de"                        (optional translation, see
  *                                                   data/i18n/*.json)
+ *            data-site="es-ec"                     (biomar.com site: local product links)
  *            data-start="shrimp"                   (portfolio shown first)
  *            data-only="shrimp">                   (show only these portfolios)
  *   </section>
@@ -242,6 +243,7 @@
     var page = options.page || data.defaultPage || null;
     var pageSettings = (page && data.pages && data.pages[page]) || {};
     var only = options.only && options.only.length ? [].concat(options.only) : null;
+    var site = options.site || null;
     var settings = Object.assign({ showUnverifiedSpecs: false, brandPrefix: "" }, data.settings);
     var ui = Object.assign({}, DEFAULT_UI, data.ui);
 
@@ -251,7 +253,11 @@
       }).map(function (pr) {
         // `pageOverrides.<page>` replaces fields on one page only (e.g. a
         // longer ProNurse bar on the LARVIVA page).
-        return page && pr.pageOverrides && pr.pageOverrides[page] ? Object.assign({}, pr, pr.pageOverrides[page]) : pr;
+        var out = page && pr.pageOverrides && pr.pageOverrides[page] ? Object.assign({}, pr, pr.pageOverrides[page]) : pr;
+        // On a market site (`site: "es-ec"`) products link to that site's own
+        // page, or not at all.
+        if (site) out = Object.assign({}, out, { url: (out.siteUrls && out.siteUrls[site]) || null });
+        return out;
       });
       // On pages that ask for it, stages and activities without products
       // are left out (the LARVIVA page has no shrimp nursery feeds).
@@ -956,7 +962,8 @@
       market: this.options.market,
       page: this.options.page,
       start: this.options.start,
-      only: this.options.only
+      only: this.options.only,
+      site: this.options.site
     });
     this.state = { portfolio: this.model.defaultPortfolio, stage: null, product: null };
 
@@ -1189,6 +1196,7 @@
       page: el.getAttribute("data-page") || null,
       lang: el.getAttribute("data-lang") || null,
       start: el.getAttribute("data-start") || null,
+      site: el.getAttribute("data-site") || null,
       only: el.getAttribute("data-only") ? el.getAttribute("data-only").split(/[\s,]+/) : null
     }, options);
     return loadData(el).then(function (data) {

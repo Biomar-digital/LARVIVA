@@ -176,6 +176,12 @@ async function run() {
   await tr.goto("file://" + path.resolve(__dirname, "..", "embed.html") + "?only=shrimp");
   assert.strictEqual(await tr.locator('[role="tab"]').count(), 0, "no switch with one portfolio");
   assert.strictEqual(await tr.locator('[data-portfolio-panel="fish"]').count(), 0, "no fish");
+  // ?site=: local product pages only.
+  await tr.goto("file://" + path.resolve(__dirname, "..", "embed.html") + "?only=shrimp&site=es-cr");
+  await tr.locator('.lj-lanes [data-product-id="larviva-mysis"]').click();
+  assert.match(await tr.locator(".lj-card .lj-cta").getAttribute("href"), /\/es-cr\//);
+  await tr.locator('.lj-lanes [data-product-id="larviva-zoea"]').click();
+  assert.strictEqual(await tr.locator(".lj-card .lj-cta").count(), 0, "no global fallback link");
 
   assert.deepStrictEqual(errors, [], "no console errors");
   await browser.close();

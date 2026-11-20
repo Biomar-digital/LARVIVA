@@ -44,6 +44,9 @@
  *                      "Provisional" in the interface.
  *   technicalNotes     Array of short strings. Empty = hidden.
  *   url                Product detail page. null = the "View product details" link is omitted.
+ *   siteUrls           Local product pages per biomar.com site, e.g. { "es-ec": "…" }.
+ *                      With site="es-ec" (?site=es-ec) the module links there; a site
+ *                      without an entry shows no link (never the global page).
  *   image              Pack shot shown in the detail panel. null = no image.
  *   logo               Family logo (LARVIVA wordmark + family name) used on the
  *                      tile and in the detail card. The product name stays in
@@ -571,6 +574,9 @@
         "marketAvailability": null,
         "published": true,
         "id": "smartcare-balance-h",
+        "siteUrls": {
+          "es-ec": "https://www.biomar.com/es-ec/alimentos-y-servicios/todos-nuestros-alimentos/smartcare-balance-h-shrimp"
+        },
         "pages": ["hatchery"],
         "name": "SmartCare Balance H",
         "logo": "assets/logos/smartcare-balance-h.svg",
@@ -629,6 +635,12 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-zoea",
+        "siteUrls": {
+          "en-ph": "https://www.biomar.com/en-ph/feed-services/all-feed/larviva-zoea-shrimp",
+          "es-ec": "https://www.biomar.com/es-ec/alimentos-y-servicios/todos-nuestros-alimentos/larviva-zoea-shrimp",
+          "vi-vn": "https://www.biomar.com/vi-vn/san-pham-va-dich-vu/tat-ca/larviva-zoea-shrimp",
+          "en-au": "https://www.biomar.com/en-au/feed-services/all-feed/larviva-zoea-au"
+        },
         "tileSubtitle": "Early feeding of larvae",
         "name": "LARVIVA Zoea",
         "logo": "assets/logos/larviva-zoea.png",
@@ -673,6 +685,13 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-mysis",
+        "siteUrls": {
+          "en-ph": "https://www.biomar.com/en-ph/feed-services/all-feed/larviva-mysis-shrimp",
+          "es-ec": "https://www.biomar.com/es-ec/alimentos-y-servicios/todos-nuestros-alimentos/larviva-mysis-shrimp",
+          "vi-vn": "https://www.biomar.com/vi-vn/san-pham-va-dich-vu/tat-ca/larviva-mysis-shrimp",
+          "es-cr": "https://www.biomar.com/es-cr/alimentos-y-servicios/todos-nuestros-alimentos/larviva-mysis-shrimp",
+          "en-au": "https://www.biomar.com/en-au/feed-services/all-feed/larviva-mysis-au"
+        },
         "tileSubtitle": "Early feeding of larvae",
         "name": "LARVIVA Mysis",
         "logo": "assets/logos/larviva-mysis.png",
@@ -717,6 +736,13 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-pl",
+        "siteUrls": {
+          "en-ph": "https://www.biomar.com/en-ph/feed-services/all-feed/larviva-pl-shrimp",
+          "es-ec": "https://www.biomar.com/es-ec/alimentos-y-servicios/todos-nuestros-alimentos/larviva-pl-shrimp",
+          "vi-vn": "https://www.biomar.com/vi-vn/san-pham-va-dich-vu/tat-ca/larviva-pl-shrimp",
+          "es-cr": "https://www.biomar.com/es-cr/alimentos-y-servicios/todos-nuestros-alimentos/larviva-pl-shrimp",
+          "en-au": "https://www.biomar.com/en-au/feed-services/all-feed/larviva-pl-au"
+        },
         "tileSubtitle": "Specialized nutrition for PL",
         "pages": ["hatchery"],
         "name": "LARVIVA PL",
@@ -780,6 +806,13 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-pl-200",
+        "siteUrls": {
+          "en-ph": "https://www.biomar.com/en-ph/feed-services/all-feed/larviva-pl-shrimp",
+          "es-ec": "https://www.biomar.com/es-ec/alimentos-y-servicios/todos-nuestros-alimentos/larviva-pl-shrimp",
+          "vi-vn": "https://www.biomar.com/vi-vn/san-pham-va-dich-vu/tat-ca/larviva-pl-shrimp",
+          "es-cr": "https://www.biomar.com/es-cr/alimentos-y-servicios/todos-nuestros-alimentos/larviva-pl-shrimp",
+          "en-au": "https://www.biomar.com/en-au/feed-services/all-feed/larviva-pl-au"
+        },
         "tileSubtitle": "Specialized nutrition for PL",
         "pages": ["larviva"],
         "name": "LARVIVA PL 200",
@@ -827,6 +860,13 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-pl-300",
+        "siteUrls": {
+          "en-ph": "https://www.biomar.com/en-ph/feed-services/all-feed/larviva-pl-shrimp",
+          "es-ec": "https://www.biomar.com/es-ec/alimentos-y-servicios/todos-nuestros-alimentos/larviva-pl-shrimp",
+          "vi-vn": "https://www.biomar.com/vi-vn/san-pham-va-dich-vu/tat-ca/larviva-pl-shrimp",
+          "es-cr": "https://www.biomar.com/es-cr/alimentos-y-servicios/todos-nuestros-alimentos/larviva-pl-shrimp",
+          "en-au": "https://www.biomar.com/en-au/feed-services/all-feed/larviva-pl-au"
+        },
         "tileSubtitle": "Specialized nutrition for PL",
         "pages": ["larviva"],
         "name": "LARVIVA PL 300",
@@ -874,6 +914,13 @@
         "marketAvailability": null,
         "published": true,
         "id": "larviva-pl-400",
+        "siteUrls": {
+          "en-ph": "https://www.biomar.com/en-ph/feed-services/all-feed/larviva-pl-shrimp",
+          "es-ec": "https://www.biomar.com/es-ec/alimentos-y-servicios/todos-nuestros-alimentos/larviva-pl-shrimp",
+          "vi-vn": "https://www.biomar.com/vi-vn/san-pham-va-dich-vu/tat-ca/larviva-pl-shrimp",
+          "es-cr": "https://www.biomar.com/es-cr/alimentos-y-servicios/todos-nuestros-alimentos/larviva-pl-shrimp",
+          "en-au": "https://www.biomar.com/en-au/feed-services/all-feed/larviva-pl-au"
+        },
         "tileSubtitle": "Specialized nutrition for PL",
         "pages": ["larviva"],
         "name": "LARVIVA PL 400",
