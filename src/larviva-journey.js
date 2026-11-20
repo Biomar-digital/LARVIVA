@@ -13,7 +13,9 @@
  *   <section data-larviva-journey
  *            data-dataset="LARVIVA_JOURNEY_DATA"   (global set by the data file)
  *            data-src="/api/larviva-journey?lang=en" (alternative: fetch JSON)
- *            data-market="VN">                     (optional market filter)
+ *            data-market="VN"                      (optional market filter)
+ *            data-lang="de">                       (optional translation, see
+ *                                                   data/i18n/*.json)
  *   </section>
  */
 (function (root, factory) {
@@ -163,6 +165,43 @@
       pr.row = r;
     });
     return rows.length;
+  }
+
+  /* ── Translation ─────────────────────────────────────────────────────── */
+
+  // Translations are phrase lists (data/i18n/<lang>.json: English → local
+  // text). Every visible text field is looked up; anything missing stays in
+  // English, and ids, brand names, sizes and codes are never touched.
+  function translateData(data, dict) {
+    if (!dict) return data;
+    var t = function (v) { return typeof v === "string" && hasText(dict[v]) ? dict[v] : v; };
+    var pick = function (obj, keys) {
+      var out = Object.assign({}, obj);
+      keys.forEach(function (k) { if (k in out) out[k] = t(out[k]); });
+      return out;
+    };
+    var ui = {};
+    Object.keys(data.ui || {}).forEach(function (k) { ui[k] = t(data.ui[k]); });
+    var stage = function (s) { return pick(s, ["label", "description"]); };
+    return Object.assign({}, data, {
+      ui: ui,
+      portfolios: (data.portfolios || []).map(function (p) {
+        return Object.assign(pick(p, ["label", "titleLabel", "title", "intro", "imageAlt"]), {
+          stages: (p.stages || []).map(stage),
+          activities: (p.activities || []).map(stage)
+        });
+      }),
+      products: (data.products || []).map(function (pr) {
+        var out = pick(pr, ["productType", "tileSubtitle", "application", "description", "health", "marketAvailability"]);
+        if (pr.variants) out.variants = pr.variants.map(t);
+        if (pr.particleSize) {
+          var ps = pick(pr.particleSize, ["label", "value"]);
+          if (ps.items) ps.items = ps.items.map(function (it) { return pick(it, ["label", "stageText"]); });
+          out.particleSize = ps;
+        }
+        return out;
+      })
+    });
   }
 
   /* ── Data preparation ────────────────────────────────────────────────── */
@@ -897,6 +936,12 @@
     this.el = el;
     this.options = options || {};
     this.uid = "lj" + (++instanceCount);
+    var lang = this.options.lang;
+    var dicts = root.LARVIVA_JOURNEY_I18N || {};
+    if (lang && dicts[lang]) {
+      data = translateData(data, dicts[lang]);
+      el.setAttribute("lang", lang);
+    }
     this.model = prepare(data, { market: this.options.market, page: this.options.page });
     this.state = { portfolio: this.model.defaultPortfolio, stage: null, product: null };
 
@@ -1126,7 +1171,8 @@
   function init(el, options) {
     options = Object.assign({
       market: el.getAttribute("data-market") || null,
-      page: el.getAttribute("data-page") || null
+      page: el.getAttribute("data-page") || null,
+      lang: el.getAttribute("data-lang") || null
     }, options);
     return loadData(el).then(function (data) {
       return new Journey(el, data, options);
@@ -1145,6 +1191,7 @@
 
   return {
     prepare: prepare,
+    translateData: translateData,
     renderModule: renderModule,
     formatSize: formatSize,
     init: init,

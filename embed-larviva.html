@@ -32,7 +32,20 @@
 
   <script src="data/larviva-journey.en.js?v=be6ba39d"></script>
   <script src="src/larviva-illustrations.js?v=84553adc"></script>
-  <script src="src/larviva-journey.js?v=ce2d12a5"></script>
+  <script>
+    // ?lang=de etc. loads that translation (data/i18n/<lang>.json, versions
+    // filled in by the build) before the module starts.
+    (function () {
+      var versions = /*I18N*/{"vi":"47fa254f","zh":"4003346f"}/*/I18N*/;
+      var m = /[?&]lang=([a-z]{2,3})\b/i.exec(location.search);
+      var lang = m && m[1].toLowerCase();
+      if (!lang || !versions[lang]) return;
+      document.documentElement.lang = lang;
+      document.querySelector("[data-larviva-journey]").setAttribute("data-lang", lang);
+      document.write('<script src="data/i18n/' + lang + '.js?v=' + versions[lang] + '"><\/script>');
+    })();
+  </script>
+  <script src="src/larviva-journey.js?v=fe9ca464"></script>
   <script>
     // Tell the host page how tall the module is, so it can size the iframe.
     (function () {

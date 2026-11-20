@@ -160,6 +160,14 @@ async function run() {
   await lvShrimp.locator('.lj-lanes [data-product-id="larviva-pl-400"]').click();
   assert.match(await lvShrimp.locator("[data-lj-panel]").innerText(), /375–500 µm/);
 
+  // Translations: ?lang=xx loads data/i18n/xx.js; untranslated fields stay English.
+  var tr = await browser.newPage({ viewport: { width: 1200, height: 900 } });
+  tr.on("pageerror", function (e) { errors.push(e.message); });
+  await tr.goto("file://" + path.resolve(__dirname, "..", "embed-larviva.html") + "?lang=vi");
+  assert.strictEqual(await tr.evaluate(function () { return document.documentElement.lang; }), "vi");
+  assert.strictEqual((await tr.locator('[role="tab"][data-portfolio="shrimp"]').innerText()).trim(), "Tôm");
+  assert.strictEqual(await tr.locator('[data-portfolio-panel="shrimp"] .lj-lanes [data-product-id]').count(), 5, "same products");
+
   assert.deepStrictEqual(errors, [], "no console errors");
   await browser.close();
   console.log("smoke test passed");
