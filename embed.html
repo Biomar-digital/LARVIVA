@@ -34,7 +34,7 @@
     // ?lang=de etc. loads that translation (data/i18n/<lang>.json, versions
     // filled in by the build) before the module starts.
     (function () {
-      var versions = /*I18N*/{"es":"0738c54c","fr":"ad37dca2","it":"0d22ba33","vi":"47fa254f","zh":"4003346f"}/*/I18N*/;
+      var versions = /*I18N*/{"da":"ed6988ac","de":"c360aa88","es":"0738c54c","fr":"ad37dca2","it":"0d22ba33","nb":"aaba8ab7","sv":"b4fbb7f8","vi":"47fa254f","zh":"4003346f"}/*/I18N*/;
       var m = /[?&]lang=([a-z]{2,3})\b/i.exec(location.search);
       var lang = m && m[1].toLowerCase();
       if (!lang || !versions[lang]) return;
